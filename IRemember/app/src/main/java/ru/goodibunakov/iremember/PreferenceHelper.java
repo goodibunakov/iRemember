@@ -15,7 +15,6 @@ public class PreferenceHelper {
     private SharedPreferences preferences;
 
     private PreferenceHelper() {
-
     }
 
     public static PreferenceHelper getInstance() {
