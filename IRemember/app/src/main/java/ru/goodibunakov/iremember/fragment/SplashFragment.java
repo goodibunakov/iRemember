@@ -49,9 +49,8 @@ public class SplashFragment extends Fragment implements Animation.AnimationListe
     public void onAnimationEnd(Animation animation) {
         if (animation == splash_in) {
             Animation splash_out = AnimationUtils.loadAnimation(getActivity(), R.anim.splash_anim_out);
-            ImageView iv = (ImageView) getActivity().findViewById(R.id.logo);
             splash_out.setStartOffset(1000);
-            iv.startAnimation(splash_out);
+            getView().startAnimation(splash_out);
         }
     }
 
