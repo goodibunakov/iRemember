@@ -1,7 +1,6 @@
 package ru.goodibunakov.iremember.fragment;
 
 
-import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,24 +8,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import java.util.Objects;
 
 import ru.goodibunakov.iremember.R;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class SplashFragment extends Fragment implements Animation.AnimationListener{
+public class SplashFragment extends Fragment implements Animation.AnimationListener {
 
-    Animation splash_in;
+    private Animation splash_in;
 
     public SplashFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         SplashTask splashTask = new SplashTask();
@@ -40,7 +40,6 @@ public class SplashFragment extends Fragment implements Animation.AnimationListe
     }
 
 
-
     @Override
     public void onAnimationStart(Animation animation) {
     }
@@ -50,14 +49,13 @@ public class SplashFragment extends Fragment implements Animation.AnimationListe
         if (animation == splash_in) {
             Animation splash_out = AnimationUtils.loadAnimation(getActivity(), R.anim.splash_anim_out);
             splash_out.setStartOffset(1000);
-            getView().startAnimation(splash_out);
+            Objects.requireNonNull(getView()).startAnimation(splash_out);
         }
     }
 
     @Override
     public void onAnimationRepeat(Animation animation) {
     }
-
 
 
     class SplashTask extends AsyncTask<Void, Void, Void> {
