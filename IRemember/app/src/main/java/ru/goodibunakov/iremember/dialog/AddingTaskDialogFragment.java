@@ -65,12 +65,17 @@ public class AddingTaskDialogFragment extends DialogFragment {
         }
     }
 
+    @Override
+    public void onActivityCreated(Bundle arg0) {
+        super.onActivityCreated(arg0);
+        Objects.requireNonNull(getDialog().getWindow()).getAttributes().windowAnimations = R.style.DialogAnimation;
+    }
+
     @NonNull
     @Override
     @SuppressLint("InflateParams")
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
-
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View container = inflater.inflate(R.layout.dialog_task, null);
