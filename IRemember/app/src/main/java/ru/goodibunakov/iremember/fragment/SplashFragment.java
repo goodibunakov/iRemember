@@ -1,6 +1,7 @@
 package ru.goodibunakov.iremember.fragment;
 
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.animation.AnimationUtils;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import java.lang.ref.WeakReference;
 import java.util.Objects;
 
 import ru.goodibunakov.iremember.R;
@@ -29,8 +31,7 @@ public class SplashFragment extends Fragment implements Animation.AnimationListe
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        SplashTask splashTask = new SplashTask();
-        splashTask.execute();
+        new SplashTask(getActivity()).execute();
 
         splash_in = AnimationUtils.loadAnimation(getActivity(), R.anim.splash_anim_in);
         splash_in.setAnimationListener(this);
@@ -58,7 +59,13 @@ public class SplashFragment extends Fragment implements Animation.AnimationListe
     }
 
 
-    class SplashTask extends AsyncTask<Void, Void, Void> {
+    private static class SplashTask extends AsyncTask<Void, Void, Void> {
+
+        private WeakReference<Activity> activityReference;
+
+        SplashTask(Activity context) {
+            activityReference = new WeakReference<>(context);
+        }
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -69,8 +76,8 @@ public class SplashFragment extends Fragment implements Animation.AnimationListe
                 e.printStackTrace();
             }
 
-            if (getActivity() != null) {
-                getActivity().getFragmentManager().popBackStack();
+            if (activityReference != null) {
+                activityReference.get().getFragmentManager().popBackStack();
             }
             return null;
         }

@@ -25,8 +25,10 @@
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
+                android:layout_marginRight="8dp"
                 android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize" />
+                android:layout_height="?android:attr/actionBarSize"
+                tools:ignore="RtlHardcoded" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
@@ -39,17 +41,6 @@
             </com.google.android.material.tabs.TabLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
-
-        <!--<com.google.android.material.floatingactionbutton.FloatingActionButton-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="end|bottom"-->
-            <!--android:layout_marginEnd="16dp"-->
-            <!--android:layout_marginRight="16dp"-->
-            <!--android:layout_marginBottom="16dp"-->
-            <!--android:elevation="1dp"-->
-            <!--app:srcCompat="@drawable/ic_add_black_24dp"-->
-            <!--tools:targetApi="lollipop" />-->
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

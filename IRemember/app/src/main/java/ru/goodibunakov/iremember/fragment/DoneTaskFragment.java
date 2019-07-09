@@ -9,11 +9,17 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import ru.goodibunakov.iremember.R;
 
 
 public class DoneTaskFragment extends Fragment {
 
+
+
+    private Unbinder unbinder;
 
     public DoneTaskFragment() {
         // Required empty public constructor
@@ -23,8 +29,14 @@ public class DoneTaskFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_done_task, container, false);
+        View view = inflater.inflate(R.layout.fragment_done_task, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 }
