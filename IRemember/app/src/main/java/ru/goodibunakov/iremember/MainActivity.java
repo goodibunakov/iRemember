@@ -3,7 +3,6 @@ package ru.goodibunakov.iremember;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,8 +26,6 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     TabLayout tabLayout;
     @BindView(R.id.pager)
     ViewPager viewPager;
-    @BindView(R.id.content_frame)
-    FrameLayout frameLayout;
 
     FragmentManager fragmentManager;
     PreferenceHelper preferenceHelper;
@@ -80,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
     private void setUI() {
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
+        toolbar.setTitleMarginStart(65);
+        toolbar.setLogo(R.drawable.toolbar_icon);
         setSupportActionBar(toolbar);
 
         tabLayout.addTab(tabLayout.newTab().setText(R.string.current_task));
