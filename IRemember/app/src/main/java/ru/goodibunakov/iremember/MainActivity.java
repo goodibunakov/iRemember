@@ -1,12 +1,14 @@
 package ru.goodibunakov.iremember;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
@@ -16,9 +18,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.goodibunakov.iremember.adapter.TabAdapter;
 import ru.goodibunakov.iremember.dialog.AddingTaskDialogFragment;
+import ru.goodibunakov.iremember.fragment.CurrentTaskFragment;
+import ru.goodibunakov.iremember.fragment.DoneTaskFragment;
 import ru.goodibunakov.iremember.fragment.SplashFragment;
+import ru.goodibunakov.iremember.fragment.TaskFragment;
+import ru.goodibunakov.iremember.model.ModelTask;
 
-public class MainActivity extends AppCompatActivity implements AddingTaskDialogFragment.AddingTaskListener {
+public class MainActivity extends AppCompatActivity implements AddingTaskDialogFragment.AddingTaskListener,
+        DoneTaskFragment.OnTaskRestoreListener, CurrentTaskFragment.OnTaskDoneListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -29,6 +36,10 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
     FragmentManager fragmentManager;
     PreferenceHelper preferenceHelper;
+    TabAdapter tabAdapter;
+    TaskFragment currentTaskFragment;
+    TaskFragment doneTaskFragment;
+    SplashFragment splashFragment;
 
 
     @Override
@@ -47,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
     public void runSplash() {
         if (!preferenceHelper.getBoolean(PreferenceHelper.SPLASH_IS_INVISIBLE)) {
-            SplashFragment splashFragment = new SplashFragment();
+            splashFragment = new SplashFragment();
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, splashFragment)
                     .addToBackStack(null)
@@ -76,15 +87,15 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     }
 
     private void setUI() {
-        toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
-        toolbar.setTitleMarginStart(65);
+        toolbar.setTitleTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.white));
+        toolbar.setTitleMarginStart(68);
         toolbar.setLogo(R.drawable.toolbar_icon);
         setSupportActionBar(toolbar);
 
         tabLayout.addTab(tabLayout.newTab().setText(R.string.current_task));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.done_task));
 
-        TabAdapter tabAdapter = new TabAdapter(fragmentManager, 2);
+        tabAdapter = new TabAdapter(fragmentManager, 2);
 
         viewPager.setAdapter(tabAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -103,15 +114,34 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+
+        currentTaskFragment = (CurrentTaskFragment) tabAdapter.getItem(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION);
+        doneTaskFragment = (DoneTaskFragment) tabAdapter.getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
     }
 
     @Override
-    public void onTaskAdded() {
-        Toast.makeText(this, getResources().getString(R.string.task_added), Toast.LENGTH_SHORT).show();
+    public void onTaskAdded(ModelTask newTask) {
+        currentTaskFragment.addTask(newTask);
     }
 
     @Override
     public void onTaskAddingCancel() {
         Toast.makeText(this, getResources().getString(R.string.task_canceled), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onTaskDone(ModelTask modelTask) {
+        doneTaskFragment.addTask(modelTask);
+    }
+
+    @Override
+    public void onTaskRestore(ModelTask modelTask) {
+        currentTaskFragment.addTask(modelTask);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("debug", "mainactivity destroy!");
     }
 }

@@ -20,4 +20,8 @@
     <string name="task_added">Task added</string>
     <string name="task_canceled">Task canceled</string>
 
+
+    <string name="restore_title">Attention</string>
+    <string name="restore_message">Restore the task?</string>
+
 </resources>

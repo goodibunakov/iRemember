@@ -1,16 +1,19 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/gray50"
     tools:context="ru.goodibunakov.iremember.fragment.CurrentTaskFragment">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:text="@string/current_task" />
+        android:clipToPadding="false"
+        android:paddingBottom="48dp"
+        android:scrollbars="vertical" />
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -25,4 +28,4 @@
         app:srcCompat="@drawable/ic_add_black_24dp"
         tools:ignore="UnusedAttribute" />
 
-</FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

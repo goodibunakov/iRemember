@@ -1,7 +1,6 @@
 package ru.goodibunakov.iremember.fragment;
 
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.view.animation.AnimationUtils;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import java.lang.ref.WeakReference;
 import java.util.Objects;
 
 import ru.goodibunakov.iremember.R;
@@ -22,6 +20,7 @@ import ru.goodibunakov.iremember.R;
 public class SplashFragment extends Fragment implements Animation.AnimationListener {
 
     private Animation splash_in;
+    private Animation splash_out;
 
     public SplashFragment() {
         // Required empty public constructor
@@ -31,11 +30,14 @@ public class SplashFragment extends Fragment implements Animation.AnimationListe
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        new SplashTask(getActivity()).execute();
+        new SplashTask().execute();
 
         splash_in = AnimationUtils.loadAnimation(getActivity(), R.anim.splash_anim_in);
         splash_in.setAnimationListener(this);
         container.startAnimation(splash_in);
+        splash_out = AnimationUtils.loadAnimation(getActivity(), R.anim.splash_anim_out);
+        splash_out.setAnimationListener(this);
+        splash_out.setStartOffset(1000);
 
         return inflater.inflate(R.layout.fragment_splash, container, false);
     }
@@ -48,9 +50,15 @@ public class SplashFragment extends Fragment implements Animation.AnimationListe
     @Override
     public void onAnimationEnd(Animation animation) {
         if (animation == splash_in) {
-            Animation splash_out = AnimationUtils.loadAnimation(getActivity(), R.anim.splash_anim_out);
-            splash_out.setStartOffset(1000);
             Objects.requireNonNull(getView()).startAnimation(splash_out);
+        }
+        if (animation == splash_out) {
+            if (getActivity() != null) {
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .remove(SplashFragment.this)
+                        .commit();
+            }
         }
     }
 
@@ -61,23 +69,16 @@ public class SplashFragment extends Fragment implements Animation.AnimationListe
 
     private static class SplashTask extends AsyncTask<Void, Void, Void> {
 
-        private WeakReference<Activity> activityReference;
-
-        SplashTask(Activity context) {
-            activityReference = new WeakReference<>(context);
+        SplashTask() {
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
 
             try {
-                Thread.sleep(3000);
+                Thread.sleep(1500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
-
-            if (activityReference != null) {
-                activityReference.get().getFragmentManager().popBackStack();
             }
             return null;
         }

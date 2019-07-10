@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/dialogTaskTitle"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginRight="16dp">
 
             <EditText
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/dialogTaskTitle"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginRight="16dp"
             android:layout_toEndOf="@id/dialogTaskDate">
 
@@ -64,5 +64,15 @@
                 android:inputType="none"
                 android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/spinner_priority"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dialogTaskDate"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="13dp"
+            tools:ignore="RtlHardcoded" />
     </RelativeLayout>
 </ScrollView>

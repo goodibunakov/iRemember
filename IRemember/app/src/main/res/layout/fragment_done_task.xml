@@ -2,13 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ru.goodibunakov.iremember.fragment.DoneTaskFragment"
-    android:background="@android:color/white">
+    android:background="@color/gray50"
+    tools:context="ru.goodibunakov.iremember.fragment.DoneTaskFragment">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/done_task"
-        android:layout_gravity="center"/>
+        android:clipToPadding="false"
+        android:paddingBottom="88dp"
+        android:scrollbars="vertical" />
 
 </FrameLayout>
