@@ -31,7 +31,6 @@ public class CurrentTasksAdapter extends TaskAdapter {
             case TYPE_SEPARATOR:
             default:
                 return null;
-
         }
     }
 

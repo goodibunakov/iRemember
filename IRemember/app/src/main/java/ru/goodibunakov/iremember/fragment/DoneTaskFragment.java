@@ -11,10 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.goodibunakov.iremember.R;
 import ru.goodibunakov.iremember.adapter.DoneTaskAdapter;
+import ru.goodibunakov.iremember.database.DbHelper;
 import ru.goodibunakov.iremember.model.ModelTask;
 
 
@@ -24,7 +28,6 @@ public class DoneTaskFragment extends TaskFragment {
 //    RecyclerView recyclerView;
 
     private Unbinder unbinder;
-    private RecyclerView.LayoutManager layoutManager;
     private OnTaskRestoreListener onTaskRestoreListener;
 
     public DoneTaskFragment() {
@@ -56,7 +59,7 @@ public class DoneTaskFragment extends TaskFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_done_task, container, false);
         unbinder = ButterKnife.bind(this, view);
-
+        recyclerView = view.findViewById(R.id.rv);
         initRecyclerView();
 
         return view;
@@ -64,15 +67,23 @@ public class DoneTaskFragment extends TaskFragment {
 
     private void initRecyclerView() {
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new DoneTaskAdapter(this);
+        if (adapter == null) adapter = new DoneTaskAdapter(this);
         recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void moveTask(ModelTask modelTask) {
         onTaskRestoreListener.onTaskRestore(modelTask);
+    }
+
+    @Override
+    public void addTaskFromDb() {
+        List<ModelTask> tasks = new ArrayList<>(activity.dbHelper.query().getTasks(DbHelper.SELECTION_STATUS,
+                new String[]{Integer.toString(ModelTask.STATUS_DONE)},
+                DbHelper.TASK_DATE_COLUMN));
+        for (int i = 0; i < tasks.size(); i++) {
+            addTask(tasks.get(i), false);
+        }
     }
 
     @Override

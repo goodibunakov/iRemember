@@ -1,5 +1,7 @@
 package ru.goodibunakov.iremember.model;
 
+import java.util.Date;
+
 import ru.goodibunakov.iremember.R;
 
 public class ModelTask implements Item {
@@ -19,16 +21,19 @@ public class ModelTask implements Item {
     private long date;
     private int priority;
     private int status;
+    private long timestamp;
 
     public ModelTask() {
         this.status = -1;
+        this.timestamp = new Date().getTime();
     }
 
-    public ModelTask(String title, long date, int priority, int status) {
+    public ModelTask(String title, long date, int priority, int status, long timestamp) {
         this.title = title;
         this.date = date;
         this.priority = priority;
         this.status = status;
+        this.timestamp = timestamp;
     }
 
     public int getPriorityColor() {
@@ -91,6 +96,14 @@ public class ModelTask implements Item {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     @Override

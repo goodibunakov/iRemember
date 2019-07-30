@@ -105,8 +105,9 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
 
 
-            cardView.setOnClickListener(v -> {
+            priority.setOnClickListener(v -> {
                 model.setStatus(ModelTask.STATUS_DONE);
+                getTaskFragment().activity.dbHelper.update().status(model.getTimestamp(), ModelTask.STATUS_DONE);
 
                 title.setTextColor(ContextCompat.getColor(title.getContext(), R.color.gray50));
                 date.setTextColor(ContextCompat.getColor(date.getContext(), R.color.colorDarkGrey));
@@ -208,8 +209,9 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
 
 
-            cardView.setOnClickListener(v -> {
+            priority.setOnClickListener(v -> {
                 model.setStatus(ModelTask.STATUS_CURRENT);
+                getTaskFragment().activity.dbHelper.update().status(model.getTimestamp(), ModelTask.STATUS_CURRENT);
 
                 title.setTextColor(ContextCompat.getColor(title.getContext(), android.R.color.black));
                 date.setTextColor(ContextCompat.getColor(date.getContext(), android.R.color.darker_gray));

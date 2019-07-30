@@ -17,6 +17,7 @@ import com.google.android.material.tabs.TabLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.goodibunakov.iremember.adapter.TabAdapter;
+import ru.goodibunakov.iremember.database.DbHelper;
 import ru.goodibunakov.iremember.dialog.AddingTaskDialogFragment;
 import ru.goodibunakov.iremember.fragment.CurrentTaskFragment;
 import ru.goodibunakov.iremember.fragment.DoneTaskFragment;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     TaskFragment doneTaskFragment;
     SplashFragment splashFragment;
 
+    public DbHelper dbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
         PreferenceHelper.getInstance().init(getApplicationContext());
         preferenceHelper = PreferenceHelper.getInstance();
+
+        dbHelper = new DbHelper(getApplicationContext());
 
         fragmentManager = getSupportFragmentManager();
         runSplash();
@@ -117,11 +122,14 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
         currentTaskFragment = (CurrentTaskFragment) tabAdapter.getItem(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION);
         doneTaskFragment = (DoneTaskFragment) tabAdapter.getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
+        Log.d("debug", "currentTaskFragmentCreated = " + currentTaskFragment);
     }
 
     @Override
     public void onTaskAdded(ModelTask newTask) {
-        currentTaskFragment.addTask(newTask);
+//        Log.d("debug", "adapterFromActivity = " + currentTaskFragment.getAdapter());
+        Log.d("debug", "currentTaskFragment = " + currentTaskFragment);
+        currentTaskFragment.addTask(newTask, true);
     }
 
     @Override
@@ -131,12 +139,12 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
     @Override
     public void onTaskDone(ModelTask modelTask) {
-        doneTaskFragment.addTask(modelTask);
+        doneTaskFragment.addTask(modelTask, false);
     }
 
     @Override
     public void onTaskRestore(ModelTask modelTask) {
-        currentTaskFragment.addTask(modelTask);
+        currentTaskFragment.addTask(modelTask, false);
     }
 
     @Override
