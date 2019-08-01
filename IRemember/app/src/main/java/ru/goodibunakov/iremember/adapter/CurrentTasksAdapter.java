@@ -41,8 +41,6 @@ public class CurrentTasksAdapter extends TaskAdapter {
         if (item.isTask()) {
             ((TaskViewHolderCurrent) holder).bind(item);
             setAnimation(holder.itemView, position);
-            holder.itemView.setEnabled(true);
-            holder.itemView.setVisibility(View.VISIBLE);
         }
     }
 

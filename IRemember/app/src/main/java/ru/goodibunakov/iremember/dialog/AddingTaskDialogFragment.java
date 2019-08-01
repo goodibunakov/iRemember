@@ -35,6 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.goodibunakov.iremember.R;
 import ru.goodibunakov.iremember.Utils;
+import ru.goodibunakov.iremember.alarm.AlarmHelper;
 import ru.goodibunakov.iremember.model.ModelTask;
 
 public class AddingTaskDialogFragment extends DialogFragment {
@@ -160,6 +161,8 @@ public class AddingTaskDialogFragment extends DialogFragment {
             modelTask.setTitle(title.getText().toString());
             if (date.length() != 0 || time.length() != 0){
                 modelTask.setDate(calendar.getTimeInMillis());
+                AlarmHelper alarmHelper = AlarmHelper.getInstance();
+                alarmHelper.setAlarm(modelTask);
             }
             modelTask.setStatus(ModelTask.STATUS_CURRENT);
             addingTaskListener.onTaskAdded(modelTask);

@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -17,6 +18,7 @@ import com.google.android.material.tabs.TabLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.goodibunakov.iremember.adapter.TabAdapter;
+import ru.goodibunakov.iremember.alarm.AlarmHelper;
 import ru.goodibunakov.iremember.database.DbHelper;
 import ru.goodibunakov.iremember.dialog.AddingTaskDialogFragment;
 import ru.goodibunakov.iremember.fragment.CurrentTaskFragment;
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     TabLayout tabLayout;
     @BindView(R.id.pager)
     ViewPager viewPager;
+    @BindView(R.id.search_view)
+    SearchView searchView;
 
     FragmentManager fragmentManager;
     PreferenceHelper preferenceHelper;
@@ -54,11 +58,25 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
         PreferenceHelper.getInstance().init(getApplicationContext());
         preferenceHelper = PreferenceHelper.getInstance();
 
+        AlarmHelper.getInstance().init(getApplicationContext());
+
         dbHelper = new DbHelper(getApplicationContext());
 
         fragmentManager = getSupportFragmentManager();
         runSplash();
         setUI();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        RememberApp.activityResumed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        RememberApp.activityPaused();
     }
 
     public void runSplash() {
@@ -122,19 +140,31 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
         currentTaskFragment = (CurrentTaskFragment) tabAdapter.getItem(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION);
         doneTaskFragment = (DoneTaskFragment) tabAdapter.getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
-        Log.d("debug", "currentTaskFragmentCreated = " + currentTaskFragment);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                currentTaskFragment.findTasks(newText);
+                doneTaskFragment.findTasks(newText);
+                return false;
+            }
+        });
     }
 
     @Override
     public void onTaskAdded(ModelTask newTask) {
-//        Log.d("debug", "adapterFromActivity = " + currentTaskFragment.getAdapter());
         Log.d("debug", "currentTaskFragment = " + currentTaskFragment);
         currentTaskFragment.addTask(newTask, true);
     }
 
     @Override
     public void onTaskAddingCancel() {
-        Toast.makeText(this, getResources().getString(R.string.task_canceled), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, getResources().getString(R.string.task_canceled), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -145,11 +175,5 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     @Override
     public void onTaskRestore(ModelTask modelTask) {
         currentTaskFragment.addTask(modelTask, false);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("debug", "mainactivity destroy!");
     }
 }

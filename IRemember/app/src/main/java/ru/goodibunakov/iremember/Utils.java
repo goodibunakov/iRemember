@@ -16,7 +16,7 @@ public class Utils {
     }
 
     public static String getFullDate (long date){
-        SimpleDateFormat fullDateFormat = new SimpleDateFormat("dd.MM.yy  HH:mm", Locale.getDefault());
+        SimpleDateFormat fullDateFormat = new SimpleDateFormat("dd.MM.yy HH:mm", Locale.getDefault());
         return fullDateFormat.format(date);
     }
 }

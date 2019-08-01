@@ -32,8 +32,6 @@ public class DoneTaskAdapter extends TaskAdapter {
         if (item.isTask()) {
             ((TaskViewHolderDone) holder).bind(item);
             setAnimation(holder.itemView, position);
-            holder.itemView.setEnabled(true);
-            holder.itemView.setVisibility(View.VISIBLE);
         }
     }
 }

@@ -28,7 +28,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 android:layout_marginRight="8dp"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded">
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/search_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:theme="@style/Theme.AppCompat.NoActionBar"
+                    app:searchIcon="@drawable/magnify" />
+
+            </androidx.appcompat.widget.Toolbar>
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"

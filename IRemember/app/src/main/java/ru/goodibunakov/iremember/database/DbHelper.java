@@ -29,6 +29,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public static final String SELECTION_STATUS = DbHelper.TASK_STATUS_COLUMN + "=?";
     public static final String SELECTION_TIMESTAMP = TASK_TIMESTAMP_COLUMN + "=?";
+    public static final String SELECTION_LIKE_TITLE = TASK_TITLE_COLUMN + " LIKE ?";
 
     private DbQueryManager queryManager;
     private DbUpdateManager updateManager;

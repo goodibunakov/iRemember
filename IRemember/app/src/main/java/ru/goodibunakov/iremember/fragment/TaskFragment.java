@@ -1,9 +1,7 @@
 package ru.goodibunakov.iremember.fragment;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -16,6 +14,7 @@ import java.util.Objects;
 import ru.goodibunakov.iremember.MainActivity;
 import ru.goodibunakov.iremember.R;
 import ru.goodibunakov.iremember.adapter.TaskAdapter;
+import ru.goodibunakov.iremember.alarm.AlarmHelper;
 import ru.goodibunakov.iremember.model.Item;
 import ru.goodibunakov.iremember.model.ModelTask;
 
@@ -26,6 +25,7 @@ public abstract class TaskFragment extends Fragment {
 
     protected TaskAdapter adapter;
     public MainActivity activity;
+    public AlarmHelper alarmHelper;
 
     public TaskAdapter getAdapter() {
         return adapter;
@@ -37,11 +37,11 @@ public abstract class TaskFragment extends Fragment {
         if (getActivity() != null) {
             activity = (MainActivity) getActivity();
         }
+        alarmHelper = AlarmHelper.getInstance();
         addTaskFromDb();
     }
 
     public void addTask(ModelTask newTask, boolean saveToDb) {
-//        if (adapter != null) {
         Log.d("debug", "adapter = " + adapter);
         int position = -1;
         if (adapter.getItemCount() > 0) {
@@ -65,14 +65,13 @@ public abstract class TaskFragment extends Fragment {
         if (saveToDb) {
             activity.dbHelper.saveTask(newTask);
         }
-//        } else  {
-//            Log.d("debug", "adapter in taskFragment = null!!!!");
-//        }
     }
 
     public abstract void moveTask(ModelTask modelTask);
 
     public abstract void addTaskFromDb();
+
+    public abstract void findTasks(String title);
 
     public void removeTaskDialog(int location) {
         AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
@@ -82,13 +81,12 @@ public abstract class TaskFragment extends Fragment {
         if (item.isTask()) {
             ModelTask removingTask = (ModelTask) item;
             long timestamp = removingTask.getTimestamp();
-            final boolean[] isRemoved = {false};
 
             builder.setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
                 adapter.removeItem(location);
                 activity.dbHelper.removeTask(timestamp);
-                isRemoved[0] = true;
                 Toast.makeText(activity, getResources().getString(R.string.removed), Toast.LENGTH_SHORT).show();
+                alarmHelper.removeAlarm(timestamp);
                 dialog.dismiss();
             });
 

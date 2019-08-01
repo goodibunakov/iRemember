@@ -88,6 +88,10 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         void bind(final Item item) {
+            itemView.setEnabled(true);
+            itemView.setVisibility(View.VISIBLE);
+            priority.setEnabled(true);
+
             ModelTask model = (ModelTask) item;
             title.setText(model.getTitle());
             title.setTextColor(ContextCompat.getColor(title.getContext(), android.R.color.black));
@@ -111,6 +115,7 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
             priority.setOnClickListener(v -> {
+                priority.setEnabled(false);
                 model.setStatus(ModelTask.STATUS_DONE);
                 getTaskFragment().activity.dbHelper.update().status(model.getTimestamp(), ModelTask.STATUS_DONE);
 
@@ -198,6 +203,10 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         void bind(final Item item) {
+            itemView.setEnabled(true);
+            itemView.setVisibility(View.VISIBLE);
+            priority.setEnabled(true);
+
             ModelTask model = (ModelTask) item;
             title.setText(model.getTitle());
             title.setTextColor(ContextCompat.getColor(title.getContext(), android.R.color.darker_gray));
@@ -221,6 +230,7 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
             priority.setOnClickListener(v -> {
+                priority.setEnabled(false);
                 model.setStatus(ModelTask.STATUS_CURRENT);
                 getTaskFragment().activity.dbHelper.update().status(model.getTimestamp(), ModelTask.STATUS_CURRENT);
 
@@ -298,6 +308,13 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
             Animation animation = AnimationUtils.loadAnimation(taskFragment.getContext(), android.R.anim.slide_in_left);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
+        }
+    }
+
+    public void removeAllItems(){
+        if (getItemCount() != 0){
+            items.clear();
+            notifyDataSetChanged();
         }
     }
 }
