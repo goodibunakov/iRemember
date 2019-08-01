@@ -3,12 +3,12 @@ package ru.goodibunakov.iremember.adapter;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -21,10 +21,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ru.goodibunakov.iremember.MainActivity;
 import ru.goodibunakov.iremember.R;
 import ru.goodibunakov.iremember.Utils;
-import ru.goodibunakov.iremember.dialog.RestoreDialogFragment;
 import ru.goodibunakov.iremember.fragment.TaskFragment;
 import ru.goodibunakov.iremember.model.Item;
 import ru.goodibunakov.iremember.model.ModelTask;
@@ -71,7 +69,7 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    class TaskViewHolderCurrent extends RecyclerView.ViewHolder  {
+    class TaskViewHolderCurrent extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_date)
         TextView date;
@@ -95,6 +93,13 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
             title.setTextColor(ContextCompat.getColor(title.getContext(), android.R.color.black));
             priority.setImageResource(R.drawable.circle_full);
             priority.setColorFilter(ContextCompat.getColor(priority.getContext(), model.getPriorityColor()));
+
+            itemView.setOnLongClickListener(v -> {
+                Handler handler = new Handler();
+                handler.postDelayed(() -> getTaskFragment().removeTaskDialog(getLayoutPosition()), 1000);
+                return true;
+            });
+
             if (model.getDate() != 0) {
                 date.setVisibility(View.VISIBLE);
                 line.setVisibility(View.VISIBLE);
@@ -174,7 +179,7 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    class TaskViewHolderDone extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+    class TaskViewHolderDone extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_date)
         TextView date;
@@ -190,7 +195,6 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
         TaskViewHolderDone(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnLongClickListener(this);
         }
 
         void bind(final Item item) {
@@ -199,6 +203,13 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
             title.setTextColor(ContextCompat.getColor(title.getContext(), android.R.color.darker_gray));
             priority.setImageResource(R.drawable.circle_checked);
             priority.setColorFilter(ContextCompat.getColor(priority.getContext(), model.getPriorityColor()));
+
+            itemView.setOnLongClickListener(v -> {
+                Handler handler = new Handler();
+                handler.postDelayed(() -> getTaskFragment().removeTaskDialog(getLayoutPosition()), 1000);
+                return true;
+            });
+
             if (model.getDate() != 0) {
                 date.setVisibility(View.VISIBLE);
                 line.setVisibility(View.VISIBLE);
@@ -275,16 +286,6 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 flipIn.start();
             });
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            Toast.makeText(v.getContext(), "долгое нажатие на айтеме", Toast.LENGTH_SHORT).show();
-            RestoreDialogFragment restoreDialogFragment = new RestoreDialogFragment();
-            if (((MainActivity)v.getContext()).getSupportFragmentManager() != null) {
-                restoreDialogFragment.show(((MainActivity)v.getContext()).getSupportFragmentManager(), "RestoreDialogFragment");
-            }
-            return true;
         }
     }
 

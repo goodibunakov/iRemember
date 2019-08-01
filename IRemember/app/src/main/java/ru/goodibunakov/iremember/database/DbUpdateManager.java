@@ -9,7 +9,7 @@ public class DbUpdateManager {
 
     private SQLiteDatabase database;
 
-    public DbUpdateManager(SQLiteDatabase database) {
+    DbUpdateManager(SQLiteDatabase database) {
         this.database = database;
     }
 
