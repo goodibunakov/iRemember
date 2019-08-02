@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,6 +26,7 @@ import ru.goodibunakov.iremember.R;
 import ru.goodibunakov.iremember.adapter.CurrentTasksAdapter;
 import ru.goodibunakov.iremember.database.DbHelper;
 import ru.goodibunakov.iremember.dialog.AddingTaskDialogFragment;
+import ru.goodibunakov.iremember.model.ModelSeparator;
 import ru.goodibunakov.iremember.model.ModelTask;
 
 
@@ -36,11 +37,11 @@ public class CurrentTaskFragment extends TaskFragment {
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
-//    @BindView(R.id.rv)
-//    RecyclerView recyclerView;
+    @BindView(R.id.rv)
+    RecyclerView recyclerView;
 
     public CurrentTaskFragment() {
-        // Required empty public constructor
+        adapter = new CurrentTasksAdapter(this);
     }
 
     public interface OnTaskDoneListener {
@@ -58,11 +59,87 @@ public class CurrentTaskFragment extends TaskFragment {
     }
 
     @Override
+    public void addTask(ModelTask newTask, boolean saveToDb) {
+        int position = -1;
+        ModelSeparator separator = null;
+
+        if (adapter.getItemCount() > 0) {
+            for (int i = 0; i < adapter.getItemCount(); i++) {
+                if (adapter.getItem(i).isTask()) {
+                    ModelTask task = (ModelTask) adapter.getItem(i);
+                    if (newTask.getDate() < task.getDate()) {
+                        position = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (newTask.getDate() != 0) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(newTask.getDate());
+
+            if (calendar.get(Calendar.DAY_OF_YEAR) < Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) {
+                newTask.setDateStatus(ModelSeparator.TYPE_OVERDUE);
+                if (!adapter.containsSeparatorOverdue) {
+                    adapter.containsSeparatorOverdue = true;
+                    separator = new ModelSeparator(ModelSeparator.TYPE_OVERDUE);
+                }
+            } else if (calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) {
+                newTask.setDateStatus(ModelSeparator.TYPE_TODAY);
+                if (!adapter.containsSeparatorToday) {
+                    adapter.containsSeparatorToday = true;
+                    separator = new ModelSeparator(ModelSeparator.TYPE_TODAY);
+                }
+            } else if (calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + 1) {
+                newTask.setDateStatus(ModelSeparator.TYPE_TOMORROW);
+                if (!adapter.containsSeparatorTomorrow) {
+                    adapter.containsSeparatorTomorrow = true;
+                    separator = new ModelSeparator(ModelSeparator.TYPE_TOMORROW);
+                }
+            } else if (calendar.get(Calendar.DAY_OF_YEAR) > Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + 1) {
+                newTask.setDateStatus(ModelSeparator.TYPE_FUTURE);
+                if (!adapter.containsSeparatorFuture) {
+                    adapter.containsSeparatorFuture = true;
+                    separator = new ModelSeparator(ModelSeparator.TYPE_FUTURE);
+                }
+            }
+        }
+
+        if (position != -1) {
+            if (!adapter.getItem(position - 1).isTask()) {
+                if (position - 2 >= 0 && adapter.getItem(position - 2).isTask()) {
+                    ModelTask task = (ModelTask) adapter.getItem(position - 2);
+                    if (task.getDateStatus() == newTask.getDateStatus()) {
+                        position -= 1;
+                    }
+                } else if (position - 2 < 0 && newTask.getDate() == 0) {
+                    position -= 1;
+                }
+            }
+
+            if (separator != null){
+                adapter.addItem(position-1, separator);
+            }
+
+            adapter.addItem(position, newTask);
+        } else {
+            if (separator != null){
+                adapter.addItem(separator);
+            }
+            adapter.addItem(newTask);
+        }
+
+        if (saveToDb) {
+            activity.dbHelper.saveTask(newTask);
+        }
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_current_task, container, false);
         unbinder = ButterKnife.bind(this, view);
-        recyclerView = view.findViewById(R.id.rv);
         initRecyclerView();
 
         return view;
@@ -70,7 +147,6 @@ public class CurrentTaskFragment extends TaskFragment {
 
     private void initRecyclerView() {
         recyclerView.setHasFixedSize(true);
-        adapter = new CurrentTasksAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -108,10 +184,10 @@ public class CurrentTaskFragment extends TaskFragment {
     @Override
     public void addTaskFromDb() {
         adapter.removeAllItems();
-        List<ModelTask> tasks = new ArrayList<>(activity.dbHelper.query().getTasks(DbHelper.SELECTION_STATUS + " OR "
-                        + DbHelper.SELECTION_STATUS,
-                new String[]{Integer.toString(ModelTask.STATUS_CURRENT), Integer.toString(ModelTask.STATUS_OVERDUE)},
-                DbHelper.TASK_DATE_COLUMN));
+        List<ModelTask> tasks = new ArrayList<>(activity.dbHelper.query()
+                .getTasks(DbHelper.SELECTION_STATUS + " OR " + DbHelper.SELECTION_STATUS,
+                        new String[]{Integer.toString(ModelTask.STATUS_CURRENT), Integer.toString(ModelTask.STATUS_OVERDUE)},
+                        DbHelper.TASK_DATE_COLUMN));
         for (int i = 0; i < tasks.size(); i++) {
             addTask(tasks.get(i), false);
         }
@@ -120,12 +196,15 @@ public class CurrentTaskFragment extends TaskFragment {
     @Override
     public void findTasks(String title) {
         adapter.removeAllItems();
-        List<ModelTask> tasks = new ArrayList<>(activity.dbHelper.query().getTasks(DbHelper.SELECTION_LIKE_TITLE + " AND "
-                        + DbHelper.SELECTION_STATUS + " OR " + DbHelper.SELECTION_STATUS,
-                new String[]{"%" + title + "%", Integer.toString(ModelTask.STATUS_CURRENT), Integer.toString(ModelTask.STATUS_OVERDUE)},
-                DbHelper.TASK_DATE_COLUMN));
-        for (int i = 0; i < tasks.size(); i++) {
-            addTask(tasks.get(i), false);
+        Log.d("debug", "activity findTasks CurrentTaskFragment = " + activity);
+        if (activity != null && activity.dbHelper != null) {
+            List<ModelTask> tasks = new ArrayList<>(activity.dbHelper.query().getTasks(DbHelper.SELECTION_LIKE_TITLE + " AND "
+                            + DbHelper.SELECTION_STATUS + " OR " + DbHelper.SELECTION_STATUS,
+                    new String[]{"%" + title + "%", Integer.toString(ModelTask.STATUS_CURRENT), Integer.toString(ModelTask.STATUS_OVERDUE)},
+                    DbHelper.TASK_DATE_COLUMN));
+            for (int i = 0; i < tasks.size(); i++) {
+                addTask(tasks.get(i), false);
+            }
         }
     }
 

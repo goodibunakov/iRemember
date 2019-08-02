@@ -1,5 +1,7 @@
 package ru.goodibunakov.iremember.adapter;
 
+import android.util.Log;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -25,6 +27,7 @@ public class TabAdapter extends FragmentStatePagerAdapter {
         this.numberOfTabs = numberOfTabs;
         this.currentTaskFragment = new CurrentTaskFragment();
         this.doneTaskFragment = new DoneTaskFragment();
+        Log.d("debug", "TabAdapter");
     }
 
     @Override

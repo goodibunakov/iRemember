@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.SearchView.OnQueryTextListener;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -21,14 +21,17 @@ import ru.goodibunakov.iremember.adapter.TabAdapter;
 import ru.goodibunakov.iremember.alarm.AlarmHelper;
 import ru.goodibunakov.iremember.database.DbHelper;
 import ru.goodibunakov.iremember.dialog.AddingTaskDialogFragment;
+import ru.goodibunakov.iremember.dialog.EditTaskDialogFragment;
 import ru.goodibunakov.iremember.fragment.CurrentTaskFragment;
 import ru.goodibunakov.iremember.fragment.DoneTaskFragment;
 import ru.goodibunakov.iremember.fragment.SplashFragment;
 import ru.goodibunakov.iremember.fragment.TaskFragment;
 import ru.goodibunakov.iremember.model.ModelTask;
+import ru.goodibunakov.iremember.utils.PreferenceHelper;
 
 public class MainActivity extends AppCompatActivity implements AddingTaskDialogFragment.AddingTaskListener,
-        DoneTaskFragment.OnTaskRestoreListener, CurrentTaskFragment.OnTaskDoneListener {
+        DoneTaskFragment.OnTaskRestoreListener,
+        CurrentTaskFragment.OnTaskDoneListener, EditTaskDialogFragment.EditingTaskListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -54,13 +57,12 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        Log.d("debug", "activity main = " + this);
         PreferenceHelper.getInstance().init(getApplicationContext());
         preferenceHelper = PreferenceHelper.getInstance();
 
-        AlarmHelper.getInstance().init(getApplicationContext());
-
         dbHelper = new DbHelper(getApplicationContext());
+        AlarmHelper.getInstance().init();
 
         fragmentManager = getSupportFragmentManager();
         runSplash();
@@ -77,6 +79,12 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     protected void onPause() {
         super.onPause();
         RememberApp.activityPaused();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        searchView.setOnQueryTextListener(null);
     }
 
     public void runSplash() {
@@ -110,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     }
 
     private void setUI() {
-        toolbar.setTitleTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.white));
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
         toolbar.setTitleMarginStart(68);
         toolbar.setLogo(R.drawable.toolbar_icon);
         setSupportActionBar(toolbar);
@@ -141,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
         currentTaskFragment = (CurrentTaskFragment) tabAdapter.getItem(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION);
         doneTaskFragment = (DoneTaskFragment) tabAdapter.getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView.setOnQueryTextListener(new OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -149,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                Log.d("debug", "onQueryTextChange = " + newText);
                 currentTaskFragment.findTasks(newText);
                 doneTaskFragment.findTasks(newText);
                 return false;
@@ -158,7 +167,6 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
     @Override
     public void onTaskAdded(ModelTask newTask) {
-        Log.d("debug", "currentTaskFragment = " + currentTaskFragment);
         currentTaskFragment.addTask(newTask, true);
     }
 
@@ -175,5 +183,11 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     @Override
     public void onTaskRestore(ModelTask modelTask) {
         currentTaskFragment.addTask(modelTask, false);
+    }
+
+    @Override
+    public void onTaskEdited(ModelTask updatedTask) {
+        currentTaskFragment.updateTask(updatedTask);
+        dbHelper.update().task(updatedTask);
     }
 }

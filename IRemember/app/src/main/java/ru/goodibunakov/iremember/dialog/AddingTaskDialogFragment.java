@@ -11,7 +11,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -34,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.goodibunakov.iremember.R;
-import ru.goodibunakov.iremember.Utils;
+import ru.goodibunakov.iremember.utils.Utils;
 import ru.goodibunakov.iremember.alarm.AlarmHelper;
 import ru.goodibunakov.iremember.model.ModelTask;
 

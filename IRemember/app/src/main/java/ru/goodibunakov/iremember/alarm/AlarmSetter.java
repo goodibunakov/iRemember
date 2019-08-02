@@ -15,7 +15,7 @@ public class AlarmSetter extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         DbHelper dbHelper = new DbHelper(context);
 
-        AlarmHelper.getInstance().init(context);
+        AlarmHelper.getInstance().init();
         AlarmHelper alarmHelper = AlarmHelper.getInstance();
         List<ModelTask> tasks = new ArrayList<>(dbHelper.query().getTasks(DbHelper.SELECTION_STATUS + " OR "
                         + DbHelper.SELECTION_STATUS,

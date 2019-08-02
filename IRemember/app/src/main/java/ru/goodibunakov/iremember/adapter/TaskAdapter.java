@@ -17,12 +17,14 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.goodibunakov.iremember.R;
-import ru.goodibunakov.iremember.Utils;
+import ru.goodibunakov.iremember.model.ModelSeparator;
+import ru.goodibunakov.iremember.utils.Utils;
 import ru.goodibunakov.iremember.fragment.TaskFragment;
 import ru.goodibunakov.iremember.model.Item;
 import ru.goodibunakov.iremember.model.ModelTask;
@@ -32,6 +34,11 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
     List<Item> items;
     private TaskFragment taskFragment;
     private int lastPosition = -1;
+
+    public boolean containsSeparatorOverdue;
+    public boolean containsSeparatorToday;
+    public boolean containsSeparatorTomorrow;
+    public boolean containsSeparatorFuture;
 
     TaskAdapter(TaskFragment taskFragment) {
         this.taskFragment = taskFragment;
@@ -57,6 +64,38 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (location >= 0 && location <= getItemCount() - 1) {
             items.remove(location);
             notifyItemRemoved(location);
+            if (location - 1 >= 0 && location <= getItemCount() - 1) {
+                if (!getItem(location).isTask() && !getItem(location - 1).isTask()) {
+                    ModelSeparator separator = (ModelSeparator) getItem(location - 1);
+                    checkSeparator(separator.getType());
+                    items.remove(location - 1);
+                    notifyItemRemoved(location - 1);
+                }
+            } else if (getItemCount() - 1 >= 0 && !getItem(getItemCount() - 1).isTask()) {
+                ModelSeparator separator = (ModelSeparator) getItem(getItemCount() - 1);
+                checkSeparator(separator.getType());
+
+                int locationTemp = getItemCount() - 1;
+                items.remove(locationTemp);
+                notifyItemRemoved(locationTemp);
+            }
+        }
+    }
+
+    private void checkSeparator(int type) {
+        switch (type) {
+            case ModelSeparator.TYPE_OVERDUE:
+                containsSeparatorOverdue = false;
+                break;
+            case ModelSeparator.TYPE_TODAY:
+                containsSeparatorToday = false;
+                break;
+            case ModelSeparator.TYPE_TOMORROW:
+                containsSeparatorTomorrow = false;
+                break;
+            case ModelSeparator.TYPE_FUTURE:
+                containsSeparatorFuture = false;
+                break;
         }
     }
 
@@ -66,6 +105,17 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
             return items.size();
         } else {
             return 0;
+        }
+    }
+    public void updateTask(ModelTask newTask){
+        for (int i = 0; i < getItemCount(); i++){
+            if (getItem(i).isTask()){
+                ModelTask task = (ModelTask) getItem(i);
+                if (newTask.getTimestamp() == task.getTimestamp()){
+                    removeItem(i);
+                    getTaskFragment().addTask(newTask, false);
+                }
+            }
         }
     }
 
@@ -88,15 +138,24 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         void bind(final Item item) {
+            ModelTask model = (ModelTask) item;
+
             itemView.setEnabled(true);
             itemView.setVisibility(View.VISIBLE);
             priority.setEnabled(true);
 
-            ModelTask model = (ModelTask) item;
+//            if (model.getDate() != 0 && model.getDate() < Calendar.getInstance().getTimeInMillis()){
+//                itemView.setBackgroundColor(itemView.getResources().getColor(R.color.gray200));
+//            } else {
+//                itemView.setBackgroundColor(itemView.getResources().getColor(R.color.gray50));
+//            }
+
             title.setText(model.getTitle());
             title.setTextColor(ContextCompat.getColor(title.getContext(), android.R.color.black));
             priority.setImageResource(R.drawable.circle_full);
             priority.setColorFilter(ContextCompat.getColor(priority.getContext(), model.getPriorityColor()));
+
+            itemView.setOnClickListener(v -> getTaskFragment().showTaskEditDialog(model));
 
             itemView.setOnLongClickListener(v -> {
                 Handler handler = new Handler();
@@ -311,10 +370,23 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public void removeAllItems(){
-        if (getItemCount() != 0){
+    public void removeAllItems() {
+        if (getItemCount() != 0) {
             items.clear();
             notifyDataSetChanged();
+            containsSeparatorFuture = false;
+            containsSeparatorTomorrow = false;
+            containsSeparatorToday = false;
+            containsSeparatorOverdue = false;
+        }
+    }
+
+    protected class SeparatorViewHolder extends RecyclerView.ViewHolder {
+        TextView type;
+
+        public SeparatorViewHolder(@NonNull View itemView, TextView type) {
+            super(itemView);
+            this.type = type;
         }
     }
 }

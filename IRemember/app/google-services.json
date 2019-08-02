@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "68897548336",
+    "firebase_url": "https://iremember-94b23.firebaseio.com",
+    "project_id": "iremember-94b23",
+    "storage_bucket": "iremember-94b23.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:68897548336:android:9e90085e5c83b38a",
+        "android_client_info": {
+          "package_name": "ru.goodibunakov.iremember"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "68897548336-rm1u05pu706ouc22gfi8f021q4v2t4di.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoOLO44PrtRr98SWf_ogA6BYmtrlgHInI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "68897548336-rm1u05pu706ouc22gfi8f021q4v2t4di.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

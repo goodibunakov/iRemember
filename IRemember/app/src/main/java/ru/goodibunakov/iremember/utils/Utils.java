@@ -1,4 +1,4 @@
-package ru.goodibunakov.iremember;
+package ru.goodibunakov.iremember.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;

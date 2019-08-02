@@ -57,7 +57,7 @@ public class SplashFragment extends Fragment implements Animation.AnimationListe
                 getActivity().getSupportFragmentManager()
                         .beginTransaction()
                         .remove(SplashFragment.this)
-                        .commit();
+                        .commitAllowingStateLoss();
             }
         }
     }

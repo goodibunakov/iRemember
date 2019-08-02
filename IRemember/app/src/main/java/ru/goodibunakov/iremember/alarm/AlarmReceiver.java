@@ -33,7 +33,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, (int) timestamp,
                 resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.default_notification_channel_id));
         builder.setContentTitle(context.getString(R.string.app_name));
         builder.setContentText(title);
         builder.setColor(context.getResources().getColor(color));
@@ -62,6 +62,5 @@ public class AlarmReceiver extends BroadcastReceiver {
             NotificationManagerCompat manager = NotificationManagerCompat.from(context.getApplicationContext());
             manager.notify((int) timestamp, notification); //Show notification for other version
         }
-
     }
 }

@@ -1,6 +1,5 @@
 package ru.goodibunakov.iremember.fragment;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,12 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.goodibunakov.iremember.R;
@@ -24,14 +23,14 @@ import ru.goodibunakov.iremember.model.ModelTask;
 
 public class DoneTaskFragment extends TaskFragment {
 
-//    @BindView(R.id.rv)
-//    RecyclerView recyclerView;
+    @BindView(R.id.rv)
+    RecyclerView recyclerView;
 
     private Unbinder unbinder;
     private OnTaskRestoreListener onTaskRestoreListener;
 
     public DoneTaskFragment() {
-        // Required empty public constructor
+        adapter = new DoneTaskAdapter(this);
     }
 
     public interface OnTaskRestoreListener {
@@ -48,18 +47,37 @@ public class DoneTaskFragment extends TaskFragment {
         }
     }
 
-//    @Override
-//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//        registerForContextMenu(recyclerView);
-//    }
+    @Override
+    public void addTask(ModelTask newTask, boolean saveToDb) {
+        int position = -1;
+        if (adapter.getItemCount() > 0) {
+            for (int i = 0; i < adapter.getItemCount(); i++) {
+                if (adapter.getItem(i).isTask()) {
+                    ModelTask task = (ModelTask) adapter.getItem(i);
+                    if (newTask.getDate() < task.getDate()) {
+                        position = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (position != -1) {
+            adapter.addItem(position, newTask);
+        } else {
+            adapter.addItem(newTask);
+        }
+
+        if (saveToDb) {
+            activity.dbHelper.saveTask(newTask);
+        }
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_done_task, container, false);
         unbinder = ButterKnife.bind(this, view);
-        recyclerView = view.findViewById(R.id.rv);
         initRecyclerView();
 
         return view;
@@ -67,13 +85,12 @@ public class DoneTaskFragment extends TaskFragment {
 
     private void initRecyclerView() {
         recyclerView.setHasFixedSize(true);
-        if (adapter == null) adapter = new DoneTaskAdapter(this);
         recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void moveTask(ModelTask modelTask) {
-        if (modelTask.getDate() != 0){
+        if (modelTask.getDate() != 0) {
             alarmHelper.setAlarm(modelTask);
         }
         onTaskRestoreListener.onTaskRestore(modelTask);
@@ -93,12 +110,14 @@ public class DoneTaskFragment extends TaskFragment {
     @Override
     public void findTasks(String title) {
         adapter.removeAllItems();
-        List<ModelTask> tasks = new ArrayList<>(activity.dbHelper.query().getTasks(DbHelper.SELECTION_LIKE_TITLE + " AND "
-                        + DbHelper.SELECTION_STATUS,
-                new String[]{"%" + title + "%", Integer.toString(ModelTask.STATUS_DONE)},
-                DbHelper.TASK_DATE_COLUMN));
-        for (int i = 0; i < tasks.size(); i++) {
-            addTask(tasks.get(i), false);
+        if (activity != null && activity.dbHelper != null) {
+            List<ModelTask> tasks = new ArrayList<>(activity.dbHelper.query().getTasks(DbHelper.SELECTION_LIKE_TITLE + " AND "
+                            + DbHelper.SELECTION_STATUS,
+                    new String[]{"%" + title + "%", Integer.toString(ModelTask.STATUS_DONE)},
+                    DbHelper.TASK_DATE_COLUMN));
+            for (int i = 0; i < tasks.size(); i++) {
+                addTask(tasks.get(i), false);
+            }
         }
     }
 

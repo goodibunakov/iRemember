@@ -8,6 +8,8 @@
     <string name="dialog_title">Adding task</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
+    
+    <string name="editing_title">Editing task</string>
 
     <string name="dialog_error_empty_title">Please, enter the title</string>
 
@@ -22,5 +24,10 @@
     <string name="search_title">Search</string>
 
     <string name="default_notification_channel_id" translatable="false">default_channel</string>
+    
+    <string name="separator_overdue">Overdue</string>
+    <string name="separator_today">Today</string>
+    <string name="separator_tomorrow">Tomorrow</string>
+    <string name="separator_future">Future</string>
 
 </resources>
