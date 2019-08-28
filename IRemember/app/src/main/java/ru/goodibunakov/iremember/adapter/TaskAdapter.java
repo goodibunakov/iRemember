@@ -381,10 +381,10 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    protected class SeparatorViewHolder extends RecyclerView.ViewHolder {
+    class SeparatorViewHolder extends RecyclerView.ViewHolder {
         TextView type;
 
-        public SeparatorViewHolder(@NonNull View itemView, TextView type) {
+        SeparatorViewHolder(@NonNull View itemView, TextView type) {
             super(itemView);
             this.type = type;
         }
