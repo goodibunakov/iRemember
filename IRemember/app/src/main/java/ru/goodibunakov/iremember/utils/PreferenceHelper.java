@@ -11,7 +11,6 @@ public class PreferenceHelper {
 
     private static PreferenceHelper instance;
     public static final String SPLASH_IS_INVISIBLE = "splash_is_invisible";
-//    private Context context;
     private SharedPreferences preferences;
 
     private PreferenceHelper() {
@@ -25,7 +24,6 @@ public class PreferenceHelper {
     }
 
     public void init(Context context) {
-//        this.context = context;
         preferences = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
     }
 

@@ -190,4 +190,6 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
         currentTaskFragment.updateTask(updatedTask);
         dbHelper.update().task(updatedTask);
     }
+
+
 }
