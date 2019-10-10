@@ -57,8 +57,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 notificationManager.notify((int) timestamp, notification); //Show notification for Oreo
             }
         } else {
-//        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-//        notificationManager.notify((int) timestamp, notification);
             NotificationManagerCompat manager = NotificationManagerCompat.from(context.getApplicationContext());
             manager.notify((int) timestamp, notification); //Show notification for other version
         }

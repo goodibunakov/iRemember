@@ -9,7 +9,7 @@ import java.util.Calendar;
 
 import ru.goodibunakov.iremember.R;
 
-public class DatePickerController implements DatePickerDialog.OnDateSetListener {
+class DatePickerController implements DatePickerDialog.OnDateSetListener {
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
     }

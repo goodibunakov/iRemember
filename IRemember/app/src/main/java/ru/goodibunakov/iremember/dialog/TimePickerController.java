@@ -10,7 +10,7 @@ import java.util.Calendar;
 
 import ru.goodibunakov.iremember.R;
 
-public class TimePickerController implements TimePickerDialog.OnTimeSetListener {
+class TimePickerController implements TimePickerDialog.OnTimeSetListener {
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
     }

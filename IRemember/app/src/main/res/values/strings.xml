@@ -1,7 +1,8 @@
 <resources>
-    <string name="app_name">iRemember</string>
+    <string name="app_name" translatable="false">iRemember</string>
 
     <string name="do_not_show_splash">Don\'t show splash</string>
+
     <string name="current_task">Current</string>
     <string name="done_task">Done</string>
 
@@ -14,14 +15,12 @@
     <string name="dialog_error_empty_title">Please, enter the title</string>
 
     <string name="dialog_remove_message">Are you sure want to delete this task?</string>
+    <string name="dialog_remove">OK</string>
     <string name="removed">Removed</string>
 
     <string name="task_title">Title</string>
     <string name="task_date">Date</string>
     <string name="task_time">Time</string>
-
-    <string name="task_canceled">Task canceled</string>
-    <string name="search_title">Search</string>
 
     <string name="default_notification_channel_id" translatable="false">default_channel</string>
     
@@ -29,5 +28,12 @@
     <string name="separator_today">Today</string>
     <string name="separator_tomorrow">Tomorrow</string>
     <string name="separator_future">Future</string>
+
+    <string-array name="priority_array">
+        <item>Low Priority</item>
+        <item>Normal Priority</item>
+        <item>High Priority</item>
+    </string-array>
+
 
 </resources>

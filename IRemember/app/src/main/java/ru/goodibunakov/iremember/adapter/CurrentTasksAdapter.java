@@ -15,8 +15,8 @@ import ru.goodibunakov.iremember.model.ModelSeparator;
 
 public class CurrentTasksAdapter extends TaskAdapter {
 
-    static final int TYPE_TASK = 0;
-    static final int TYPE_SEPARATOR = 1;
+    private static final int TYPE_TASK = 0;
+    private static final int TYPE_SEPARATOR = 1;
 
     public CurrentTasksAdapter(CurrentTaskFragment taskFragment) {
         super(taskFragment);
@@ -25,18 +25,14 @@ public class CurrentTasksAdapter extends TaskAdapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        switch (viewType) {
-            case TYPE_TASK:
-                LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-                final View itemView = layoutInflater.inflate(R.layout.item_task, parent, false);
-                return new TaskViewHolderCurrent(itemView);
-            case TYPE_SEPARATOR:
-                View separator = LayoutInflater.from(parent.getContext()).inflate(R.layout.separator, parent, false);
-                TextView type = separator.findViewById(R.id.separator);
-                return new SeparatorViewHolder(separator, type);
-            default:
-                return null;
+        if (viewType == TYPE_TASK) {
+            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+            final View itemView = layoutInflater.inflate(R.layout.item_task, parent, false);
+            return new TaskViewHolderCurrent(itemView);
         }
+        View separator = LayoutInflater.from(parent.getContext()).inflate(R.layout.separator, parent, false);
+        TextView type = separator.findViewById(R.id.separator);
+        return new SeparatorViewHolder(separator, type);
     }
 
     @Override

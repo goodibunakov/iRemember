@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="do_not_show_splash">Не показывать заставку</string>
+
+    <string name="current_task">Текущие</string>
+    <string name="done_task">Выполненные</string>
+
+    <string name="dialog_title">Добавление задачи</string>
+    <string name="dialog_ok">Сохранить</string>
+    <string name="dialog_cancel">Отмена</string>
+
+    <string name="editing_title">Изменить задачу</string>
+
+    <string name="dialog_error_empty_title">Пожалуйста, заполните это поле</string>
+
+    <string name="dialog_remove_message">Удалить задачу?</string>
+    <string name="dialog_remove">Удалить</string>
+    <string name="removed">Запись удалена</string>
+
+    <string name="task_title">Заголовок</string>
+    <string name="task_date">Дата</string>
+    <string name="task_time">Время</string>
+
+    <string name="separator_overdue">Прошедшие</string>
+    <string name="separator_today">Сегодня</string>
+    <string name="separator_tomorrow">Завтра</string>
+    <string name="separator_future">Будущие</string>
+
+    <string-array name="priority_array">
+        <item>Низкий приоритет</item>
+        <item>Нормальный приоритет</item>
+        <item>Высокий приоритет</item>
+    </string-array>
+</resources>

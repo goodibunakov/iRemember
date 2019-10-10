@@ -4,5 +4,4 @@ public interface Item {
 
     boolean isTask();
 
-    String toString(ModelTask modelTask);
 }

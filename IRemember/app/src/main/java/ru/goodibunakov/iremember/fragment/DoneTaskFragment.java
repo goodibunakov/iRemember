@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +40,7 @@ public class DoneTaskFragment extends TaskFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NotNull Context context) {
         super.onAttach(context);
         try {
             onTaskRestoreListener = (OnTaskRestoreListener) context;
@@ -50,6 +52,7 @@ public class DoneTaskFragment extends TaskFragment {
     @Override
     public void addTask(ModelTask newTask, boolean saveToDb) {
         int position = -1;
+        checkAdapter();
         if (adapter.getItemCount() > 0) {
             for (int i = 0; i < adapter.getItemCount(); i++) {
                 if (adapter.getItem(i).isTask()) {
@@ -97,7 +100,8 @@ public class DoneTaskFragment extends TaskFragment {
     }
 
     @Override
-    public void addTaskFromDb() {
+    protected void addTaskFromDb() {
+        checkAdapter();
         adapter.removeAllItems();
         List<ModelTask> tasks = new ArrayList<>(activity.dbHelper.query().getTasks(DbHelper.SELECTION_STATUS,
                 new String[]{Integer.toString(ModelTask.STATUS_DONE)},
@@ -109,6 +113,7 @@ public class DoneTaskFragment extends TaskFragment {
 
     @Override
     public void findTasks(String title) {
+        checkAdapter();
         adapter.removeAllItems();
         if (activity != null && activity.dbHelper != null) {
             List<ModelTask> tasks = new ArrayList<>(activity.dbHelper.query().getTasks(DbHelper.SELECTION_LIKE_TITLE + " AND "
@@ -118,6 +123,14 @@ public class DoneTaskFragment extends TaskFragment {
             for (int i = 0; i < tasks.size(); i++) {
                 addTask(tasks.get(i), false);
             }
+        }
+    }
+
+    @Override
+    public void checkAdapter() {
+        if (adapter == null) {
+            adapter = new DoneTaskAdapter(this);
+            addTaskFromDb();
         }
     }
 

@@ -12,14 +12,14 @@ import ru.goodibunakov.iremember.model.ModelTask;
 
 public class DbHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "iremember_database";
-    public static final String TASKS_TABLE = "tasks_table";
-    public static final String TASK_TITLE_COLUMN = "task_title";
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "iremember_database";
+    static final String TASKS_TABLE = "tasks_table";
+    static final String TASK_TITLE_COLUMN = "task_title";
     public static final String TASK_DATE_COLUMN = "task_date";
-    public static final String TASK_PRIORITY_COLUMN = "task_priority";
-    public static final String TASK_STATUS_COLUMN = "task_status";
-    public static final String TASK_TIMESTAMP_COLUMN = "task_timestamp";
+    static final String TASK_PRIORITY_COLUMN = "task_priority";
+    static final String TASK_STATUS_COLUMN = "task_status";
+    static final String TASK_TIMESTAMP_COLUMN = "task_timestamp";
 
     private static final String TASKS_TABLE_CREATE_SCRIPT = "CREATE TABLE "
             + TASKS_TABLE + " (" + BaseColumns._ID
@@ -28,11 +28,11 @@ public class DbHelper extends SQLiteOpenHelper {
             + TASK_STATUS_COLUMN + " INTEGER, " + TASK_TIMESTAMP_COLUMN + " LONG);";
 
     public static final String SELECTION_STATUS = DbHelper.TASK_STATUS_COLUMN + "=?";
-    public static final String SELECTION_TIMESTAMP = TASK_TIMESTAMP_COLUMN + "=?";
+    private static final String SELECTION_TIMESTAMP = TASK_TIMESTAMP_COLUMN + "=?";
     public static final String SELECTION_LIKE_TITLE = TASK_TITLE_COLUMN + " LIKE ?";
 
-    private DbQueryManager queryManager;
-    private DbUpdateManager updateManager;
+    private final DbQueryManager queryManager;
+    private final DbUpdateManager updateManager;
 
 
     public DbHelper(@Nullable Context context) {

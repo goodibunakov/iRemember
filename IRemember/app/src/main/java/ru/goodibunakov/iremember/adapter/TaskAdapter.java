@@ -17,7 +17,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,8 +30,8 @@ import ru.goodibunakov.iremember.model.ModelTask;
 
 public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    List<Item> items;
-    private TaskFragment taskFragment;
+    final List<Item> items;
+    private final TaskFragment taskFragment;
     private int lastPosition = -1;
 
     public boolean containsSeparatorOverdue;
@@ -137,18 +136,13 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
             ButterKnife.bind(this, itemView);
         }
 
+        @SuppressWarnings("SameReturnValue")
         void bind(final Item item) {
             ModelTask model = (ModelTask) item;
 
             itemView.setEnabled(true);
             itemView.setVisibility(View.VISIBLE);
             priority.setEnabled(true);
-
-//            if (model.getDate() != 0 && model.getDate() < Calendar.getInstance().getTimeInMillis()){
-//                itemView.setBackgroundColor(itemView.getResources().getColor(R.color.gray200));
-//            } else {
-//                itemView.setBackgroundColor(itemView.getResources().getColor(R.color.gray50));
-//            }
 
             title.setText(model.getTitle());
             title.setTextColor(ContextCompat.getColor(title.getContext(), android.R.color.black));
@@ -261,6 +255,7 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
             ButterKnife.bind(this, itemView);
         }
 
+        @SuppressWarnings("SameReturnValue")
         void bind(final Item item) {
             itemView.setEnabled(true);
             itemView.setVisibility(View.VISIBLE);
@@ -382,7 +377,7 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     class SeparatorViewHolder extends RecyclerView.ViewHolder {
-        TextView type;
+        final TextView type;
 
         SeparatorViewHolder(@NonNull View itemView, TextView type) {
             super(itemView);

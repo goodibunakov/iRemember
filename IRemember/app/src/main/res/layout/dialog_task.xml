@@ -12,6 +12,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/dialogTaskTitle"
             android:layout_width="match_parent"
+            android:hint="@string/task_title"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
@@ -21,7 +22,8 @@
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="Autofill,LabelFor,TextFields" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -29,6 +31,7 @@
             android:id="@+id/dialogTaskDate"
             android:layout_width="130dp"
             android:layout_height="wrap_content"
+            android:hint="@string/task_date"
             android:layout_below="@id/dialogTaskTitle"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
@@ -42,18 +45,20 @@
                 android:focusableInTouchMode="false"
                 android:inputType="none"
                 android:textSize="16sp"
-                tools:ignore="TextFields" />
+                tools:ignore="Autofill,LabelFor,TextFields" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/dialogTaskTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/task_time"
             android:layout_below="@id/dialogTaskTitle"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="16dp"
-            android:layout_toEndOf="@id/dialogTaskDate">
+            android:layout_toEndOf="@id/dialogTaskDate"
+            android:layout_toRightOf="@id/dialogTaskDate">
 
             <EditText
                 android:id="@+id/time"
@@ -62,7 +67,8 @@
                 android:cursorVisible="false"
                 android:focusableInTouchMode="false"
                 android:inputType="none"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="Autofill,LabelFor" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Spinner

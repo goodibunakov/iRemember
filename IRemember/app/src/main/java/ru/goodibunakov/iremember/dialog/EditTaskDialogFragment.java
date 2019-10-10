@@ -25,13 +25,14 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Calendar;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import okhttp3.internal.Util;
 import ru.goodibunakov.iremember.R;
 import ru.goodibunakov.iremember.alarm.AlarmHelper;
 import ru.goodibunakov.iremember.model.ModelTask;
@@ -71,7 +72,7 @@ public class EditTaskDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NotNull Context context) {
         super.onAttach(context);
         try {
             editingTaskListener = (EditingTaskListener) context;
@@ -122,12 +123,9 @@ public class EditTaskDialogFragment extends DialogFragment {
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + 1);
 
-            ArrayAdapter<String> priorityAdapter;
-            if (getResources().getConfiguration().locale.getCountry().equals("RU")) {
-                priorityAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ModelTask.PRIORITY_LEVELS_RU);
-            } else {
-                priorityAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ModelTask.PRIORITY_LEVELS);
-            }
+            ArrayAdapter<String> priorityAdapter = new ArrayAdapter<>(getActivity(),
+                    android.R.layout.simple_spinner_dropdown_item, getActivity().getResources().getStringArray(R.array.priority_array));
+
             spinner.setAdapter(priorityAdapter);
             spinner.setSelection(priority);
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -193,9 +191,7 @@ public class EditTaskDialogFragment extends DialogFragment {
                 dialog.dismiss();
                 Log.d("debug", "model = " + modelTask.toString(modelTask));
             });
-            builder.setNegativeButton(R.string.dialog_cancel, (dialog, which) -> {
-                dialog.cancel();
-            });
+            builder.setNegativeButton(R.string.dialog_cancel, (dialog, which) -> dialog.cancel());
 
             AlertDialog alertDialog = builder.create();
 

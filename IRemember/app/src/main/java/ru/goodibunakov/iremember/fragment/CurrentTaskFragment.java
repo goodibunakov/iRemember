@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -49,7 +51,7 @@ public class CurrentTaskFragment extends TaskFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NotNull Context context) {
         super.onAttach(context);
         try {
             onTaskDoneListener = (OnTaskDoneListener) context;
@@ -63,6 +65,7 @@ public class CurrentTaskFragment extends TaskFragment {
         int position = -1;
         ModelSeparator separator = null;
 
+        checkAdapter();
         if (adapter.getItemCount() > 0) {
             for (int i = 0; i < adapter.getItemCount(); i++) {
                 if (adapter.getItem(i).isTask()) {
@@ -118,13 +121,13 @@ public class CurrentTaskFragment extends TaskFragment {
                 }
             }
 
-            if (separator != null){
-                adapter.addItem(position-1, separator);
+            if (separator != null) {
+                adapter.addItem(position - 1, separator);
             }
 
             adapter.addItem(position, newTask);
         } else {
-            if (separator != null){
+            if (separator != null) {
                 adapter.addItem(separator);
             }
             adapter.addItem(newTask);
@@ -170,9 +173,7 @@ public class CurrentTaskFragment extends TaskFragment {
     @OnClick(R.id.fab)
     void onClick() {
         DialogFragment addingTaskDialogFragment = new AddingTaskDialogFragment();
-        if (Objects.requireNonNull(getActivity()).getSupportFragmentManager() != null) {
-            addingTaskDialogFragment.show(getActivity().getSupportFragmentManager(), "AddingTaskDialogFragment");
-        }
+        addingTaskDialogFragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "AddingTaskDialogFragment");
     }
 
     @Override
@@ -182,7 +183,8 @@ public class CurrentTaskFragment extends TaskFragment {
     }
 
     @Override
-    public void addTaskFromDb() {
+    protected void addTaskFromDb() {
+        checkAdapter();
         adapter.removeAllItems();
         List<ModelTask> tasks = new ArrayList<>(activity.dbHelper.query()
                 .getTasks(DbHelper.SELECTION_STATUS + " OR " + DbHelper.SELECTION_STATUS,
@@ -195,6 +197,7 @@ public class CurrentTaskFragment extends TaskFragment {
 
     @Override
     public void findTasks(String title) {
+        checkAdapter();
         adapter.removeAllItems();
         Log.d("debug", "activity findTasks CurrentTaskFragment = " + activity);
         if (activity != null && activity.dbHelper != null) {
@@ -205,6 +208,14 @@ public class CurrentTaskFragment extends TaskFragment {
             for (int i = 0; i < tasks.size(); i++) {
                 addTask(tasks.get(i), false);
             }
+        }
+    }
+
+    @Override
+    public void checkAdapter() {
+        if (adapter == null) {
+            adapter = new CurrentTasksAdapter(this);
+            addTaskFromDb();
         }
     }
 

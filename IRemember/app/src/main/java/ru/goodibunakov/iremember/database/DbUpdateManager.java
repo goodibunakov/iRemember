@@ -7,21 +7,21 @@ import ru.goodibunakov.iremember.model.ModelTask;
 
 public class DbUpdateManager {
 
-    private SQLiteDatabase database;
+    private final SQLiteDatabase database;
 
     DbUpdateManager(SQLiteDatabase database) {
         this.database = database;
     }
 
-    public void title(long timestamp, String title){
-        update(DbHelper.TASK_TITLE_COLUMN, timestamp, title);
+    private void title(long timestamp, String title){
+        update(timestamp, title);
     }
 
-    public void date(long timestamp, long date){
+    private void date(long timestamp, long date){
         update(DbHelper.TASK_DATE_COLUMN, timestamp, date);
     }
 
-    public void priority(long timestamp, int priority){
+    private void priority(long timestamp, int priority){
         update(DbHelper.TASK_PRIORITY_COLUMN, timestamp, priority);
     }
 
@@ -36,9 +36,9 @@ public class DbUpdateManager {
         status(modelTask.getTimestamp(), modelTask.getStatus());
     }
 
-    private void update(String column, long key, String value) {
+    private void update(long key, String value) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(column, value);
+        contentValues.put(DbHelper.TASK_TITLE_COLUMN, value);
         database.update(DbHelper.TASKS_TABLE, contentValues, DbHelper.TASK_TIMESTAMP_COLUMN + " = " + key, null);
     }
 

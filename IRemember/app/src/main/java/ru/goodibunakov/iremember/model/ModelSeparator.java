@@ -9,7 +9,7 @@ public class ModelSeparator implements Item {
     public static final int TYPE_TOMORROW = R.string.separator_tomorrow;
     public static final int TYPE_FUTURE = R.string.separator_future;
 
-    private int type;
+    private final int type;
 
     public ModelSeparator(int type) {
         this.type = type;
@@ -19,16 +19,8 @@ public class ModelSeparator implements Item {
         return false;
     }
 
-    @Override
-    public String toString(ModelTask modelTask) {
-        return "";
-    }
-
     public int getType() {
         return type;
     }
 
-    public void setType(int type) {
-        this.type = type;
-    }
 }

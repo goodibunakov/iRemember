@@ -26,6 +26,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -59,12 +61,10 @@ public class AddingTaskDialogFragment extends DialogFragment {
 
     public interface AddingTaskListener {
         void onTaskAdded(ModelTask newTask);
-
-        void onTaskAddingCancel();
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NotNull Context context) {
         super.onAttach(context);
         try {
             addingTaskListener = (AddingTaskListener) context;
@@ -76,7 +76,7 @@ public class AddingTaskDialogFragment extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle arg0) {
         super.onActivityCreated(arg0);
-        Objects.requireNonNull(getDialog().getWindow()).getAttributes().windowAnimations = R.style.DialogAnimation;
+        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).getAttributes().windowAnimations = R.style.DialogAnimation;
     }
 
     @NonNull
@@ -91,9 +91,9 @@ public class AddingTaskDialogFragment extends DialogFragment {
 
         builder.setTitle(R.string.dialog_title);
         builder.setIcon(R.mipmap.ic_launcher);
-        tilTitle.setHint(getResources().getString(R.string.task_title));
-        tilDate.setHint(getResources().getString(R.string.task_date));
-        tilTime.setHint(getResources().getString(R.string.task_time));
+//        tilTitle.setHint(getResources().getString(R.string.task_title));
+//        tilDate.setHint(getResources().getString(R.string.task_date));
+//        tilTime.setHint(getResources().getString(R.string.task_time));
 
         builder.setView(container);
 
@@ -102,12 +102,8 @@ public class AddingTaskDialogFragment extends DialogFragment {
 
         ModelTask modelTask = new ModelTask();
 
-        ArrayAdapter<String> priorityAdapter;
-        if (getResources().getConfiguration().locale.getCountry().equals("RU")){
-            priorityAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ModelTask.PRIORITY_LEVELS_RU);
-        } else {
-            priorityAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ModelTask.PRIORITY_LEVELS);
-        }
+        ArrayAdapter<String> priorityAdapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_spinner_dropdown_item, getActivity().getResources().getStringArray(R.array.priority_array));
         spinner.setAdapter(priorityAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -168,10 +164,7 @@ public class AddingTaskDialogFragment extends DialogFragment {
             dialog.dismiss();
             Log.d("debug", "model = " + modelTask.toString(modelTask));
         });
-        builder.setNegativeButton(R.string.dialog_cancel, (dialog, which) -> {
-            addingTaskListener.onTaskAddingCancel();
-            dialog.cancel();
-        });
+        builder.setNegativeButton(R.string.dialog_cancel, (dialog, which) -> dialog.cancel());
 
         AlertDialog alertDialog = builder.create();
 //        Objects.requireNonNull(alertDialog.getWindow()).setSoftInputMode(

@@ -1,10 +1,12 @@
 package ru.goodibunakov.iremember;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.SearchView.OnQueryTextListener;
@@ -42,12 +44,10 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     @BindView(R.id.search_view)
     SearchView searchView;
 
-    FragmentManager fragmentManager;
-    PreferenceHelper preferenceHelper;
-    TabAdapter tabAdapter;
-    TaskFragment currentTaskFragment;
-    TaskFragment doneTaskFragment;
-    SplashFragment splashFragment;
+    private FragmentManager fragmentManager;
+    private PreferenceHelper preferenceHelper;
+    private TaskFragment currentTaskFragment;
+    private TaskFragment doneTaskFragment;
 
     public DbHelper dbHelper;
 
@@ -87,9 +87,9 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
         searchView.setOnQueryTextListener(null);
     }
 
-    public void runSplash() {
+    private void runSplash() {
         if (!preferenceHelper.getBoolean(PreferenceHelper.SPLASH_IS_INVISIBLE)) {
-            splashFragment = new SplashFragment();
+            SplashFragment splashFragment = new SplashFragment();
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, splashFragment)
                     .addToBackStack(null)
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
         tabLayout.addTab(tabLayout.newTab().setText(R.string.current_task));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.done_task));
 
-        tabAdapter = new TabAdapter(fragmentManager, 2);
+        TabAdapter tabAdapter = new TabAdapter(fragmentManager, 2);
 
         viewPager.setAdapter(tabAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -171,11 +171,6 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     }
 
     @Override
-    public void onTaskAddingCancel() {
-//        Toast.makeText(this, getResources().getString(R.string.task_canceled), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void onTaskDone(ModelTask modelTask) {
         doneTaskFragment.addTask(modelTask, false);
     }
@@ -191,5 +186,8 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
         dbHelper.update().task(updatedTask);
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
 
+    }
 }

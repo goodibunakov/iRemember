@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray50"
-    tools:context="ru.goodibunakov.iremember.fragment.CurrentTaskFragment">
+    tools:context="ru.goodibunakov.iremember.fragment.CurrentTaskFragment"
+    tools:ignore="Overdraw">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"
@@ -13,7 +14,7 @@
         android:clipToPadding="false"
         android:paddingBottom="48dp"
         android:scrollbars="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -22,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
         app:elevation="1dp"
         app:fabSize="normal"

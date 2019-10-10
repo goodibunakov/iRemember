@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import ru.goodibunakov.iremember.database.DbHelper;
 import ru.goodibunakov.iremember.model.ModelTask;
@@ -13,6 +14,8 @@ import ru.goodibunakov.iremember.model.ModelTask;
 public class AlarmSetter extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (!Objects.requireNonNull(intent.getAction()).equals("android.intent.action.BOOT_COMPLETED")) return;
+
         DbHelper dbHelper = new DbHelper(context);
 
         AlarmHelper.getInstance().init();

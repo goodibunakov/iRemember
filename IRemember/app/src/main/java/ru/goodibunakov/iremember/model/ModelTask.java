@@ -6,12 +6,9 @@ import ru.goodibunakov.iremember.R;
 
 public class ModelTask implements Item {
 
-    public static final int PRIORITY_LOW = 0;
-    public static final int PRIORITY_NORMAL = 1;
-    public static final int PRIORITY_HIGH = 2;
-
-    public static final String[] PRIORITY_LEVELS = {"Low Priority", "Normal Priority", "High Priority"};
-    public static final String[] PRIORITY_LEVELS_RU = {"Низкий приоритет", "Нормальный приоритет", "Высокий приоритет"};
+    private static final int PRIORITY_LOW = 0;
+    private static final int PRIORITY_NORMAL = 1;
+    private static final int PRIORITY_HIGH = 2;
 
     public static final int STATUS_OVERDUE = 0;
     public static final int STATUS_CURRENT = 1;
@@ -21,7 +18,7 @@ public class ModelTask implements Item {
     private long date;
     private int priority;
     private int status;
-    private long timestamp;
+    private final long timestamp;
     private int dateStatus;
 
     public ModelTask() {
@@ -103,10 +100,6 @@ public class ModelTask implements Item {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public int getDateStatus() {
         return dateStatus;
     }
@@ -115,7 +108,6 @@ public class ModelTask implements Item {
         this.dateStatus = dateStatus;
     }
 
-    @Override
     public String toString(ModelTask modelTask) {
         return "title = " + modelTask.getTitle() + "  date = " + modelTask.getDate() +
                 "   priority = " + modelTask.getPriority() +
