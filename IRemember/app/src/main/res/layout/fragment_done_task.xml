@@ -4,11 +4,11 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/gray50"
-    tools:context="ru.goodibunakov.iremember.fragment.DoneTaskFragment"
+    tools:context="ru.goodibunakov.iremember.presentation.view.fragment.DoneTaskFragment"
     tools:ignore="Overdraw">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv"
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
