@@ -5,40 +5,44 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.DatePicker
-import android.widget.TimePicker
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.dialog_task.*
 import kotlinx.android.synthetic.main.dialog_task.view.*
+import moxy.MvpAppCompatDialogFragment
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.goodibunakov.iremember.R
-import ru.goodibunakov.iremember.alarm.AlarmHelper
+import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.presentation.model.ModelTask
+import ru.goodibunakov.iremember.presentation.presenter.EditTaskDialogPresenter
 import ru.goodibunakov.iremember.utils.Utils
-import java.util.*
 
+class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragmentView {
 
-class EditTaskDialogFragment : DialogFragment() {
+    lateinit var container: View
+    lateinit var positive: Button
 
-    private var editingTaskListener: EditingTaskListener? = null
+    @InjectPresenter
+    lateinit var editTaskDialogPresenter: EditTaskDialogPresenter
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            editingTaskListener = context as EditingTaskListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$context must implements EditingTaskListener")
+    @ProvidePresenter
+    fun providePresenter(): EditTaskDialogPresenter {
+        return EditTaskDialogPresenter(RememberApp.databaseRepository)
+    }
+
+    private val timePickerController = object : TimePickerController() {
+        override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+            editTaskDialogPresenter.timeSelected(hourOfDay, minute)
         }
     }
 
-    interface EditingTaskListener {
-        fun onTaskEdited(updatedTask: ModelTask)
+    private val datePickerController = object : DatePickerController() {
+        override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+            editTaskDialogPresenter.dateSelected(year, month, dayOfMonth)
+        }
     }
 
     companion object {
@@ -59,31 +63,23 @@ class EditTaskDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val args = arguments
 
-        val title: String?
-        val date: Long
-        val timestamp: Long
-        val priority: Int
-        val modelTask: ModelTask
-
         if (args != null) {
-            title = args.getString("title")
-            date = args.getLong("date")
-            priority = args.getInt("priority")
-            timestamp = args.getLong("timestamp")
-            modelTask = ModelTask(title!!, date, priority, 0, timestamp)
-
+            val title = args.getString("title")!!
+            val date = args.getLong("date")
+            val priority = args.getInt("priority")
+            val timestamp = args.getLong("timestamp")
+            editTaskDialogPresenter.onCreateDialog(title, date, priority, timestamp)
 
             val builder = AlertDialog.Builder(activity as Context)
-
-            val container = View.inflate(context, R.layout.dialog_task, null)
+            container = View.inflate(context, R.layout.dialog_task, null)
 
             builder.setTitle(R.string.editing_title)
             builder.setIcon(R.mipmap.ic_launcher)
-            container.etTitle.setText(title)
-            container.etTitle.setSelection(container.etTitle.length())
+            editTaskDialogPresenter.initTitle()
+
             if (date != 0L) {
-                container.etDate.setText(Utils.getDate(date))
-                container.etTime.setText(Utils.getTime(timestamp))
+                editTaskDialogPresenter.setDateToUI()
+                editTaskDialogPresenter.setTimeToUI()
             }
 
             container.dialogTaskTitle.hint = resources.getString(R.string.task_title)
@@ -92,100 +88,65 @@ class EditTaskDialogFragment : DialogFragment() {
 
             builder.setView(container)
 
-            val calendar = Calendar.getInstance()
-            calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + 1)
-
             val priorityAdapter = ArrayAdapter<String>(activity!!,
                     android.R.layout.simple_spinner_dropdown_item,
                     activity!!.resources.getStringArray(R.array.priority_array))
 
             container.spinnerPriority.adapter = priorityAdapter
-            container.spinnerPriority.setSelection(priority)
+            editTaskDialogPresenter.setPriorityToUI()
+
             container.spinnerPriority.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                    modelTask.priority = position
+                    editTaskDialogPresenter.itemSelected(position)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
-                    modelTask.priority = 0
+                    editTaskDialogPresenter.nothingSelected()
                 }
-            }
-
-            if (container.etDate.length() != 0 || container.etTime.length() != 0) {
-                calendar.timeInMillis = date
             }
 
             container.etDate.setOnClickListener {
                 if (container.etDate.length() == 0) {
-                    container.etDate.setText("")
+                    editTaskDialogPresenter.setEmptyDateToEditText()
                 }
-
-                val datePickerController = object : DatePickerController() {
-                    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-                        calendar.set(Calendar.YEAR, year)
-                        calendar.set(Calendar.MONTH, month)
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                        container.etDate.setText(Utils.getDate(calendar.timeInMillis))
-                    }
-                }
-                datePickerController.onCreateDialog(activity as Context).show()
+                editTaskDialogPresenter.dateClicked()
             }
 
             container.etTime.setOnClickListener {
-
                 if (container.etTime.length() == 0) {
-                    container.etTime.setText("")
+                    editTaskDialogPresenter.setEmptyTimeToEditText()
                 }
-
-                val timePickerController = object : TimePickerController() {
-                    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                        calendar.set(Calendar.MINUTE, minute)
-                        calendar.set(Calendar.SECOND, 0)
-                        container.etTime.setText(Utils.getTime(calendar.timeInMillis))
-                    }
-                }
-                timePickerController.onCreateDialog(activity as Context).show()
+                editTaskDialogPresenter.timeClicked()
             }
 
-            builder.setPositiveButton(R.string.dialog_ok) { dialog, _ ->
-                modelTask.title = container.etTitle.text.toString()
+            builder.setPositiveButton(R.string.dialog_ok) { _, _ ->
+                editTaskDialogPresenter.okClicked(container.etTitle.text.toString())
+
                 if (container.etDate.length() != 0 || container.etTime.length() != 0) {
-                    modelTask.date = calendar.timeInMillis
-                    val alarmHelper = AlarmHelper.getInstance()
-                    alarmHelper.setAlarm(modelTask)
+                    editTaskDialogPresenter.setDateToModel()
+//                    val alarmHelper = AlarmHelper.getInstance()
+//                    alarmHelper.setAlarm(modelTask)
                 }
-                modelTask.status = ModelTask.STATUS_CURRENT
-                editingTaskListener?.onTaskEdited(modelTask)
-                dialog.dismiss()
-                Log.d("debug", "model = " + modelTask.toString(modelTask))
+                editTaskDialogPresenter.updateTask()
+                editTaskDialogPresenter.dismissDialog()
+
             }
-            builder.setNegativeButton(R.string.dialog_cancel) { dialog, _ -> dialog.cancel() }
+            builder.setNegativeButton(R.string.dialog_cancel) { _, _ -> editTaskDialogPresenter.cancelDialog() }
 
             val alertDialog = builder.create()
 
             alertDialog.setOnShowListener { dialog ->
-                val positive = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
+                positive = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
                 if (container.etTitle.length() == 0) {
-                    positive.isEnabled = false
-                    dialogTaskTitle.error = resources.getString(R.string.dialog_error_empty_title)
+                    editTaskDialogPresenter.titleEmpty()
                 }
-                container.etTitle.addTextChangedListener(object : TextWatcher {
-                    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
-                    }
-
+                container.etTitle.addTextChangedListener(object : MyTextWatcher {
                     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                         if (s.isEmpty()) {
-                            positive.isEnabled = false
-                            container.dialogTaskTitle.error = resources.getString(R.string.dialog_error_empty_title)
+                            editTaskDialogPresenter.titleEmpty()
                         } else {
-                            positive.isEnabled = true
-                            container.dialogTaskTitle.isErrorEnabled = false
+                            editTaskDialogPresenter.titleNotEmpty()
                         }
-                    }
-
-                    override fun afterTextChanged(s: Editable) {
                     }
                 })
             }
@@ -194,5 +155,66 @@ class EditTaskDialogFragment : DialogFragment() {
         } else {
             return super.onCreateDialog(savedInstanceState)
         }
+    }
+
+    override fun setDateToUI(date: Long) {
+        container.etDate.setText(Utils.getDate(date))
+        Log.d("debug", "setDateToUI = " + Utils.getDate(date))
+    }
+
+    override fun setTimeToUI(time: Long) {
+        container.etTime.setText(Utils.getTime(time))
+        Log.d("debug", "setTimeToUI = " + Utils.getTime(time))
+    }
+
+    override fun setEmptyDateToEditText() {
+        container.etDate.setText("")
+    }
+
+    override fun showDateController() {
+        datePickerController.onCreateDialog(activity as Context).show()
+    }
+
+    override fun setTimeToEditText(time: String) {
+        container.etTime.setText(time)
+    }
+
+    override fun showTimeController() {
+        timePickerController.onCreateDialog(activity as Context).show()
+    }
+
+    override fun setDateToEditText(date: String) {
+        container.etDate.setText(date)
+    }
+
+    override fun setEmptyTimeToEditText() {
+        container.etTime.setText("")
+    }
+
+    override fun dismissDialog() {
+        dialog?.dismiss()
+    }
+
+    override fun cancelDialog() {
+        dialog?.cancel()
+    }
+
+    override fun setUIWhenTitleEmpty() {
+        positive.isEnabled = false
+        dialogTaskTitle.error = resources.getString(R.string.dialog_error_empty_title)
+    }
+
+    override fun setUIWhenTitleNotEmpty() {
+        positive.isEnabled = true
+        container.dialogTaskTitle.isErrorEnabled = false
+    }
+
+    override fun initTitle(title: String) {
+        container.etTitle.setText(title)
+        container.etTitle.setSelection(container.etTitle.length())
+    }
+
+    override fun setPriorityToUI(priority: Int) {
+        container.spinnerPriority.setSelection(priority)
     }
 }

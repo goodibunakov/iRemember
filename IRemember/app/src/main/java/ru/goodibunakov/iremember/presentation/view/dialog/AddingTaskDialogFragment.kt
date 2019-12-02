@@ -7,32 +7,39 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
-import com.google.android.material.textfield.TextInputLayout
+import kotlinx.android.synthetic.main.dialog_task.view.*
+import moxy.MvpAppCompatDialogFragment
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.goodibunakov.iremember.R
-import ru.goodibunakov.iremember.alarm.AlarmHelper
-import ru.goodibunakov.iremember.presentation.model.ModelTask
-import ru.goodibunakov.iremember.utils.Utils
-import java.util.*
+import ru.goodibunakov.iremember.RememberApp
+import ru.goodibunakov.iremember.presentation.presenter.AddingTaskDialogPresenter
 
-class AddingTaskDialogFragment : DialogFragment() {
+class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogFragmentView {
 
-    private var addingTaskListener: AddingTaskListener? = null
+    private lateinit var container: View
+    private lateinit var positive: Button
 
-    interface AddingTaskListener {
-        fun onTaskAdded(newTask: ModelTask)
+    @InjectPresenter
+    lateinit var addingTaskDialogPresenter: AddingTaskDialogPresenter
+
+    @ProvidePresenter
+    fun providePresenter(): AddingTaskDialogPresenter {
+        return AddingTaskDialogPresenter(RememberApp.databaseRepository)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            addingTaskListener = context as AddingTaskListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$context must implement AddingTaskListener")
+    private val datePickerController = object : DatePickerController() {
+        override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+            addingTaskDialogPresenter.dateSelected(year, month, dayOfMonth)
+        }
+    }
+
+    private val timePickerController = object : TimePickerController() {
+        override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+            addingTaskDialogPresenter.timeSelected(hourOfDay, minute)
         }
     }
 
@@ -41,115 +48,122 @@ class AddingTaskDialogFragment : DialogFragment() {
         dialog?.window?.attributes?.windowAnimations = R.style.DialogAnimation
     }
 
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(activity as Context)
-
-        val container = View.inflate(activity, R.layout.dialog_task, null)
+        container = View.inflate(activity, R.layout.dialog_task, null)
 
         builder.setTitle(R.string.dialog_title)
         builder.setIcon(R.mipmap.ic_launcher)
 
         builder.setView(container)
 
-        val spinnerPriority: Spinner = container.findViewById(R.id.spinnerPriority)
-        val etDate: EditText = container.findViewById(R.id.etDate)
-        val etTime: EditText = container.findViewById(R.id.etTime)
-        val etTitle: EditText = container.findViewById(R.id.etTitle)
-        val dialogTaskTitle: TextInputLayout = container.findViewById(R.id.dialogTaskTitle)
+        addingTaskDialogPresenter.dialogCreated()
 
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + 1)
-        Log.d("debug", "calendar = $calendar, Calendar.HOUR_OF_DAY = ${Calendar.HOUR_OF_DAY}, calendar.get(Calendar.HOUR_OF_DAY) + 1 = ${calendar.get(Calendar.HOUR_OF_DAY) + 1}")
+        builder.setPositiveButton(R.string.dialog_ok) { _, _ ->
+            addingTaskDialogPresenter.okClicked(container.etTitle.text.toString())
+            if (container.etDate.length() != 0 || container.etTime.length() != 0) {
+                addingTaskDialogPresenter.setDateToModel()
+//                val alarmHelper = AlarmHelper.getInstance()
+//                alarmHelper.setAlarm(modelTask)
+            }
+            addingTaskDialogPresenter.saveTask()
+            addingTaskDialogPresenter.dismissDialog()
+        }
+        builder.setNegativeButton(R.string.dialog_cancel) { _, _ ->
+            addingTaskDialogPresenter.cancelDialog()
+        }
 
-        val modelTask = ModelTask()
 
         val priorityAdapter = ArrayAdapter<String>(activity!!,
                 android.R.layout.simple_spinner_dropdown_item,
                 activity!!.resources.getStringArray(R.array.priority_array))
-        spinnerPriority.adapter = priorityAdapter
-        spinnerPriority.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        container.spinnerPriority.adapter = priorityAdapter
+        container.spinnerPriority.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                modelTask.priority = position
+                addingTaskDialogPresenter.itemSelected(position)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                modelTask.priority = 0
+                addingTaskDialogPresenter.nothingSelected()
             }
         }
 
-        etDate.setOnClickListener {
-            if (etDate.length() == 0) {
-                etDate.setText("")
-            }
 
-            val datePickerController = object : DatePickerController() {
-                override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-                    calendar.set(Calendar.YEAR, year)
-                    calendar.set(Calendar.MONTH, month)
-                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                    etDate.setText(Utils.getDate(calendar.timeInMillis))
-                }
+        container.etDate.setOnClickListener {
+            if (container.etDate.length() == 0) {
+                addingTaskDialogPresenter.dateIsEmpty()
             }
-            datePickerController.onCreateDialog(activity as Context).show()
+            addingTaskDialogPresenter.editTextDateClicked()
         }
 
-        etTime.setOnClickListener {
-            if (etTime.length() == 0) {
-                etTime.setText("")
+        container.etTime.setOnClickListener {
+            if (container.etTime.length() == 0) {
+                addingTaskDialogPresenter.timeIsEmpty()
             }
-
-            val timePickerController = object : TimePickerController() {
-                override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-                    calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                    calendar.set(Calendar.MINUTE, minute)
-                    calendar.set(Calendar.SECOND, 0)
-                    etTime.setText(Utils.getTime(calendar.timeInMillis))
-                }
-            }
-            timePickerController.onCreateDialog(activity as Context).show()
+            addingTaskDialogPresenter.editTextTimeClicked()
         }
-
-        builder.setPositiveButton(R.string.dialog_ok) { dialog, _ ->
-            modelTask.title = etTitle.text.toString()
-            if (etDate.length() != 0 || etTime.length() != 0) {
-                modelTask.date = calendar.timeInMillis
-                val alarmHelper = AlarmHelper.getInstance()
-                alarmHelper.setAlarm(modelTask)
-            }
-            modelTask.status = ModelTask.STATUS_CURRENT
-            addingTaskListener?.onTaskAdded(modelTask)
-            dialog.dismiss()
-            Log.d("debug", "model = " + modelTask.toString(modelTask))
-        }
-        builder.setNegativeButton(R.string.dialog_cancel) { dialog, _ -> dialog.cancel() }
 
         val alertDialog = builder.create()
 
         alertDialog.setOnShowListener { dialog ->
-            val positive = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
-            if (etTitle.length() == 0) {
-                positive.isEnabled = false
-                dialogTaskTitle.error = resources.getString(R.string.dialog_error_empty_title)
+            positive = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
+            if (container.etTitle.length() == 0) {
+                addingTaskDialogPresenter.titleEmpty()
             }
 
-            etTitle.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                }
-
+            container.etTitle.addTextChangedListener(object : MyTextWatcher {
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                     if (s.isEmpty()) {
-                        positive.isEnabled = false
-                        dialogTaskTitle.error = resources.getString(R.string.dialog_error_empty_title)
+                        addingTaskDialogPresenter.titleEmpty()
                     } else {
-                        positive.isEnabled = true
-                        dialogTaskTitle.isErrorEnabled = false
+                        addingTaskDialogPresenter.titleNotEmpty()
                     }
-                }
-
-                override fun afterTextChanged(s: Editable) {
                 }
             })
         }
         return alertDialog
+    }
+
+    override fun dismissDialog() {
+        dialog?.dismiss()
+    }
+
+    override fun cancelDialog() {
+        dialog?.cancel()
+    }
+
+    override fun setEmptyToDateEditText() {
+        container.etDate.setText("")
+    }
+
+    override fun setEmptyToTimeEditText() {
+        container.etTime.setText("")
+    }
+
+    override fun showDatePickerController() {
+        datePickerController.onCreateDialog(activity as Context).show()
+    }
+
+    override fun showTimePickerController() {
+        timePickerController.onCreateDialog(activity as Context).show()
+    }
+
+    override fun setDate(date: String) {
+        container.etDate.setText(date)
+    }
+
+    override fun setTime(time: String) {
+        container.etTime.setText(time)
+    }
+
+    override fun setUIWhenTitleEmpty() {
+        positive.isEnabled = false
+        container.dialogTaskTitle.error = resources.getString(R.string.dialog_error_empty_title)
+    }
+
+    override fun setUIWhenTitleNotEmpty() {
+        positive.isEnabled = true
+        container.dialogTaskTitle.isErrorEnabled = false
     }
 }

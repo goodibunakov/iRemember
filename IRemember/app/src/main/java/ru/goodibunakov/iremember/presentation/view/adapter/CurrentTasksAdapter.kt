@@ -8,7 +8,7 @@ import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.presentation.model.ModelSeparator
 import ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragment
 
-class CurrentTasksAdapter(taskFragment: CurrentTaskFragment) : TaskAdapter(taskFragment) {
+class CurrentTasksAdapter(taskFragment: CurrentTaskFragment) : TasksAdapter(taskFragment) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == TYPE_TASK) {

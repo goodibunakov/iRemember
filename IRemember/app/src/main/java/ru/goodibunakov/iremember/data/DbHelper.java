@@ -21,11 +21,11 @@ public class DbHelper extends SQLiteOpenHelper {
     static final String TASK_STATUS_COLUMN = "task_status";
     static final String TASK_TIMESTAMP_COLUMN = "task_timestamp";
 
-    private static final String TASKS_TABLE_CREATE_SCRIPT = "CREATE TABLE "
-            + TASKS_TABLE + " (" + BaseColumns._ID
-            + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TASK_TITLE_COLUMN + " TEXT NOT NULL, "
-            + TASK_DATE_COLUMN + " LONG, " + TASK_PRIORITY_COLUMN + " INTEGER, "
-            + TASK_STATUS_COLUMN + " INTEGER, " + TASK_TIMESTAMP_COLUMN + " LONG);";
+//    private static final String TASKS_TABLE_CREATE_SCRIPT = "CREATE TABLE "
+//            + TASKS_TABLE + " (" + BaseColumns._ID
+//            + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TASK_TITLE_COLUMN + " TEXT NOT NULL, "
+//            + TASK_DATE_COLUMN + " LONG, " + TASK_PRIORITY_COLUMN + " INTEGER, "
+//            + TASK_STATUS_COLUMN + " INTEGER, " + TASK_TIMESTAMP_COLUMN + " LONG);";
 
     public static final String SELECTION_STATUS = DbHelper.TASK_STATUS_COLUMN + "=?";
     private static final String SELECTION_TIMESTAMP = TASK_TIMESTAMP_COLUMN + "=?";
@@ -43,13 +43,13 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(TASKS_TABLE_CREATE_SCRIPT);
+//        db.execSQL(TASKS_TABLE_CREATE_SCRIPT);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE " + TASKS_TABLE);
-        onCreate(db);
+//        db.execSQL("DROP TABLE " + TASKS_TABLE);
+//        onCreate(db);
     }
 
     public void saveTask(ModelTask modelTask) {

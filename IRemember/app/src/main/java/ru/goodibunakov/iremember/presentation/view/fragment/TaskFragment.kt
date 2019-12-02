@@ -4,17 +4,18 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
+import moxy.MvpAppCompatFragment
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.alarm.AlarmHelper
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.view.activity.MainActivity
-import ru.goodibunakov.iremember.presentation.view.adapter.TaskAdapter
+import ru.goodibunakov.iremember.presentation.view.adapter.TasksAdapter
 import ru.goodibunakov.iremember.presentation.view.dialog.EditTaskDialogFragment
 
-abstract class TaskFragment : Fragment() {
 
-    var adapter: TaskAdapter? = null
+abstract class TaskFragment : MvpAppCompatFragment(), TaskFragmentView {
+
+    var adapter: TasksAdapter? = null
     var activity: MainActivity? = null
     var alarmHelper: AlarmHelper? = null
 
@@ -27,20 +28,23 @@ abstract class TaskFragment : Fragment() {
 
         alarmHelper = AlarmHelper.getInstance()
 
-        addTaskFromDb()
+//        getTasksFromDb()
     }
 
-    abstract fun addTask(newTask: ModelTask, saveToDb: Boolean)
+    abstract override fun addTask(newTask: ModelTask, saveToDb: Boolean)
 
     abstract fun moveTask(modelTask: ModelTask)
-
-    protected abstract fun addTaskFromDb()
 
     abstract fun findTasks(title: String)
 
     abstract fun checkAdapter()
 
-    fun removeTaskDialog(location: Int) {
+    override fun removeAllItemsFromAdapter() {
+        adapter?.removeAllItems()
+
+    }
+
+    fun showRemoveTaskDialog(location: Int) {
         val builder = AlertDialog.Builder(getActivity() as Context)
         builder.setMessage(R.string.dialog_remove_message)
         builder.setTitle(R.string.app_name)

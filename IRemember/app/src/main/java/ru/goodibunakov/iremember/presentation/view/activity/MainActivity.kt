@@ -2,52 +2,58 @@ package ru.goodibunakov.iremember.presentation.view.activity
 
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import moxy.MvpAppCompatActivity
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.alarm.AlarmHelper
 import ru.goodibunakov.iremember.data.DbHelper
 import ru.goodibunakov.iremember.presentation.model.ModelTask
+import ru.goodibunakov.iremember.presentation.presenter.MainActivityPresenter
 import ru.goodibunakov.iremember.presentation.view.adapter.TabAdapter
-import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment
-import ru.goodibunakov.iremember.presentation.view.dialog.EditTaskDialogFragment
 import ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragment
 import ru.goodibunakov.iremember.presentation.view.fragment.DoneTaskFragment
 import ru.goodibunakov.iremember.presentation.view.fragment.SplashFragment
 import ru.goodibunakov.iremember.presentation.view.fragment.TaskFragment
-import ru.goodibunakov.iremember.utils.PreferenceHelper
 
-class MainActivity : AppCompatActivity(R.layout.activity_main), MainActivityView, AddingTaskDialogFragment.AddingTaskListener,
-        DoneTaskFragment.OnTaskRestoreListener, CurrentTaskFragment.OnTaskDoneListener, EditTaskDialogFragment.EditingTaskListener {
+class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityView,
+        DoneTaskFragment.OnTaskRestoreListener,
+        CurrentTaskFragment.OnTaskDoneListener {
 
-    private var preferenceHelper: PreferenceHelper? = null
     private var fragmentManager: FragmentManager? = null
     private var currentTaskFragment: TaskFragment? = null
     private var doneTaskFragment: TaskFragment? = null
 
     var dbHelper: DbHelper? = null
 
+    @InjectPresenter
+    lateinit var mainActivityPresenter: MainActivityPresenter
+
+    @ProvidePresenter
+    fun providePresenter(): MainActivityPresenter {
+        return MainActivityPresenter(RememberApp.databaseRepository, RememberApp.sharedPreferencesRepository)
+    }
+
+    companion object {
+        const val TOOLBAR_TITLE_PADDING = 2
+        const val NUMBER_OF_TABS = 2
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        preferenceHelper = PreferenceHelper.getInstance()
-        preferenceHelper!!.init(applicationContext)
 
         dbHelper = DbHelper(applicationContext)
         AlarmHelper.getInstance().initAlarmManager()
 
         fragmentManager = supportFragmentManager
-        runSplash()
-        setUI()
     }
 
     override fun onResume() {
@@ -61,82 +67,93 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), MainActivityView
     }
 
     override fun onDestroy() {
+        mainActivityPresenter.onDestroyView()
         super.onDestroy()
+    }
+
+    override fun onDestroyView() {
         searchView.setOnQueryTextListener(null)
     }
 
-    private fun runSplash() {
-        if (!preferenceHelper!!.getBoolean(PreferenceHelper.SPLASH_IS_INVISIBLE)) {
-            val splashFragment = SplashFragment()
-            fragmentManager?.beginTransaction()
-                    ?.replace(R.id.content_frame, splashFragment)
-                    ?.addToBackStack(null)
-                    ?.commit()
-        }
+    override fun runSplash() {
+        val splashFragment = SplashFragment()
+        fragmentManager?.beginTransaction()
+                ?.replace(R.id.content_frame, splashFragment)
+                ?.addToBackStack(null)
+                ?.commit()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.action_splash) {
-            item.isChecked = !item.isChecked
-            preferenceHelper?.putBoolean(PreferenceHelper.SPLASH_IS_INVISIBLE, item.isChecked)
+            mainActivityPresenter.itemSelected(id)
             return true
         }
-
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun itemSelected(id: Int) {
+        if (id == R.id.action_splash) {
+            val splashItem = toolbar.menu.findItem(id)
+            splashItem!!.isChecked = !splashItem.isChecked
+            mainActivityPresenter.saveBoolean(splashItem.isChecked)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         val splashItem = menu.findItem(R.id.action_splash)
-        splashItem.isChecked = preferenceHelper!!.getBoolean(PreferenceHelper.SPLASH_IS_INVISIBLE)
+        mainActivityPresenter.setSplashItemChecked(splashItem.itemId)
         return true
     }
 
-    private fun setUI() {
+    override fun setSplashItemState(id: Int, isChecked: Boolean) {
+        toolbar.menu.findItem(id).isChecked = isChecked
+    }
+
+    override fun setUI() {
+        setToolbar()
+        setTabLayout()
+
+        searchView.setOnQueryTextListener(object : OnQueryTextListener {
+            override fun onQueryTextChange(newText: String): Boolean {
+                mainActivityPresenter.findTasks(newText)
+//                currentTaskFragment?.findTasks(newText)
+//                doneTaskFragment?.findTasks(newText)
+                return false
+            }
+        })
+    }
+
+    private fun setToolbar() {
         toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white))
         toolbar.setLogo(R.drawable.toolbar_icon)
-        toolbar.titleMarginStart = ContextCompat.getDrawable(this, R.drawable.toolbar_icon)!!.intrinsicWidth + 2
+        toolbar.titleMarginStart = ContextCompat.getDrawable(this, R.drawable.toolbar_icon)!!.intrinsicWidth + TOOLBAR_TITLE_PADDING
         setSupportActionBar(toolbar)
+    }
 
+    private fun setTabLayout() {
         tabLayout.addTab(tabLayout.newTab().setText(R.string.current_task))
         tabLayout.addTab(tabLayout.newTab().setText(R.string.done_task))
 
-        val tabAdapter = TabAdapter(fragmentManager!!, 2)
+        val tabAdapter = TabAdapter(fragmentManager!!, NUMBER_OF_TABS)
 
         viewPager.adapter = tabAdapter
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
 
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 viewPager.currentItem = tab.position
             }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-
-            override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
         currentTaskFragment = tabAdapter.getItem(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION) as CurrentTaskFragment
         doneTaskFragment = tabAdapter.getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION) as DoneTaskFragment
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String): Boolean {
-                Log.d("debug", "onQueryTextChange = $newText")
-                currentTaskFragment?.findTasks(newText)
-                doneTaskFragment?.findTasks(newText)
-                return false
-            }
-        })
     }
 
-    override fun onTaskAdded(newTask: ModelTask) {
-        currentTaskFragment!!.addTask(newTask, true)
-    }
+//    override fun onTaskAdded(newTask: ModelTask) {
+//        currentTaskFragment!!.addTask(newTask, true)
+//    }
 
     override fun onTaskDone(modelTask: ModelTask) {
         doneTaskFragment!!.addTask(modelTask, false)
@@ -146,12 +163,23 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), MainActivityView
         currentTaskFragment!!.addTask(modelTask, false)
     }
 
-    override fun onTaskEdited(updatedTask: ModelTask) {
-        currentTaskFragment!!.updateTask(updatedTask)
-        dbHelper?.update()?.task(updatedTask)
-    }
+//    override fun onTaskEdited(updatedTask: ModelTask) {
+//        currentTaskFragment!!.updateTask(updatedTask)
+//        dbHelper?.update()?.task(updatedTask)
+//    }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
 
+    }
+
+    interface OnTabSelectedListener : TabLayout.OnTabSelectedListener {
+        override fun onTabUnselected(tab: TabLayout.Tab) {}
+        override fun onTabReselected(tab: TabLayout.Tab) {}
+    }
+
+    interface OnQueryTextListener : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String): Boolean {
+            return false
+        }
     }
 }

@@ -2,23 +2,34 @@ package ru.goodibunakov.iremember.presentation.view.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_current_task.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.data.DbHelper
 import ru.goodibunakov.iremember.presentation.model.ModelSeparator
 import ru.goodibunakov.iremember.presentation.model.ModelTask
+import ru.goodibunakov.iremember.presentation.presenter.CurrentTaskFragmentPresenter
 import ru.goodibunakov.iremember.presentation.view.adapter.CurrentTasksAdapter
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment
 import java.util.*
 
-class CurrentTaskFragment : TaskFragment() {
+class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView {
 
     private var onTaskDoneListener: OnTaskDoneListener? = null
+
+    @InjectPresenter
+    lateinit var currentTaskFragmentPresenter: CurrentTaskFragmentPresenter
+
+    @ProvidePresenter
+    fun providePresenter(): CurrentTaskFragmentPresenter {
+        return CurrentTaskFragmentPresenter()
+    }
 
     init {
         adapter = CurrentTasksAdapter(this)
@@ -35,6 +46,10 @@ class CurrentTaskFragment : TaskFragment() {
         } catch (e: ClassCastException) {
             throw ClassCastException("$context must implement OnTaskDoneListener")
         }
+    }
+
+    override fun showError(s: Int) {
+        Toast.makeText(context, getText(s), Toast.LENGTH_SHORT).show()
     }
 
     override fun addTask(newTask: ModelTask, saveToDb: Boolean) {
@@ -125,9 +140,13 @@ class CurrentTaskFragment : TaskFragment() {
         initRecyclerView()
 
         fab.setOnClickListener {
-            val addingTaskDialogFragment = AddingTaskDialogFragment()
-            addingTaskDialogFragment.show(activity!!.supportFragmentManager, "AddingTaskDialogFragment")
+            currentTaskFragmentPresenter.showViewToAddTask()
         }
+    }
+
+    override fun showAddingTaskDialog() {
+        val addingTaskDialogFragment = AddingTaskDialogFragment()
+        addingTaskDialogFragment.show(activity!!.supportFragmentManager, "AddingTaskDialogFragment")
     }
 
     private fun initRecyclerView() {
@@ -136,13 +155,13 @@ class CurrentTaskFragment : TaskFragment() {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 0 || dy < 0 && fab.isShown) {
-                    fab.hide()
+                    currentTaskFragmentPresenter.hideFab()
                 }
             }
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    fab.show()
+                    currentTaskFragmentPresenter.showFab()
                 }
 
                 super.onScrollStateChanged(recyclerView, newState)
@@ -150,27 +169,22 @@ class CurrentTaskFragment : TaskFragment() {
         })
     }
 
+    override fun hideFab() {
+        fab.hide()
+    }
+
+    override fun showFab() {
+        fab.show()
+    }
+
     override fun moveTask(modelTask: ModelTask) {
         alarmHelper?.removeAlarm(modelTask.timestamp)
         onTaskDoneListener?.onTaskDone(modelTask)
     }
 
-    override fun addTaskFromDb() {
-        checkAdapter()
-        adapter!!.removeAllItems()
-        val tasks = ArrayList(activity!!.dbHelper!!.query()
-                .getTasks(DbHelper.SELECTION_STATUS + " OR " + DbHelper.SELECTION_STATUS,
-                        arrayOf(ModelTask.STATUS_CURRENT.toString(), ModelTask.STATUS_OVERDUE.toString()),
-                        DbHelper.TASK_DATE_COLUMN))
-        for (i in tasks.indices) {
-            addTask(tasks[i], false)
-        }
-    }
-
     override fun findTasks(title: String) {
         checkAdapter()
         adapter!!.removeAllItems()
-        Log.d("debug", "activity findTasks CurrentTaskFragment = $activity")
         if (activity != null && activity!!.dbHelper != null) {
             val tasks = ArrayList(activity!!.dbHelper!!.query().getTasks(DbHelper.SELECTION_LIKE_TITLE + " AND "
                     + DbHelper.SELECTION_STATUS + " OR " + DbHelper.SELECTION_STATUS,
@@ -185,7 +199,6 @@ class CurrentTaskFragment : TaskFragment() {
     override fun checkAdapter() {
         if (adapter == null) {
             adapter = CurrentTasksAdapter(this)
-            addTaskFromDb()
         }
     }
 }

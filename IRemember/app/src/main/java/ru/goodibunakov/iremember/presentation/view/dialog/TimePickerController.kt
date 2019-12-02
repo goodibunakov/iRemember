@@ -14,9 +14,9 @@ open class TimePickerController : TimePickerDialog.OnTimeSetListener {
     }
 
     internal fun onCreateDialog(context: Context): Dialog {
-        val c = Calendar.getInstance()
-        val hour = c.get(Calendar.HOUR_OF_DAY)
-        val minute = c.get(Calendar.MINUTE)
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
         return TimePickerDialog(context, R.style.AppThemeDialog, this, hour, minute, DateFormat.is24HourFormat(context))
     }
 }

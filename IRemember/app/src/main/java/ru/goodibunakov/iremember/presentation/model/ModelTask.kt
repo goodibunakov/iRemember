@@ -1,6 +1,7 @@
 package ru.goodibunakov.iremember.presentation.model
 
 import ru.goodibunakov.iremember.R
+import ru.goodibunakov.iremember.utils.Utils
 import java.util.*
 
 class ModelTask : Item {
@@ -15,7 +16,7 @@ class ModelTask : Item {
         const val STATUS_DONE = 2
     }
 
-    var title: String? = null
+    var title: String = ""
     var date: Long = 0
     var priority: Int = 0
     var status: Int = 0
@@ -62,6 +63,7 @@ class ModelTask : Item {
 
     fun toString(modelTask: ModelTask): String {
         return "title = " + modelTask.title + "  date = " + modelTask.date +
+                "   date = " + Utils.getDate(modelTask.date) + " " + Utils.getTime(modelTask.date)
                 "   priority = " + modelTask.priority +
                 "   status = " + modelTask.status +
                 "   priorityColor + " + modelTask.getPriorityColor()

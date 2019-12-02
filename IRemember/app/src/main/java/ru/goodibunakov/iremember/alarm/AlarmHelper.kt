@@ -10,6 +10,11 @@ import ru.goodibunakov.iremember.presentation.model.ModelTask
 class AlarmHelper private constructor() {
 
     companion object {
+
+        const val ALARM_KEY_TITLE = "title"
+        const val ALARM_KEY_TIMESTAMP = "timestamp"
+        const val ALARM_KEY_COLOR = "color"
+
         private var instance: AlarmHelper? = null
 
         fun getInstance(): AlarmHelper {
@@ -29,9 +34,9 @@ class AlarmHelper private constructor() {
 
     fun setAlarm(task: ModelTask) {
         val intent = Intent(RememberApp.getAppContext(), AlarmBroadcastReceiver::class.java)
-        intent.putExtra("title", task.title)
-        intent.putExtra("timestamp", task.timestamp)
-        intent.putExtra("color", task.getPriorityColor())
+        intent.putExtra(ALARM_KEY_TITLE, task.title)
+        intent.putExtra(ALARM_KEY_TIMESTAMP, task.timestamp)
+        intent.putExtra(ALARM_KEY_COLOR, task.getPriorityColor())
 
         val pendingIntent = PendingIntent.getBroadcast(RememberApp.getAppContext(),
                 task.timestamp.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)

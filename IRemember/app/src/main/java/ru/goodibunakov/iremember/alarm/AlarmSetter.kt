@@ -15,10 +15,11 @@ class AlarmSetter : BroadcastReceiver() {
 
         val alarmHelper = AlarmHelper.getInstance()
         alarmHelper.initAlarmManager()
-        val tasks = ArrayList(dbHelper.query().getTasks(DbHelper.SELECTION_STATUS + " OR "
-                + DbHelper.SELECTION_STATUS,
+        val tasks = ArrayList(dbHelper.query().getTasks(
+                DbHelper.SELECTION_STATUS + " OR " + DbHelper.SELECTION_STATUS,
                 arrayOf(ModelTask.STATUS_CURRENT.toString(), ModelTask.STATUS_OVERDUE.toString()),
-                DbHelper.TASK_DATE_COLUMN))
+                DbHelper.TASK_DATE_COLUMN)
+        )
 
         for (task in tasks) {
             if (task.date != 0L) {

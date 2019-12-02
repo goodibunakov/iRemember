@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.presentation.view.fragment.DoneTaskFragment
 
-class DoneTaskAdapter(taskFragment: DoneTaskFragment) : TaskAdapter(taskFragment) {
+class DoneTasksAdapter(taskFragment: DoneTaskFragment) : TasksAdapter(taskFragment) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)

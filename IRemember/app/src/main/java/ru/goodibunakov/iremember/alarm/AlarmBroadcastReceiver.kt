@@ -13,15 +13,18 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
+import ru.goodibunakov.iremember.alarm.AlarmHelper.Companion.ALARM_KEY_COLOR
+import ru.goodibunakov.iremember.alarm.AlarmHelper.Companion.ALARM_KEY_TIMESTAMP
+import ru.goodibunakov.iremember.alarm.AlarmHelper.Companion.ALARM_KEY_TITLE
 import ru.goodibunakov.iremember.presentation.view.activity.MainActivity
 
 class AlarmBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
-        val title = intent.getStringExtra("title")
-        val timestamp = intent.getLongExtra("timestamp", 0)
-        val color = intent.getIntExtra("color", 0)
+        val title = intent.getStringExtra(ALARM_KEY_TITLE)
+        val timestamp = intent.getLongExtra(ALARM_KEY_TIMESTAMP, 0)
+        val color = intent.getIntExtra(ALARM_KEY_COLOR, 0)
 
         var resultIntent = Intent(context, MainActivity::class.java)
 

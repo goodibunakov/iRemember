@@ -13,10 +13,10 @@ open class DatePickerController : DatePickerDialog.OnDateSetListener {
     }
 
     internal fun onCreateDialog(context: Context): Dialog {
-        val c = Calendar.getInstance()
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
         val datePickerDialog = DatePickerDialog(context, R.style.AppThemeDialog, this, year, month, day)
         datePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
         return datePickerDialog

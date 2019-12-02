@@ -17,7 +17,7 @@ import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.view.fragment.TaskFragment
 import ru.goodibunakov.iremember.utils.Utils
 
-abstract class TaskAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+abstract class TasksAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     protected var items: MutableList<Item>? = null
     private var lastPosition = -1
@@ -129,7 +129,7 @@ abstract class TaskAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapte
 
             itemView.setOnLongClickListener {
                 val handler = Handler()
-                handler.postDelayed({ taskFragment.removeTaskDialog(layoutPosition) }, 1000)
+                handler.postDelayed({ taskFragment.showRemoveTaskDialog(layoutPosition) }, 1000)
                 true
             }
 
@@ -154,9 +154,7 @@ abstract class TaskAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapte
 
                 val flipIn = ObjectAnimator.ofFloat(itemView.priority, View.ROTATION_Y, -180f, 0f)
                 flipIn.addListener(object : Animator.AnimatorListener {
-                    override fun onAnimationStart(animation: Animator) {
-
-                    }
+                    override fun onAnimationStart(animation: Animator) {}
 
                     override fun onAnimationEnd(animation: Animator) {
                         if (model.status == ModelTask.STATUS_DONE) {
@@ -166,9 +164,7 @@ abstract class TaskAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapte
                             val transBack = ObjectAnimator.ofFloat(itemView, View.TRANSLATION_X, itemView.width.toFloat(), 0f)
 
                             trans.addListener(object : Animator.AnimatorListener {
-                                override fun onAnimationStart(animation: Animator) {
-
-                                }
+                                override fun onAnimationStart(animation: Animator) {}
 
                                 override fun onAnimationEnd(animation: Animator) {
                                     itemView.visibility = View.GONE
@@ -176,13 +172,9 @@ abstract class TaskAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapte
                                     removeItem(layoutPosition)
                                 }
 
-                                override fun onAnimationCancel(animation: Animator) {
+                                override fun onAnimationCancel(animation: Animator) {}
 
-                                }
-
-                                override fun onAnimationRepeat(animation: Animator) {
-
-                                }
+                                override fun onAnimationRepeat(animation: Animator) {}
                             })
 
                             val animatorSet = AnimatorSet()
@@ -191,13 +183,9 @@ abstract class TaskAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapte
                         }
                     }
 
-                    override fun onAnimationCancel(animation: Animator) {
+                    override fun onAnimationCancel(animation: Animator) {}
 
-                    }
-
-                    override fun onAnimationRepeat(animation: Animator) {
-
-                    }
+                    override fun onAnimationRepeat(animation: Animator) {}
                 })
 
                 flipIn.start()
@@ -221,7 +209,7 @@ abstract class TaskAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapte
 
             itemView.setOnLongClickListener {
                 val handler = Handler()
-                handler.postDelayed({ taskFragment.removeTaskDialog(layoutPosition) }, 1000)
+                handler.postDelayed({ taskFragment.showRemoveTaskDialog(layoutPosition) }, 1000)
                 true
             }
 
@@ -247,8 +235,7 @@ abstract class TaskAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapte
                 val flipIn = ObjectAnimator.ofFloat(itemView.priority, View.ROTATION_Y, 180f, 0f)
                 itemView.priority.setImageResource(R.drawable.circle_full)
                 flipIn.addListener(object : Animator.AnimatorListener {
-                    override fun onAnimationStart(animation: Animator) {
-                    }
+                    override fun onAnimationStart(animation: Animator) {}
 
                     override fun onAnimationEnd(animation: Animator) {
                         if (model.status != ModelTask.STATUS_DONE) {
@@ -257,9 +244,7 @@ abstract class TaskAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapte
                             val transBack = ObjectAnimator.ofFloat(itemView, View.TRANSLATION_X, -itemView.width.toFloat(), 0f)
 
                             trans.addListener(object : Animator.AnimatorListener {
-                                override fun onAnimationStart(animation: Animator) {
-
-                                }
+                                override fun onAnimationStart(animation: Animator) {}
 
                                 override fun onAnimationEnd(animation: Animator) {
                                     itemView.visibility = View.GONE
@@ -267,13 +252,9 @@ abstract class TaskAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapte
                                     removeItem(layoutPosition)
                                 }
 
-                                override fun onAnimationCancel(animation: Animator) {
+                                override fun onAnimationCancel(animation: Animator) {}
 
-                                }
-
-                                override fun onAnimationRepeat(animation: Animator) {
-
-                                }
+                                override fun onAnimationRepeat(animation: Animator) {}
                             })
 
                             val animatorSet = AnimatorSet()
@@ -282,13 +263,9 @@ abstract class TaskAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapte
                         }
                     }
 
-                    override fun onAnimationCancel(animation: Animator) {
+                    override fun onAnimationCancel(animation: Animator) {}
 
-                    }
-
-                    override fun onAnimationRepeat(animation: Animator) {
-
-                    }
+                    override fun onAnimationRepeat(animation: Animator) {}
                 })
 
                 flipIn.start()

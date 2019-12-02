@@ -13,23 +13,23 @@ public class DbUpdateManager {
         this.database = database;
     }
 
-    private void title(long timestamp, String title){
+    private void title(long timestamp, String title) {
         update(timestamp, title);
     }
 
-    private void date(long timestamp, long date){
+    private void date(long timestamp, long date) {
         update(DbHelper.TASK_DATE_COLUMN, timestamp, date);
     }
 
-    private void priority(long timestamp, int priority){
+    private void priority(long timestamp, int priority) {
         update(DbHelper.TASK_PRIORITY_COLUMN, timestamp, priority);
     }
 
-    public void status(long timestamp, int status){
+    public void status(long timestamp, int status) {
         update(DbHelper.TASK_STATUS_COLUMN, timestamp, status);
     }
 
-    public void task(ModelTask modelTask){
+    public void task(ModelTask modelTask) {
         title(modelTask.getTimestamp(), modelTask.getTitle());
         date(modelTask.getTimestamp(), modelTask.getDate());
         priority(modelTask.getTimestamp(), modelTask.getPriority());
@@ -42,7 +42,7 @@ public class DbUpdateManager {
         database.update(DbHelper.TASKS_TABLE, contentValues, DbHelper.TASK_TIMESTAMP_COLUMN + " = " + key, null);
     }
 
-    private void update(String column, long key, long value){
+    private void update(String column, long key, long value) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(column, value);
         database.update(DbHelper.TASKS_TABLE, contentValues, DbHelper.TASK_TIMESTAMP_COLUMN + " = " + key, null);
