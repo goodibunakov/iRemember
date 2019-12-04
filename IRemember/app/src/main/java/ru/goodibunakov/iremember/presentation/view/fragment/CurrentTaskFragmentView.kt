@@ -10,5 +10,6 @@ interface CurrentTaskFragmentView : TaskFragmentView {
     fun checkAdapter()
     fun showFab()
     fun hideFab()
-    override fun addTask(newTask: ModelTask)
+//    override fun addTask(newTask: ModelTask)
+    fun showEditTaskDialog(task: ModelTask)
 }

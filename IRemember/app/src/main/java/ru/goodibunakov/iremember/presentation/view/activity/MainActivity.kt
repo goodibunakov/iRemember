@@ -151,22 +151,13 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
         doneTaskFragment = tabAdapter.getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION) as DoneTaskFragment
     }
 
-//    override fun onTaskAdded(newTask: ModelTask) {
-//        currentTaskFragment!!.addTask(newTask, true)
-//    }
-
     override fun onTaskDone(modelTask: ModelTask) {
-        doneTaskFragment!!.addTask(modelTask)
+//        doneTaskFragment!!.addTask(modelTask)
     }
 
     override fun onTaskRestore(modelTask: ModelTask) {
-        currentTaskFragment!!.addTask(modelTask)
+//        currentTaskFragment!!.addTask(modelTask)
     }
-
-//    override fun onTaskEdited(updatedTask: ModelTask) {
-//        currentTaskFragment!!.updateTask(updatedTask)
-//        dbHelper?.update()?.task(updatedTask)
-//    }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
 

@@ -7,5 +7,5 @@ import ru.goodibunakov.iremember.presentation.model.ModelTask
 @StateStrategyType(value = AddToEndStrategy::class)
 interface DoneTaskFragmentView : TaskFragmentView {
     fun checkAdapter()
-    override fun addTask(newTask: ModelTask)
+//    override fun addTask(newTask: ModelTask)
 }

@@ -1,20 +1,22 @@
 package ru.goodibunakov.iremember.presentation.view.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.goodibunakov.iremember.R
-import ru.goodibunakov.iremember.presentation.model.ModelSeparator
+import ru.goodibunakov.iremember.presentation.OnItemLongClickListener
+import ru.goodibunakov.iremember.presentation.OnPriorityClickListener
 import ru.goodibunakov.iremember.presentation.model.ModelTask
-import ru.goodibunakov.iremember.presentation.view.fragment.DoneTaskFragment
-import java.util.*
 
-class DoneTasksAdapter(taskFragment: DoneTaskFragment) : TasksAdapter(taskFragment) {
+class DoneTasksAdapter(private val onLongClickListener: OnItemLongClickListener,
+                       private val onPriorityClickListener: OnPriorityClickListener)
+    : TasksAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val itemView = layoutInflater.inflate(R.layout.item_task, parent, false)
-        return TaskViewHolderDone(itemView)
+        return TaskViewHolderDone(itemView, onLongClickListener, onPriorityClickListener)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

@@ -8,7 +8,7 @@ abstract class TaskFragmentPresenter<V : TaskFragmentView> : MvpPresenter<V>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        getTasksFromDb()
+//        getTasksFromDb()
         searchSubscribe()
     }
 

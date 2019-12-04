@@ -10,4 +10,5 @@ interface TaskFragmentView : MvpView {
     fun removeAllItemsFromAdapter()
     fun showError(s: Int)
     fun addTask(newTask: ModelTask)
+    fun showRemoveTaskDialog(location: Int)
 }

@@ -10,6 +10,7 @@ import moxy.InjectViewState
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp.Companion.databaseRepository
 import ru.goodibunakov.iremember.presentation.RxBus
+import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragmentView
 
 @InjectViewState
@@ -18,16 +19,19 @@ class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresent
     private var disposable: Disposable? = null
     private var disposableSearch: Disposable? = null
 
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        bus.post("")
+    }
+
     fun showViewToAddTask() {
         viewState.showAddingTaskDialog()
     }
 
     override fun searchSubscribe() {
         disposableSearch = bus.getEvent()
-//                .filter { s -> s.isNotEmpty()}
                 .subscribe { it ->
                     databaseRepository.findCurrentTasks(it)
-//                            .flatMap { Observable.fromIterable(it) }
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({
@@ -45,21 +49,20 @@ class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresent
 
     @SuppressLint("CheckResult")
     override fun getTasksFromDb() {
-        disposable = databaseRepository.getCurrentTasks()
-//                .flatMap { Observable.fromIterable(it) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    viewState.checkAdapter()
-                    viewState.removeAllItemsFromAdapter()
-                    Log.d("debug", "it = $it")
-                    for (element in it) {
-                        viewState.addTask(element)
-                    }
-                }, { error ->
-                    Log.d("debug", error!!.localizedMessage!!)
-                    viewState.showError(R.string.error_database_download)
-                })
+//        disposable = databaseRepository.getCurrentTasks()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({
+//                    viewState.checkAdapter()
+//                    viewState.removeAllItemsFromAdapter()
+//                    Log.d("debug", "it = $it")
+//                    for (element in it) {
+//                        viewState.addTask(element)
+//                    }
+//                }, { error ->
+//                    Log.d("debug", error!!.localizedMessage!!)
+//                    viewState.showError(R.string.error_database_download)
+//                })
     }
 
     fun hideFab() {
@@ -74,5 +77,17 @@ class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresent
         super.onDestroy()
         if (disposable != null && !disposable!!.isDisposed) disposable?.dispose()
         if (disposableSearch != null && !disposableSearch!!.isDisposed) disposableSearch?.dispose()
+    }
+
+    fun onItemClick(task: ModelTask) {
+        viewState.showEditTaskDialog(task)
+    }
+
+    fun onItemLongClick(location: Int) {
+        viewState.showRemoveTaskDialog(location)
+    }
+
+    fun updateTask(modelTask: ModelTask) {
+        databaseRepository.update(modelTask)
     }
 }

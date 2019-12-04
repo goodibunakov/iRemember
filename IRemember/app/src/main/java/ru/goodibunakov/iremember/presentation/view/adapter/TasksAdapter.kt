@@ -3,8 +3,6 @@ package ru.goodibunakov.iremember.presentation.view.adapter
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
-import android.os.Handler
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.TextView
@@ -12,16 +10,16 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_task.view.*
 import ru.goodibunakov.iremember.R
+import ru.goodibunakov.iremember.presentation.OnItemClickListener
+import ru.goodibunakov.iremember.presentation.OnItemLongClickListener
+import ru.goodibunakov.iremember.presentation.OnPriorityClickListener
 import ru.goodibunakov.iremember.presentation.model.Item
 import ru.goodibunakov.iremember.presentation.model.ModelSeparator
 import ru.goodibunakov.iremember.presentation.model.ModelTask
-import ru.goodibunakov.iremember.presentation.presenter.TaskFragmentPresenter
-import ru.goodibunakov.iremember.presentation.view.fragment.TaskFragment
 import ru.goodibunakov.iremember.utils.Utils
-import java.util.*
 import kotlin.collections.ArrayList
 
-abstract class TasksAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     protected var items: MutableList<Item>? = null
     private var lastPosition = -1
@@ -100,7 +98,7 @@ abstract class TasksAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapt
 
     protected fun setAnimation(viewToAnimate: View, position: Int) {
         if (position > lastPosition) {
-            val animation = AnimationUtils.loadAnimation(taskFragment.context, android.R.anim.slide_in_left)
+            val animation = AnimationUtils.loadAnimation(viewToAnimate.context, android.R.anim.slide_in_left)
             viewToAnimate.startAnimation(animation)
             lastPosition = position
         }
@@ -117,7 +115,10 @@ abstract class TasksAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapt
         }
     }
 
-    inner class TaskViewHolderCurrent(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class TaskViewHolderCurrent(itemView: View, private val onClickListener: OnItemClickListener,
+                                      private val onLongClickListener: OnItemLongClickListener,
+                                      private val onPriorityClickListener: OnPriorityClickListener)
+        : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Item) {
             val model = item as ModelTask
@@ -131,13 +132,8 @@ abstract class TasksAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapt
             itemView.priority.setImageResource(R.drawable.circle_full)
             itemView.priority.setColorFilter(ContextCompat.getColor(itemView.priority.context, model.getPriorityColor()))
 
-            itemView.setOnClickListener { taskFragment.showTaskEditDialog(model) }
-
-            itemView.setOnLongClickListener {
-                val handler = Handler()
-                handler.postDelayed({ taskFragment.showRemoveTaskDialog(layoutPosition) }, 500)
-                true
-            }
+            itemView.setOnClickListener { onClickListener.onItemClick(model) }
+            itemView.setOnLongClickListener { onLongClickListener.onItemLongClick(layoutPosition) }
 
             if (model.date != 0L) {
                 itemView.tvDate.visibility = View.VISIBLE
@@ -152,7 +148,6 @@ abstract class TasksAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapt
             itemView.priority.setOnClickListener {
                 itemView.priority.isEnabled = false
                 model.status = ModelTask.STATUS_DONE
-                taskFragment.activity!!.dbHelper!!.update().status(model.timestamp, ModelTask.STATUS_DONE)
 
                 itemView.tvTitle.setTextColor(ContextCompat.getColor(itemView.tvTitle.context, R.color.gray50))
                 itemView.tvDate.setTextColor(ContextCompat.getColor(itemView.tvDate.context, R.color.colorDarkGrey))
@@ -174,8 +169,9 @@ abstract class TasksAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapt
 
                                 override fun onAnimationEnd(animation: Animator) {
                                     itemView.visibility = View.GONE
-                                    taskFragment.moveTask(model)
+//                                    taskFragment.moveTask(model)
                                     removeItem(layoutPosition)
+                                    onPriorityClickListener.onPriorityClick(model)
                                 }
 
                                 override fun onAnimationCancel(animation: Animator) {}
@@ -200,7 +196,9 @@ abstract class TasksAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapt
     }
 
 
-    inner class TaskViewHolderDone(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class TaskViewHolderDone(itemView: View, private val onLongClickListener: OnItemLongClickListener,
+                                   private val onPriorityClickListener: OnPriorityClickListener)
+        : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Item) {
             itemView.isEnabled = true
@@ -213,11 +211,7 @@ abstract class TasksAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapt
             itemView.priority.setImageResource(R.drawable.circle_checked)
             itemView.priority.setColorFilter(ContextCompat.getColor(itemView.priority.context, model.getPriorityColor()))
 
-            itemView.setOnLongClickListener {
-                val handler = Handler()
-                handler.postDelayed({ taskFragment.showRemoveTaskDialog(layoutPosition) }, 500)
-                true
-            }
+            itemView.setOnLongClickListener { onLongClickListener.onItemLongClick(layoutPosition) }
 
             if (model.date != 0L) {
                 itemView.tvDate.visibility = View.VISIBLE
@@ -232,7 +226,6 @@ abstract class TasksAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapt
             itemView.priority.setOnClickListener {
                 itemView.priority.isEnabled = false
                 model.status = ModelTask.STATUS_CURRENT
-                taskFragment.activity!!.dbHelper!!.update().status(model.timestamp, ModelTask.STATUS_CURRENT)
 
                 itemView.tvTitle.setTextColor(ContextCompat.getColor(itemView.tvTitle.context, android.R.color.black))
                 itemView.tvDate.setTextColor(ContextCompat.getColor(itemView.tvDate.context, android.R.color.darker_gray))
@@ -254,8 +247,9 @@ abstract class TasksAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapt
 
                                 override fun onAnimationEnd(animation: Animator) {
                                     itemView.visibility = View.GONE
-                                    taskFragment.moveTask(model)
+//                                    taskFragment.moveTask(model)
                                     removeItem(layoutPosition)
+                                    onPriorityClickListener.onPriorityClick(model)
                                 }
 
                                 override fun onAnimationCancel(animation: Animator) {}

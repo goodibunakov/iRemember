@@ -2,6 +2,7 @@ package ru.goodibunakov.iremember.presentation.view.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,14 +13,16 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
-import ru.goodibunakov.iremember.data.DbHelper
+import ru.goodibunakov.iremember.presentation.OnItemClickListener
+import ru.goodibunakov.iremember.presentation.OnItemLongClickListener
+import ru.goodibunakov.iremember.presentation.OnPriorityClickListener
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.presenter.CurrentTaskFragmentPresenter
 import ru.goodibunakov.iremember.presentation.view.adapter.CurrentTasksAdapter
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment
-import java.util.*
+import ru.goodibunakov.iremember.presentation.view.dialog.EditTaskDialogFragment
 
-class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView {
+class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClickListener, OnItemLongClickListener, OnPriorityClickListener {
 
     private var onTaskDoneListener: OnTaskDoneListener? = null
 
@@ -32,7 +35,7 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView {
     }
 
     init {
-        adapter = CurrentTasksAdapter(this)
+        adapter = CurrentTasksAdapter(this, this, this)
     }
 
     interface OnTaskDoneListener {
@@ -52,9 +55,10 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView {
         Toast.makeText(context, getText(s), Toast.LENGTH_SHORT).show()
     }
 
-    override fun addTask(newTask: ModelTask) {
-        adapter?.addTask(newTask)
-    }
+//    override fun addTask(newTask: ModelTask) {
+//        adapter?.addTask(newTask)
+//    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -109,23 +113,27 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView {
         onTaskDoneListener?.onTaskDone(modelTask)
     }
 
-//    override fun findTasks(title: String) {
-//        checkAdapter()
-//        adapter!!.removeAllItems()
-//        if (activity != null && activity!!.dbHelper != null) {
-//            val tasks = ArrayList(activity!!.dbHelper!!.query().getTasks(DbHelper.SELECTION_LIKE_TITLE + " AND "
-//                    + DbHelper.SELECTION_STATUS + " OR " + DbHelper.SELECTION_STATUS,
-//                    arrayOf("%$title%", ModelTask.STATUS_CURRENT.toString(), ModelTask.STATUS_OVERDUE.toString()),
-//                    DbHelper.TASK_DATE_COLUMN))
-//            for (i in tasks.indices) {
-//                addTask(tasks[i], false)
-//            }
-//        }
-//    }
-
     override fun checkAdapter() {
         if (adapter == null) {
-            adapter = CurrentTasksAdapter(this)
+            adapter = CurrentTasksAdapter(this, this, this)
         }
+    }
+
+    override fun onItemClick(task: ModelTask) {
+        currentTaskFragmentPresenter.onItemClick(task)
+    }
+
+    override fun showEditTaskDialog(task: ModelTask) {
+        val editingDialog = EditTaskDialogFragment.newInstance(task)
+        editingDialog.show(getActivity()!!.supportFragmentManager, "EditTaskDialogFragment")
+    }
+
+    override fun onItemLongClick(location: Int): Boolean {
+        Handler().postDelayed({ currentTaskFragmentPresenter.onItemLongClick(location) }, 500)
+        return true
+    }
+
+    override fun onPriorityClick(modelTask: ModelTask) {
+        currentTaskFragmentPresenter.updateTask(modelTask)
     }
 }

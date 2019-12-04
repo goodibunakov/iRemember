@@ -10,8 +10,6 @@ import ru.goodibunakov.iremember.alarm.AlarmHelper
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.view.activity.MainActivity
 import ru.goodibunakov.iremember.presentation.view.adapter.TasksAdapter
-import ru.goodibunakov.iremember.presentation.view.dialog.EditTaskDialogFragment
-
 
 abstract class TaskFragment : MvpAppCompatFragment(), TaskFragmentView {
 
@@ -29,11 +27,11 @@ abstract class TaskFragment : MvpAppCompatFragment(), TaskFragmentView {
         alarmHelper = AlarmHelper.getInstance()
     }
 
-    abstract override fun addTask(newTask: ModelTask)
+    override fun addTask(newTask: ModelTask) {
+        adapter?.addTask(newTask)
+    }
 
-    abstract fun moveTask(modelTask: ModelTask)
-
-//    abstract fun findTasks(title: String)
+//    abstract fun moveTask(modelTask: ModelTask)
 
     abstract fun checkAdapter()
 
@@ -41,7 +39,7 @@ abstract class TaskFragment : MvpAppCompatFragment(), TaskFragmentView {
         adapter?.removeAllItems()
     }
 
-    fun showRemoveTaskDialog(location: Int) {
+    override fun showRemoveTaskDialog(location: Int) {
         val builder = AlertDialog.Builder(getActivity() as Context)
         builder.setMessage(R.string.dialog_remove_message)
         builder.setTitle(R.string.app_name)
@@ -52,7 +50,9 @@ abstract class TaskFragment : MvpAppCompatFragment(), TaskFragmentView {
             val removingTask = item as ModelTask
             val timestamp = removingTask.timestamp
 
-            builder.setPositiveButton(R.string.dialog_remove) { dialog, _ ->
+            builder.setPositiveButton(R.string.dialog_remove) {
+                //TODO
+                dialog, _ ->
                 adapter?.removeItem(location)
                 activity?.dbHelper!!.removeTask(timestamp)
                 Toast.makeText(activity, resources.getString(R.string.removed), Toast.LENGTH_SHORT).show()
@@ -63,14 +63,5 @@ abstract class TaskFragment : MvpAppCompatFragment(), TaskFragmentView {
             builder.setNegativeButton(R.string.dialog_cancel) { dialog, _ -> dialog.cancel() }
         }
         builder.show()
-    }
-
-    fun updateTask(task: ModelTask) {
-        adapter?.updateTask(task)
-    }
-
-    fun showTaskEditDialog(task: ModelTask) {
-        val editingDialog = EditTaskDialogFragment.newInstance(task)
-        editingDialog.show(getActivity()!!.supportFragmentManager, "EditTaskDialogFragment")
     }
 }

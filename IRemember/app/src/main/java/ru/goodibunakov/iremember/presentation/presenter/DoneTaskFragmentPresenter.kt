@@ -8,13 +8,20 @@ import io.reactivex.schedulers.Schedulers
 import moxy.InjectViewState
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp.Companion.databaseRepository
+import ru.goodibunakov.iremember.presentation.RxBus
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.view.fragment.DoneTaskFragmentView
 
 @InjectViewState
-class DoneTaskFragmentPresenter : TaskFragmentPresenter<DoneTaskFragmentView>() {
+class DoneTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresenter<DoneTaskFragmentView>() {
 
     private var disposable: Disposable? = null
+    private var disposableSearch: Disposable? = null
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        bus.post("")
+    }
 
     @SuppressLint("CheckResult")
     override fun getTasksFromDb() {
@@ -32,12 +39,37 @@ class DoneTaskFragmentPresenter : TaskFragmentPresenter<DoneTaskFragmentView>() 
 //                })
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        disposable?.dispose()
+    override fun searchSubscribe() {
+        disposableSearch = bus.getEvent()
+                .subscribe { it ->
+                    databaseRepository.findDoneTasks(it)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+                                viewState.checkAdapter()
+                                viewState.removeAllItemsFromAdapter()
+                                for (element in it) {
+                                    viewState.addTask(element)
+                                    Log.d("debug", "donetaskFragmentPresenter $element")
+                                }
+                            }, { error ->
+                                Log.d("debug", error!!.localizedMessage!!)
+                                viewState.showError(R.string.error_database_download)
+                            })
+                }
     }
 
-    override fun searchSubscribe() {
+    fun onItemLongClick(location: Int){
+        viewState.showRemoveTaskDialog(location)
+    }
 
+    fun updateTask(modelTask: ModelTask) {
+        databaseRepository.update(modelTask)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (disposable != null && !disposable!!.isDisposed) disposable?.dispose()
+        if (disposableSearch != null && !disposableSearch!!.isDisposed) disposableSearch?.dispose()
     }
 }

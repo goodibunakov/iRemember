@@ -2,16 +2,26 @@ package ru.goodibunakov.iremember.presentation.view.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.goodibunakov.iremember.R
+import ru.goodibunakov.iremember.presentation.OnItemClickListener
+import ru.goodibunakov.iremember.presentation.OnItemLongClickListener
+import ru.goodibunakov.iremember.presentation.OnPriorityClickListener
 import ru.goodibunakov.iremember.presentation.model.ModelSeparator
 import ru.goodibunakov.iremember.presentation.model.ModelTask
+import ru.goodibunakov.iremember.presentation.presenter.CurrentTaskFragmentPresenter
 import ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragment
+import ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragmentView
+import ru.goodibunakov.iremember.presentation.view.fragment.TaskFragmentView
 import java.util.*
 
-class CurrentTasksAdapter(taskFragment: CurrentTaskFragment) : TasksAdapter(taskFragment) {
+class CurrentTasksAdapter(private val onClickListener: OnItemClickListener,
+                          private val onLongClickListener: OnItemLongClickListener,
+                          private val onPriorityClickListener: OnPriorityClickListener)
+    : TasksAdapter() {
 
     private val calendar = Calendar.getInstance()
 
@@ -19,7 +29,7 @@ class CurrentTasksAdapter(taskFragment: CurrentTaskFragment) : TasksAdapter(task
         if (viewType == TYPE_TASK) {
             val layoutInflater = LayoutInflater.from(parent.context)
             val itemView = layoutInflater.inflate(R.layout.item_task, parent, false)
-            return TaskViewHolderCurrent(itemView)
+            return TaskViewHolderCurrent(itemView, onClickListener, onLongClickListener, onPriorityClickListener)
         }
         val separator = LayoutInflater.from(parent.context).inflate(R.layout.separator, parent, false)
         val type = separator.findViewById<TextView>(R.id.separator)
