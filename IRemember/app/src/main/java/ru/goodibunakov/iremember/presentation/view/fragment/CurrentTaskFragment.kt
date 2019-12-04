@@ -11,8 +11,8 @@ import kotlinx.android.synthetic.main.fragment_current_task.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.goodibunakov.iremember.R
+import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.data.DbHelper
-import ru.goodibunakov.iremember.presentation.model.ModelSeparator
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.presenter.CurrentTaskFragmentPresenter
 import ru.goodibunakov.iremember.presentation.view.adapter.CurrentTasksAdapter
@@ -28,7 +28,7 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView {
 
     @ProvidePresenter
     fun providePresenter(): CurrentTaskFragmentPresenter {
-        return CurrentTaskFragmentPresenter()
+        return CurrentTaskFragmentPresenter(RememberApp.getBus())
     }
 
     init {
@@ -52,81 +52,8 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView {
         Toast.makeText(context, getText(s), Toast.LENGTH_SHORT).show()
     }
 
-    override fun addTask(newTask: ModelTask, saveToDb: Boolean) {
-        var position = -1
-        var separator: ModelSeparator? = null
-
-        checkAdapter()
-        if (adapter!!.itemCount > 0) {
-            for (i in 0 until adapter!!.itemCount) {
-                if (adapter!!.getItem(i).isTask()) {
-                    val task = adapter!!.getItem(i) as ModelTask
-                    if (newTask.date < task.date) {
-                        position = i
-                        break
-                    }
-                }
-            }
-        }
-
-        if (newTask.date != 0L) {
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = newTask.date
-
-            if (calendar.get(Calendar.DAY_OF_YEAR) < Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) {
-                newTask.dateStatus = ModelSeparator.TYPE_OVERDUE
-                if (!adapter!!.containsSeparatorOverdue) {
-                    adapter!!.containsSeparatorOverdue = true
-                    separator = ModelSeparator(ModelSeparator.TYPE_OVERDUE)
-                }
-            } else if (calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) {
-                newTask.dateStatus = ModelSeparator.TYPE_TODAY
-                if (!adapter!!.containsSeparatorToday) {
-                    adapter!!.containsSeparatorToday = true
-                    separator = ModelSeparator(ModelSeparator.TYPE_TODAY)
-                }
-            } else if (calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + 1) {
-                newTask.dateStatus = ModelSeparator.TYPE_TOMORROW
-                if (!adapter!!.containsSeparatorTomorrow) {
-                    adapter!!.containsSeparatorTomorrow = true
-                    separator = ModelSeparator(ModelSeparator.TYPE_TOMORROW)
-                }
-            } else if (calendar.get(Calendar.DAY_OF_YEAR) > Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + 1) {
-                newTask.dateStatus = ModelSeparator.TYPE_FUTURE
-                if (!adapter!!.containsSeparatorFuture) {
-                    adapter!!.containsSeparatorFuture = true
-                    separator = ModelSeparator(ModelSeparator.TYPE_FUTURE)
-                }
-            }
-        }
-
-        if (position != -1) {
-            if (!adapter!!.getItem(position - 1).isTask()) {
-                if (position - 2 >= 0 && adapter!!.getItem(position - 2).isTask()) {
-                    val task = adapter!!.getItem(position - 2) as ModelTask
-                    if (task.dateStatus == newTask.dateStatus) {
-                        position -= 1
-                    }
-                } else if (position - 2 < 0 && newTask.date == 0L) {
-                    position -= 1
-                }
-            }
-
-            if (separator != null) {
-                adapter!!.addItem(position - 1, separator)
-            }
-
-            adapter!!.addItem(position, newTask)
-        } else {
-            if (separator != null) {
-                adapter!!.addItem(separator)
-            }
-            adapter!!.addItem(newTask)
-        }
-
-        if (saveToDb) {
-            activity?.dbHelper!!.saveTask(newTask)
-        }
+    override fun addTask(newTask: ModelTask) {
+        adapter?.addTask(newTask)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -182,19 +109,19 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView {
         onTaskDoneListener?.onTaskDone(modelTask)
     }
 
-    override fun findTasks(title: String) {
-        checkAdapter()
-        adapter!!.removeAllItems()
-        if (activity != null && activity!!.dbHelper != null) {
-            val tasks = ArrayList(activity!!.dbHelper!!.query().getTasks(DbHelper.SELECTION_LIKE_TITLE + " AND "
-                    + DbHelper.SELECTION_STATUS + " OR " + DbHelper.SELECTION_STATUS,
-                    arrayOf("%$title%", ModelTask.STATUS_CURRENT.toString(), ModelTask.STATUS_OVERDUE.toString()),
-                    DbHelper.TASK_DATE_COLUMN))
-            for (i in tasks.indices) {
-                addTask(tasks[i], false)
-            }
-        }
-    }
+//    override fun findTasks(title: String) {
+//        checkAdapter()
+//        adapter!!.removeAllItems()
+//        if (activity != null && activity!!.dbHelper != null) {
+//            val tasks = ArrayList(activity!!.dbHelper!!.query().getTasks(DbHelper.SELECTION_LIKE_TITLE + " AND "
+//                    + DbHelper.SELECTION_STATUS + " OR " + DbHelper.SELECTION_STATUS,
+//                    arrayOf("%$title%", ModelTask.STATUS_CURRENT.toString(), ModelTask.STATUS_OVERDUE.toString()),
+//                    DbHelper.TASK_DATE_COLUMN))
+//            for (i in tasks.indices) {
+//                addTask(tasks[i], false)
+//            }
+//        }
+//    }
 
     override fun checkAdapter() {
         if (adapter == null) {

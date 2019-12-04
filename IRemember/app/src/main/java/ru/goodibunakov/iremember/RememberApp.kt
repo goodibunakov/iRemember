@@ -8,6 +8,7 @@ import ru.goodibunakov.iremember.data.SharedPreferencesRepositoryImpl
 import ru.goodibunakov.iremember.data.TasksDatabase
 import ru.goodibunakov.iremember.domain.DatabaseRepository
 import ru.goodibunakov.iremember.domain.SharedPreferencesRepository
+import ru.goodibunakov.iremember.presentation.RxBus
 
 class RememberApp : MultiDexApplication() {
 
@@ -15,6 +16,7 @@ class RememberApp : MultiDexApplication() {
 
         lateinit var databaseRepository: DatabaseRepository
         lateinit var sharedPreferencesRepository: SharedPreferencesRepository
+        private lateinit var bus: RxBus
 
         private var activityVisible: Boolean = false
         private lateinit var appContext: Context
@@ -34,6 +36,10 @@ class RememberApp : MultiDexApplication() {
         fun activityPaused() {
             activityVisible = false
         }
+
+        fun getBus(): RxBus {
+            return bus
+        }
     }
 
     override fun onCreate() {
@@ -42,5 +48,6 @@ class RememberApp : MultiDexApplication() {
         appContext = this
         databaseRepository = DatabaseRepositoryImpl(TasksDatabase.getDatabase(this).taskDao())
         sharedPreferencesRepository = SharedPreferencesRepositoryImpl(getSharedPreferences("preferences", Context.MODE_PRIVATE))
+        bus = RxBus()
     }
 }

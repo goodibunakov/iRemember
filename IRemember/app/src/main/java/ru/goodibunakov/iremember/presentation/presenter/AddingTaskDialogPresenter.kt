@@ -36,10 +36,6 @@ class AddingTaskDialogPresenter(private val repository: DatabaseRepository) : Mv
         viewState.setEmptyToTimeEditText()
     }
 
-    fun showDatePickerDialog() {
-        viewState.showDatePickerController()
-    }
-
     fun editTextDateClicked() {
         viewState.showDatePickerController()
     }

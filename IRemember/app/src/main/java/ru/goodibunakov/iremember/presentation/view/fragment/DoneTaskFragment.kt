@@ -44,30 +44,30 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView {
         }
     }
 
-    override fun addTask(newTask: ModelTask, saveToDb: Boolean) {
-        var position = -1
-        checkAdapter()
-        if (adapter!!.itemCount > 0) {
-            for (i in 0 until adapter!!.itemCount) {
-                if (adapter!!.getItem(i).isTask()) {
-                    val task = adapter!!.getItem(i) as ModelTask
-                    if (newTask.date < task.date) {
-                        position = i
-                        break
-                    }
-                }
-            }
-        }
-
-        if (position != -1) {
-            adapter!!.addItem(position, newTask)
-        } else {
-            adapter!!.addItem(newTask)
-        }
-
-        if (saveToDb) {
-            activity?.dbHelper!!.saveTask(newTask)
-        }
+    override fun addTask(newTask: ModelTask) {
+//        var position = -1
+//        checkAdapter()
+//        if (adapter!!.itemCount > 0) {
+//            for (i in 0 until adapter!!.itemCount) {
+//                if (adapter!!.getItem(i).isTask()) {
+//                    val task = adapter!!.getItem(i) as ModelTask
+//                    if (newTask.date < task.date) {
+//                        position = i
+//                        break
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (position != -1) {
+//            adapter!!.addItem(position, newTask)
+//        } else {
+//            adapter!!.addItem(newTask)
+//        }
+//
+//        if (saveToDb) {
+//            activity?.dbHelper!!.saveTask(newTask)
+//        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -96,18 +96,18 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView {
         onTaskRestoreListener?.onTaskRestore(modelTask)
     }
 
-    override fun findTasks(title: String) {
-        checkAdapter()
-        adapter?.removeAllItems()
-        if (activity != null && activity!!.dbHelper != null) {
-            val tasks = ArrayList(activity!!.dbHelper!!.query().getTasks(DbHelper.SELECTION_LIKE_TITLE + " AND "
-                    + DbHelper.SELECTION_STATUS,
-                    arrayOf("%$title%", ModelTask.STATUS_DONE.toString()),
-                    DbHelper.TASK_DATE_COLUMN))
-            for (i in tasks.indices) {
-                addTask(tasks[i], false)
-            }
-        }
+    fun findDoneTasks(title: String) {
+//        checkAdapter()
+//        adapter?.removeAllItems()
+//        if (activity != null && activity!!.dbHelper != null) {
+//            val tasks = ArrayList(activity!!.dbHelper!!.query().getTasks(DbHelper.SELECTION_LIKE_TITLE + " AND "
+//                    + DbHelper.SELECTION_STATUS,
+//                    arrayOf("%$title%", ModelTask.STATUS_DONE.toString()),
+//                    DbHelper.TASK_DATE_COLUMN))
+//            for (i in tasks.indices) {
+//                addTask(tasks[i], false)
+//            }
+//        }
     }
 
     override fun checkAdapter() {

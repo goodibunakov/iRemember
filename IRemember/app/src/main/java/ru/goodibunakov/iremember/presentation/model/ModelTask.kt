@@ -63,7 +63,7 @@ class ModelTask : Item {
 
     fun toString(modelTask: ModelTask): String {
         return "title = " + modelTask.title + "  date = " + modelTask.date +
-                "   date = " + Utils.getDate(modelTask.date) + " " + Utils.getTime(modelTask.date)
+                "   date = " + Utils.getDate(modelTask.date) + " " + Utils.getTime(modelTask.date) +
                 "   priority = " + modelTask.priority +
                 "   status = " + modelTask.status +
                 "   priorityColor + " + modelTask.getPriorityColor()

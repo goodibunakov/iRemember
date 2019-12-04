@@ -4,7 +4,6 @@ import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.CompletableObserver
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -34,15 +33,6 @@ class DatabaseRepositoryImpl(private val taskDao: TaskDao) : DatabaseRepository 
                 }
     }
 
-//    override fun insert(modelTask: ModelTask): Completable {
-//        return Single.just(modelTask)
-//                .map { Utils.mapToTask(it) }
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-////                .ignoreElement()
-//                .toCompletable()
-//    }
-
     override fun insert(modelTask: ModelTask) {
         Completable
                 .fromAction { taskDao.insert(Utils.mapToTask(modelTask)) }
@@ -65,7 +55,7 @@ class DatabaseRepositoryImpl(private val taskDao: TaskDao) : DatabaseRepository 
 
     override fun update(modelTask: ModelTask) {
         Completable
-                .fromAction { taskDao.update(Task(modelTask.title, modelTask.date, modelTask.priority, modelTask.status, modelTask.timestamp)) }
+                .fromAction { taskDao.update(Utils.mapToTask(modelTask)) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : CompletableObserver {
@@ -81,5 +71,25 @@ class DatabaseRepositoryImpl(private val taskDao: TaskDao) : DatabaseRepository 
                         Log.d("debug", "Error!!! task NOT updated to DB")
                     }
                 })
+    }
+
+    override fun findCurrentTasks(title: String): Observable<List<ModelTask>> {
+        return taskDao.findCurrentTasks(title)
+                .flatMap { list ->
+                    Observable.fromIterable(list)
+                            .map { item -> Utils.mapToModelTask(item) }
+                            .toList()
+                            .toObservable()
+                }
+    }
+
+    override fun findDoneTasks(title: String): Observable<List<ModelTask>> {
+        return taskDao.findDoneTasks(title)
+                .flatMap { list ->
+                    Observable.fromIterable(list)
+                            .map { item -> Utils.mapToModelTask(item) }
+                            .toList()
+                            .toObservable()
+                }
     }
 }

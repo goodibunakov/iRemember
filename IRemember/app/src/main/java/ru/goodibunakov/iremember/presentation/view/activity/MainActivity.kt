@@ -117,7 +117,7 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
 
         searchView.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextChange(newText: String): Boolean {
-                mainActivityPresenter.findTasks(newText)
+                mainActivityPresenter.find(newText)
 //                currentTaskFragment?.findTasks(newText)
 //                doneTaskFragment?.findTasks(newText)
                 return false
@@ -156,11 +156,11 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
 //    }
 
     override fun onTaskDone(modelTask: ModelTask) {
-        doneTaskFragment!!.addTask(modelTask, false)
+        doneTaskFragment!!.addTask(modelTask)
     }
 
     override fun onTaskRestore(modelTask: ModelTask) {
-        currentTaskFragment!!.addTask(modelTask, false)
+        currentTaskFragment!!.addTask(modelTask)
     }
 
 //    override fun onTaskEdited(updatedTask: ModelTask) {

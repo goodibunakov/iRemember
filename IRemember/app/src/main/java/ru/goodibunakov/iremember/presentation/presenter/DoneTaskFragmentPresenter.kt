@@ -32,14 +32,12 @@ class DoneTaskFragmentPresenter : TaskFragmentPresenter<DoneTaskFragmentView>() 
 //                })
     }
 
-    private fun sortTasks(tasks: List<ModelTask>) {
-        for (i in tasks.indices) {
-            viewState.addTask(tasks[i], false)
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         disposable?.dispose()
+    }
+
+    override fun searchSubscribe() {
+
     }
 }

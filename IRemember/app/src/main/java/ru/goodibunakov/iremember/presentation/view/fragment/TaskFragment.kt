@@ -27,21 +27,18 @@ abstract class TaskFragment : MvpAppCompatFragment(), TaskFragmentView {
         }
 
         alarmHelper = AlarmHelper.getInstance()
-
-//        getTasksFromDb()
     }
 
-    abstract override fun addTask(newTask: ModelTask, saveToDb: Boolean)
+    abstract override fun addTask(newTask: ModelTask)
 
     abstract fun moveTask(modelTask: ModelTask)
 
-    abstract fun findTasks(title: String)
+//    abstract fun findTasks(title: String)
 
     abstract fun checkAdapter()
 
     override fun removeAllItemsFromAdapter() {
         adapter?.removeAllItems()
-
     }
 
     fun showRemoveTaskDialog(location: Int) {

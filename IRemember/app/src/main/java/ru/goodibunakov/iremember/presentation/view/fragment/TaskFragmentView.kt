@@ -9,5 +9,5 @@ import ru.goodibunakov.iremember.presentation.model.ModelTask
 interface TaskFragmentView : MvpView {
     fun removeAllItemsFromAdapter()
     fun showError(s: Int)
-    fun addTask(newTask: ModelTask, saveToDb: Boolean)
+    fun addTask(newTask: ModelTask)
 }

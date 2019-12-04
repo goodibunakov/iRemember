@@ -3,6 +3,7 @@ package ru.goodibunakov.iremember.presentation.view.adapter
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.os.Handler
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -14,8 +15,11 @@ import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.presentation.model.Item
 import ru.goodibunakov.iremember.presentation.model.ModelSeparator
 import ru.goodibunakov.iremember.presentation.model.ModelTask
+import ru.goodibunakov.iremember.presentation.presenter.TaskFragmentPresenter
 import ru.goodibunakov.iremember.presentation.view.fragment.TaskFragment
 import ru.goodibunakov.iremember.utils.Utils
+import java.util.*
+import kotlin.collections.ArrayList
 
 abstract class TasksAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -34,6 +38,8 @@ abstract class TasksAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapt
     fun getItem(position: Int): Item {
         return items!![position]
     }
+
+    abstract fun addTask(newTask: ModelTask)
 
     fun addItem(item: Item) {
         items!!.add(item)
@@ -81,15 +87,15 @@ abstract class TasksAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapt
     }
 
     fun updateTask(newTask: ModelTask) {
-        for (i in 0 until itemCount) {
-            if (getItem(i).isTask()) {
-                val task = getItem(i) as ModelTask
-                if (newTask.timestamp == task.timestamp) {
-                    removeItem(i)
-                    taskFragment.addTask(newTask, false)
-                }
-            }
-        }
+//        for (i in 0 until itemCount) {
+//            if (getItem(i).isTask()) {
+//                val task = getItem(i) as ModelTask
+//                if (newTask.timestamp == task.timestamp) {
+//                    removeItem(i)
+//                    taskFragment.addTask(newTask)
+//                }
+//            }
+//        }
     }
 
     protected fun setAnimation(viewToAnimate: View, position: Int) {
@@ -129,7 +135,7 @@ abstract class TasksAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapt
 
             itemView.setOnLongClickListener {
                 val handler = Handler()
-                handler.postDelayed({ taskFragment.showRemoveTaskDialog(layoutPosition) }, 1000)
+                handler.postDelayed({ taskFragment.showRemoveTaskDialog(layoutPosition) }, 500)
                 true
             }
 
@@ -209,7 +215,7 @@ abstract class TasksAdapter(val taskFragment: TaskFragment) : RecyclerView.Adapt
 
             itemView.setOnLongClickListener {
                 val handler = Handler()
-                handler.postDelayed({ taskFragment.showRemoveTaskDialog(layoutPosition) }, 1000)
+                handler.postDelayed({ taskFragment.showRemoveTaskDialog(layoutPosition) }, 500)
                 true
             }
 

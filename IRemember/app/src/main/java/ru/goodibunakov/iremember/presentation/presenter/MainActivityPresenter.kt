@@ -5,6 +5,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import moxy.InjectViewState
 import moxy.MvpPresenter
+import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.data.SharedPreferencesRepositoryImpl
 import ru.goodibunakov.iremember.domain.DatabaseRepository
 import ru.goodibunakov.iremember.domain.SharedPreferencesRepository
@@ -35,19 +36,6 @@ class MainActivityPresenter(private val databaseRepository: DatabaseRepository,
         sharedPreferencesRepository.putBoolean(SharedPreferencesRepositoryImpl.SPLASH_IS_INVISIBLE, isChecked)
     }
 
-//    fun startTaskLoading() {
-//        disp = databaseRepository.getAllTasks()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe({
-//                    //ok
-//                    viewState.hideProgressbar()
-//                    viewState.showTasks()
-//                }, { error ->
-//                    viewState.showError("Ошибка загрузки из БД")
-//                })
-//    }
-
     fun itemSelected(id: Int) {
         viewState.itemSelected(id)
     }
@@ -62,7 +50,7 @@ class MainActivityPresenter(private val databaseRepository: DatabaseRepository,
         super.onDestroy()
     }
 
-    fun findTasks(newText: String) {
-
+    fun find(newText: String) {
+        RememberApp.getBus().post(newText)
     }
 }
