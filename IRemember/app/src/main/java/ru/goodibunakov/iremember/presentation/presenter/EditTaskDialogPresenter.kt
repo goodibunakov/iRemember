@@ -15,15 +15,25 @@ class EditTaskDialogPresenter(private val repository: DatabaseRepository) : MvpP
     lateinit var modelTask: ModelTask
     lateinit var calendar: Calendar
 
+    var titleIn = ""
+    var dateIn = 0L
+    var priorityIn = 0
+    var timestampIn = 0L
+
     fun onCreateDialog(title: String, date: Long, priority: Int, timestamp: Long) {
+        titleIn = title
+        dateIn = date
+        priorityIn = priority
+        timestampIn = timestamp
+
         modelTask = ModelTask(title, date, priority, 0, timestamp)
         Log.d("debug", "modelTask = " + modelTask.toString(modelTask))
         calendar = Calendar.getInstance()
-       if (date == 0L) {
-           calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + 1)
-       } else {
-           calendar.timeInMillis = modelTask.date
-       }
+        if (date == 0L) {
+            calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + 1)
+        } else {
+            calendar.timeInMillis = modelTask.date
+        }
         Log.d("debug", "calendar = ${calendar.timeInMillis}")
     }
 
@@ -42,11 +52,6 @@ class EditTaskDialogPresenter(private val repository: DatabaseRepository) : MvpP
     fun nothingSelected() {
         modelTask.priority = 0
     }
-
-//    fun setDateFromUI() {
-//        if (modelTask.date != 0L)
-//        Log.d("debug", "calendar from ui = ${calendar.timeInMillis}")
-//    }
 
     fun setEmptyDateToEditText() {
         viewState.setEmptyDateToEditText()
@@ -105,7 +110,8 @@ class EditTaskDialogPresenter(private val repository: DatabaseRepository) : MvpP
 
     fun updateTask() {
         Log.d("debug", "modelTask = " + modelTask.toString(modelTask))
-        repository.update(modelTask)
+        if (titleIn != modelTask.title || dateIn != modelTask.date || priorityIn != modelTask.priority || timestampIn != modelTask.timestamp)
+            repository.update(modelTask)
     }
 
     fun initTitle() {

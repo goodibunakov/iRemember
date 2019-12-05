@@ -84,18 +84,6 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return if (items != null) items!!.size else 0
     }
 
-    fun updateTask(newTask: ModelTask) {
-//        for (i in 0 until itemCount) {
-//            if (getItem(i).isTask()) {
-//                val task = getItem(i) as ModelTask
-//                if (newTask.timestamp == task.timestamp) {
-//                    removeItem(i)
-//                    taskFragment.addTask(newTask)
-//                }
-//            }
-//        }
-    }
-
     protected fun setAnimation(viewToAnimate: View, position: Int) {
         if (position > lastPosition) {
             val animation = AnimationUtils.loadAnimation(viewToAnimate.context, android.R.anim.slide_in_left)
@@ -129,6 +117,7 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
             itemView.tvTitle.text = model.title
             itemView.tvTitle.setTextColor(ContextCompat.getColor(itemView.tvTitle.context, android.R.color.black))
+            itemView.tvDate.setTextColor(ContextCompat.getColor(itemView.tvDate.context, android.R.color.darker_gray))
             itemView.priority.setImageResource(R.drawable.circle_full)
             itemView.priority.setColorFilter(ContextCompat.getColor(itemView.priority.context, model.getPriorityColor()))
 
@@ -150,7 +139,7 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 model.status = ModelTask.STATUS_DONE
 
                 itemView.tvTitle.setTextColor(ContextCompat.getColor(itemView.tvTitle.context, R.color.gray50))
-                itemView.tvDate.setTextColor(ContextCompat.getColor(itemView.tvDate.context, R.color.colorDarkGrey))
+                itemView.tvDate.setTextColor(ContextCompat.getColor(itemView.tvDate.context, android.R.color.darker_gray))
                 itemView.priority.setColorFilter(ContextCompat.getColor(itemView.priority.context, model.getPriorityColor()))
 
                 val flipIn = ObjectAnimator.ofFloat(itemView.priority, View.ROTATION_Y, -180f, 0f)
@@ -169,7 +158,6 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
                                 override fun onAnimationEnd(animation: Animator) {
                                     itemView.visibility = View.GONE
-//                                    taskFragment.moveTask(model)
                                     removeItem(layoutPosition)
                                     onPriorityClickListener.onPriorityClick(model)
                                 }
@@ -247,7 +235,6 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
                                 override fun onAnimationEnd(animation: Animator) {
                                     itemView.visibility = View.GONE
-//                                    taskFragment.moveTask(model)
                                     removeItem(layoutPosition)
                                     onPriorityClickListener.onPriorityClick(model)
                                 }

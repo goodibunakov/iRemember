@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 import ru.goodibunakov.iremember.data.DatabaseConstants.Companion.DATABASE_NAME
 import ru.goodibunakov.iremember.data.DatabaseConstants.Companion.DATABASE_VERSION
 

@@ -1,6 +1,6 @@
 package ru.goodibunakov.iremember.presentation.view.fragment
 
-import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -17,6 +17,7 @@ import ru.goodibunakov.iremember.presentation.OnPriorityClickListener
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.presenter.DoneTaskFragmentPresenter
 import ru.goodibunakov.iremember.presentation.view.adapter.DoneTasksAdapter
+import ru.goodibunakov.iremember.presentation.view.dialog.RemoveDialog
 
 class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickListener, OnPriorityClickListener {
 
@@ -30,29 +31,6 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
 
     init {
         adapter = DoneTasksAdapter(this, this)
-    }
-
-    private var onTaskRestoreListener: OnTaskRestoreListener? = null
-
-    interface OnTaskRestoreListener {
-        fun onTaskRestore(modelTask: ModelTask)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            onTaskRestoreListener = context as OnTaskRestoreListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$context must implement OnTaskRestoreListener")
-        }
-    }
-
-//    override fun addTask(newTask: ModelTask) {
-//        adapter?.addTask(newTask)
-//    }
-
-    override fun moveTask(modelTask: ModelTask) {
-//        to delete
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -74,13 +52,6 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
         recyclerView.adapter = adapter
     }
 
-//    override fun moveTask(modelTask: ModelTask) {
-//        if (modelTask.date != 0L) {
-//            alarmHelper?.setAlarm(modelTask)
-//        }
-//        onTaskRestoreListener?.onTaskRestore(modelTask)
-//    }
-
     override fun checkAdapter() {
         if (adapter == null) {
             adapter = DoneTasksAdapter(this, this)
@@ -94,5 +65,19 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
 
     override fun onPriorityClick(modelTask: ModelTask) {
         doneTaskFragmentPresenter.updateTask(modelTask)
+    }
+
+    override fun showRemoveTaskDialog(location: Int) {
+        dialog = RemoveDialog.generateRemoveDialog(context!!, DialogInterface.OnClickListener { _, which ->
+            if (which == DialogInterface.BUTTON_POSITIVE){
+                doneTaskFragmentPresenter.doRemove(location, (adapter?.getItem(location) as ModelTask).timestamp)
+            } else {
+                doneTaskFragmentPresenter.cancelDialog()
+            }
+        }).show()
+    }
+
+    override fun cancelRemoveDialog() {
+        dialog.cancel()
     }
 }

@@ -1,6 +1,6 @@
 package ru.goodibunakov.iremember.presentation.view.fragment
 
-import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -21,10 +21,10 @@ import ru.goodibunakov.iremember.presentation.presenter.CurrentTaskFragmentPrese
 import ru.goodibunakov.iremember.presentation.view.adapter.CurrentTasksAdapter
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment
 import ru.goodibunakov.iremember.presentation.view.dialog.EditTaskDialogFragment
+import ru.goodibunakov.iremember.presentation.view.dialog.RemoveDialog
 
 class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClickListener, OnItemLongClickListener, OnPriorityClickListener {
 
-    private var onTaskDoneListener: OnTaskDoneListener? = null
 
     @InjectPresenter
     lateinit var currentTaskFragmentPresenter: CurrentTaskFragmentPresenter
@@ -38,27 +38,23 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
         adapter = CurrentTasksAdapter(this, this, this)
     }
 
-    interface OnTaskDoneListener {
-        fun onTaskDone(modelTask: ModelTask)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            onTaskDoneListener = context as OnTaskDoneListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$context must implement OnTaskDoneListener")
-        }
-    }
-
     override fun showError(s: Int) {
         Toast.makeText(context, getText(s), Toast.LENGTH_SHORT).show()
     }
 
-//    override fun addTask(newTask: ModelTask) {
-//        adapter?.addTask(newTask)
-//    }
+    override fun showRemoveTaskDialog(location: Int) {
+        dialog = RemoveDialog.generateRemoveDialog(context!!, DialogInterface.OnClickListener { _, which ->
+            if (which == DialogInterface.BUTTON_POSITIVE){
+                currentTaskFragmentPresenter.doRemove(location, (adapter?.getItem(location) as ModelTask).timestamp)
+            } else {
+                currentTaskFragmentPresenter.cancelDialog()
+            }
+        }).show()
+    }
 
+    override fun cancelRemoveDialog() {
+        dialog.cancel()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -108,11 +104,6 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
         fab.show()
     }
 
-    override fun moveTask(modelTask: ModelTask) {
-        alarmHelper?.removeAlarm(modelTask.timestamp)
-        onTaskDoneListener?.onTaskDone(modelTask)
-    }
-
     override fun checkAdapter() {
         if (adapter == null) {
             adapter = CurrentTasksAdapter(this, this, this)
@@ -125,7 +116,7 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
 
     override fun showEditTaskDialog(task: ModelTask) {
         val editingDialog = EditTaskDialogFragment.newInstance(task)
-        editingDialog.show(getActivity()!!.supportFragmentManager, "EditTaskDialogFragment")
+        editingDialog.show(activity!!.supportFragmentManager, "EditTaskDialogFragment")
     }
 
     override fun onItemLongClick(location: Int): Boolean {

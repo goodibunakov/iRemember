@@ -15,29 +15,29 @@ import ru.goodibunakov.iremember.presentation.view.fragment.DoneTaskFragmentView
 @InjectViewState
 class DoneTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresenter<DoneTaskFragmentView>() {
 
-    private var disposable: Disposable? = null
-    private var disposableSearch: Disposable? = null
+//    private var disposable: Disposable? = null
+    private lateinit var disposableSearch: Disposable
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         bus.post("")
     }
 
-    @SuppressLint("CheckResult")
-    override fun getTasksFromDb() {
-        viewState.checkAdapter()
-        viewState.removeAllItemsFromAdapter()
-
-//        disposable = databaseRepository.getDoneTasks()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe({
-//                    sortTasks(it)
-//                }, { error ->
-//                    Log.e("debug", error.stackTrace.toString())
-//                    viewState.showError(R.string.error_database_dowload)
-//                })
-    }
+//    @SuppressLint("CheckResult")
+//    override fun getTasksFromDb() {
+//        viewState.checkAdapter()
+//        viewState.removeAllItemsFromAdapter()
+//
+////        disposable = databaseRepository.getDoneTasks()
+////                .subscribeOn(Schedulers.io())
+////                .observeOn(AndroidSchedulers.mainThread())
+////                .subscribe({
+////                    sortTasks(it)
+////                }, { error ->
+////                    Log.e("debug", error.stackTrace.toString())
+////                    viewState.showError(R.string.error_database_dowload)
+////                })
+//    }
 
     override fun searchSubscribe() {
         disposableSearch = bus.getEvent()
@@ -60,7 +60,7 @@ class DoneTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresenter<
     }
 
     fun onItemLongClick(location: Int){
-        viewState.showRemoveTaskDialog(location)
+        super.showRemoveTaskDialog(location)
     }
 
     fun updateTask(modelTask: ModelTask) {
@@ -69,7 +69,7 @@ class DoneTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresenter<
 
     override fun onDestroy() {
         super.onDestroy()
-        if (disposable != null && !disposable!!.isDisposed) disposable?.dispose()
-        if (disposableSearch != null && !disposableSearch!!.isDisposed) disposableSearch?.dispose()
+//        if (disposable != null && !disposable!!.isDisposed) disposable?.dispose()
+        if (::disposableSearch.isInitialized && !disposableSearch.isDisposed) disposableSearch.dispose()
     }
 }

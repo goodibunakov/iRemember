@@ -13,25 +13,25 @@ import ru.goodibunakov.iremember.utils.Utils
 
 class DatabaseRepositoryImpl(private val taskDao: TaskDao) : DatabaseRepository {
 
-    override fun getCurrentTasks(): Observable<List<ModelTask>> {
-        return taskDao.getCurrentTasks()
-                .flatMap { list ->
-                    Observable.fromIterable(list)
-                            .map { item -> Utils.mapToModelTask(item) }
-                            .toList()
-                            .toObservable()
-                }
-    }
-
-    override fun getDoneTasks(): Observable<List<ModelTask>> {
-        return taskDao.getDoneTasks()
-                .flatMap { list ->
-                    Observable.fromIterable(list)
-                            .map { item -> Utils.mapToModelTask(item) }
-                            .toList()
-                            .toObservable()
-                }
-    }
+//    override fun getCurrentTasks(): Observable<List<ModelTask>> {
+//        return taskDao.getCurrentTasks()
+//                .flatMap { list ->
+//                    Observable.fromIterable(list)
+//                            .map { item -> Utils.mapToModelTask(item) }
+//                            .toList()
+//                            .toObservable()
+//                }
+//    }
+//
+//    override fun getDoneTasks(): Observable<List<ModelTask>> {
+//        return taskDao.getDoneTasks()
+//                .flatMap { list ->
+//                    Observable.fromIterable(list)
+//                            .map { item -> Utils.mapToModelTask(item) }
+//                            .toList()
+//                            .toObservable()
+//                }
+//    }
 
     override fun insert(modelTask: ModelTask) {
         Completable
@@ -91,5 +91,9 @@ class DatabaseRepositoryImpl(private val taskDao: TaskDao) : DatabaseRepository 
                             .toList()
                             .toObservable()
                 }
+    }
+
+    override fun delete(timestamp: Long): Completable {
+        return taskDao.delete(timestamp)
     }
 }

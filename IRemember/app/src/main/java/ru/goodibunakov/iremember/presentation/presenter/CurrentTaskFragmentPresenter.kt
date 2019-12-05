@@ -1,8 +1,6 @@
 package ru.goodibunakov.iremember.presentation.presenter
 
-import android.annotation.SuppressLint
 import android.util.Log
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -16,8 +14,8 @@ import ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragmentV
 @InjectViewState
 class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresenter<CurrentTaskFragmentView>() {
 
-    private var disposable: Disposable? = null
-    private var disposableSearch: Disposable? = null
+//    private var disposable: Disposable? = null
+    private lateinit var disposableSearch: Disposable
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -47,23 +45,23 @@ class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresent
                 }
     }
 
-    @SuppressLint("CheckResult")
-    override fun getTasksFromDb() {
-//        disposable = databaseRepository.getCurrentTasks()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe({
-//                    viewState.checkAdapter()
-//                    viewState.removeAllItemsFromAdapter()
-//                    Log.d("debug", "it = $it")
-//                    for (element in it) {
-//                        viewState.addTask(element)
-//                    }
-//                }, { error ->
-//                    Log.d("debug", error!!.localizedMessage!!)
-//                    viewState.showError(R.string.error_database_download)
-//                })
-    }
+//    @SuppressLint("CheckResult")
+//    override fun getTasksFromDb() {
+////        disposable = databaseRepository.getCurrentTasks()
+////                .subscribeOn(Schedulers.io())
+////                .observeOn(AndroidSchedulers.mainThread())
+////                .subscribe({
+////                    viewState.checkAdapter()
+////                    viewState.removeAllItemsFromAdapter()
+////                    Log.d("debug", "it = $it")
+////                    for (element in it) {
+////                        viewState.addTask(element)
+////                    }
+////                }, { error ->
+////                    Log.d("debug", error!!.localizedMessage!!)
+////                    viewState.showError(R.string.error_database_download)
+////                })
+//    }
 
     fun hideFab() {
         viewState.hideFab()
@@ -75,8 +73,8 @@ class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresent
 
     override fun onDestroy() {
         super.onDestroy()
-        if (disposable != null && !disposable!!.isDisposed) disposable?.dispose()
-        if (disposableSearch != null && !disposableSearch!!.isDisposed) disposableSearch?.dispose()
+//        if (disposable != null && !disposable!!.isDisposed) disposable?.dispose()
+        if (::disposableSearch.isInitialized && !disposableSearch.isDisposed) disposableSearch.dispose()
     }
 
     fun onItemClick(task: ModelTask) {

@@ -16,7 +16,6 @@ import moxy.presenter.ProvidePresenter
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.alarm.AlarmHelper
-import ru.goodibunakov.iremember.data.DbHelper
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.presenter.MainActivityPresenter
 import ru.goodibunakov.iremember.presentation.view.adapter.TabAdapter2
@@ -24,13 +23,9 @@ import ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragment
 import ru.goodibunakov.iremember.presentation.view.fragment.DoneTaskFragment
 import ru.goodibunakov.iremember.presentation.view.fragment.SplashFragment
 
-class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityView,
-        DoneTaskFragment.OnTaskRestoreListener,
-        CurrentTaskFragment.OnTaskDoneListener {
+class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityView {
 
     private var fragmentManager: FragmentManager? = null
-
-    var dbHelper: DbHelper? = null
 
     @InjectPresenter
     lateinit var mainActivityPresenter: MainActivityPresenter
@@ -47,7 +42,6 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        dbHelper = DbHelper(applicationContext)
         AlarmHelper.getInstance().initAlarmManager()
 
         fragmentManager = supportFragmentManager
@@ -136,21 +130,8 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
                 }).attach()
     }
 
-    override fun onTaskDone(modelTask: ModelTask) {
-//        doneTaskFragment!!.addTask(modelTask)
-    }
-
-    override fun onTaskRestore(modelTask: ModelTask) {
-//        currentTaskFragment!!.addTask(modelTask)
-    }
-
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
 
-    }
-
-    interface OnTabSelectedListener : TabLayout.OnTabSelectedListener {
-        override fun onTabUnselected(tab: TabLayout.Tab) {}
-        override fun onTabReselected(tab: TabLayout.Tab) {}
     }
 
     interface OnQueryTextListener : SearchView.OnQueryTextListener {

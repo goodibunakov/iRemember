@@ -26,7 +26,7 @@
     <string name="separator_tomorrow">Завтра</string>
     <string name="separator_future">Будущие</string>
 
-    <string name="error_database_download">Ошибка загрузки из базы данных</string>
+    <string name="error_database_download">Ошибка базы данных</string>
 
     <string-array name="priority_array">
         <item>Низкий приоритет</item>

@@ -7,9 +7,9 @@ import ru.goodibunakov.iremember.presentation.model.ModelTask
 @StateStrategyType(value = AddToEndStrategy::class)
 interface CurrentTaskFragmentView : TaskFragmentView {
     fun showAddingTaskDialog()
-    fun checkAdapter()
+    override fun checkAdapter()
     fun showFab()
     fun hideFab()
-//    override fun addTask(newTask: ModelTask)
     fun showEditTaskDialog(task: ModelTask)
+    override fun cancelRemoveDialog()
 }
