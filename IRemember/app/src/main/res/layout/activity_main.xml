@@ -12,11 +12,11 @@
         android:layout_height="match_parent"
         tools:context="ru.goodibunakov.iremember.presentation.view.activity.MainActivityJ">
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/viewPager"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar_layout"

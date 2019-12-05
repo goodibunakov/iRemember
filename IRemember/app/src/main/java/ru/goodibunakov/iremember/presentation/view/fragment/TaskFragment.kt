@@ -31,7 +31,7 @@ abstract class TaskFragment : MvpAppCompatFragment(), TaskFragmentView {
         adapter?.addTask(newTask)
     }
 
-//    abstract fun moveTask(modelTask: ModelTask)
+    abstract fun moveTask(modelTask: ModelTask)
 
     abstract fun checkAdapter()
 

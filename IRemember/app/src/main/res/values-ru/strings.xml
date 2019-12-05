@@ -25,6 +25,7 @@
     <string name="separator_today">Сегодня</string>
     <string name="separator_tomorrow">Завтра</string>
     <string name="separator_future">Будущие</string>
+
     <string name="error_database_download">Ошибка загрузки из базы данных</string>
 
     <string-array name="priority_array">
@@ -32,4 +33,6 @@
         <item>Нормальный приоритет</item>
         <item>Высокий приоритет</item>
     </string-array>
+
+    <string name="version">Версия %1$s</string>
 </resources>

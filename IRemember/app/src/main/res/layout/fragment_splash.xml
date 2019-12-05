@@ -14,4 +14,13 @@
         app:srcCompat="@drawable/logo"
         tools:ignore="ContentDescription" />
 
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="@string/version"
+        android:layout_gravity="center_horizontal|bottom"
+        android:textColor="@color/colorLightGrey"
+        android:layout_marginBottom="32dp"/>
+
 </FrameLayout>

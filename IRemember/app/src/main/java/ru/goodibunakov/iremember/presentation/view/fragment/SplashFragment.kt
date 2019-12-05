@@ -8,8 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import kotlinx.android.synthetic.main.fragment_splash.view.*
+import ru.goodibunakov.iremember.BuildConfig
 import ru.goodibunakov.iremember.R
-import java.util.*
 
 class SplashFragment : Fragment(), Animation.AnimationListener {
 
@@ -18,6 +19,9 @@ class SplashFragment : Fragment(), Animation.AnimationListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
+        val view = inflater.inflate(R.layout.fragment_splash, container, false)
+        view.version.text = String.format(resources.getString(R.string.version), BuildConfig.VERSION_NAME)
         SplashTask().execute()
 
         splashIn = AnimationUtils.loadAnimation(activity, R.anim.splash_anim_in)
@@ -27,7 +31,7 @@ class SplashFragment : Fragment(), Animation.AnimationListener {
         splashOut?.setAnimationListener(this)
         splashOut?.startOffset = 1000
 
-        return inflater.inflate(R.layout.fragment_splash, container, false)
+        return view
     }
 
     override fun onAnimationStart(animation: Animation) {}
