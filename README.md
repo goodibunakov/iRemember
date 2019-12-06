@@ -1,3 +1,3 @@
 # iRemember
 
-Разбор курса Виталия Непочатова
+Kotlin, MVP (Moxy), Rx, Room
