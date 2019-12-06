@@ -19,6 +19,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="@string/version"
+        android:textSize="12sp"
+        android:textStyle="normal"
         android:layout_gravity="center_horizontal|bottom"
         android:textColor="@color/colorLightGrey"
         android:layout_marginBottom="32dp"/>

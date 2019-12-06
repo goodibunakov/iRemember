@@ -14,6 +14,6 @@ interface TaskFragmentView : MvpView {
     fun addTask(newTask: ModelTask)
     fun showRemoveTaskDialog(location: Int)
     fun cancelRemoveDialog()
-    fun removeAlarm()
     fun dismissRemoveDialog()
+    fun showSuccess(text: Int)
 }

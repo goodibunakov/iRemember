@@ -1,20 +1,15 @@
 package ru.goodibunakov.iremember.presentation.presenter
 
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.data.SharedPreferencesRepositoryImpl
-import ru.goodibunakov.iremember.domain.DatabaseRepository
 import ru.goodibunakov.iremember.domain.SharedPreferencesRepository
 import ru.goodibunakov.iremember.presentation.view.activity.MainActivityView
 
 @InjectViewState
-class MainActivityPresenter(private val databaseRepository: DatabaseRepository,
-                            private val sharedPreferencesRepository: SharedPreferencesRepository)
-    : MvpPresenter<MainActivityView>() {
+class MainActivityPresenter(private val sharedPreferencesRepository: SharedPreferencesRepository) : MvpPresenter<MainActivityView>() {
 
     private var disp: Disposable? = null
 

@@ -5,12 +5,14 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import moxy.MvpPresenter
 import ru.goodibunakov.iremember.R
+import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.RememberApp.Companion.databaseRepository
+import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.view.fragment.TaskFragmentView
 
 abstract class TaskFragmentPresenter<V : TaskFragmentView> : MvpPresenter<V>() {
 
-    lateinit var disposable: Disposable
+    private lateinit var disposable: Disposable
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -19,8 +21,6 @@ abstract class TaskFragmentPresenter<V : TaskFragmentView> : MvpPresenter<V>() {
     }
 
     protected abstract fun searchSubscribe()
-
-//    protected abstract fun getTasksFromDb()
 
     protected fun showRemoveTaskDialog(location: Int) {
         viewState.showRemoveTaskDialog(location)
@@ -32,11 +32,20 @@ abstract class TaskFragmentPresenter<V : TaskFragmentView> : MvpPresenter<V>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe ({
                     viewState.removeItemFromAdapter(location)
-                    viewState.removeAlarm()
+                    removeAlarm(timestamp)
                     viewState.dismissRemoveDialog()
+                    viewState.showSuccess(R.string.removed)
                 }, {
                     viewState.showError(R.string.error_database_download)
                 })
+    }
+
+    fun setAlarm(modelTask: ModelTask) {
+        RememberApp.alarmHelper.setAlarm(modelTask)
+    }
+
+    fun removeAlarm(timestamp: Long) {
+        RememberApp.alarmHelper.removeAlarm(timestamp)
     }
 
     fun cancelDialog() {

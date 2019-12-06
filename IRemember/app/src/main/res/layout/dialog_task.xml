@@ -34,7 +34,7 @@
             android:hint="@string/task_date"
             android:layout_below="@id/dialogTaskTitle"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginRight="16dp">
 
             <EditText
@@ -55,7 +55,7 @@
             android:hint="@string/task_time"
             android:layout_below="@id/dialogTaskTitle"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
             android:layout_toEndOf="@id/dialogTaskDate"
             android:layout_toRightOf="@id/dialogTaskDate">
@@ -76,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/dialogTaskDate"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="13dp"
             tools:ignore="RtlHardcoded" />

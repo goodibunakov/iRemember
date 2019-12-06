@@ -1,4 +1,4 @@
-package ru.goodibunakov.iremember.alarm
+package ru.goodibunakov.iremember.presentation.alarm
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -8,20 +8,22 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
-import ru.goodibunakov.iremember.alarm.AlarmHelper.Companion.ALARM_KEY_COLOR
-import ru.goodibunakov.iremember.alarm.AlarmHelper.Companion.ALARM_KEY_TIMESTAMP
-import ru.goodibunakov.iremember.alarm.AlarmHelper.Companion.ALARM_KEY_TITLE
+import ru.goodibunakov.iremember.presentation.alarm.AlarmHelper.Companion.ALARM_KEY_COLOR
+import ru.goodibunakov.iremember.presentation.alarm.AlarmHelper.Companion.ALARM_KEY_TIMESTAMP
+import ru.goodibunakov.iremember.presentation.alarm.AlarmHelper.Companion.ALARM_KEY_TITLE
 import ru.goodibunakov.iremember.presentation.view.activity.MainActivity
 
 class AlarmBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-
+        Log.d("debug", "AlarmBroadcastReceiver : BroadcastReceiver()")
+        Log.d("debug", "intent = $intent")
         val title = intent.getStringExtra(ALARM_KEY_TITLE)
         val timestamp = intent.getLongExtra(ALARM_KEY_TIMESTAMP, 0)
         val color = intent.getIntExtra(ALARM_KEY_COLOR, 0)
@@ -41,6 +43,8 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
         builder.setContentText(title)
         builder.color = ContextCompat.getColor(context, color)
         builder.setSmallIcon(R.drawable.ic_notification)
+        builder.setAutoCancel(true)
+        builder.setLights(color, 5000, 5000)
         builder.setDefaults(Notification.DEFAULT_ALL)
         builder.setContentIntent(pendingIntent)
 

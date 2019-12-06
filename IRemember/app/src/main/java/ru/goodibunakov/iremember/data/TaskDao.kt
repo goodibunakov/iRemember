@@ -15,12 +15,6 @@ import ru.goodibunakov.iremember.data.DatabaseConstants.Companion.TASK_TITLE_COL
 @Dao
 interface TaskDao {
 
-//    @Query("SELECT * FROM tasks_table WHERE task_status = $STATUS_CURRENT OR task_status = $STATUS_OVERDUE ORDER BY task_date DESC")
-//    fun getCurrentTasks(): Observable<List<Task>>
-//
-//    @Query("SELECT * FROM tasks_table WHERE task_status = $STATUS_DONE ORDER BY task_date DESC")
-//    fun getDoneTasks(): Observable<List<Task>>
-
     @Query("SELECT * FROM $TASKS_TABLE WHERE $TASK_TITLE_COLUMN LIKE '%' || :queryTitle || '%' AND $TASK_STATUS_COLUMN = $STATUS_CURRENT OR $TASK_STATUS_COLUMN = $STATUS_OVERDUE ORDER BY $TASK_DATE_COLUMN DESC")
     fun findCurrentTasks(queryTitle: String): Observable<List<Task>>
 

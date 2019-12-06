@@ -1,4 +1,4 @@
-package ru.goodibunakov.iremember.utils
+package ru.goodibunakov.iremember.presentation.utils
 
 import ru.goodibunakov.iremember.data.Task
 import ru.goodibunakov.iremember.presentation.model.ModelTask

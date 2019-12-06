@@ -16,7 +16,7 @@ import ru.goodibunakov.iremember.presentation.OnPriorityClickListener
 import ru.goodibunakov.iremember.presentation.model.Item
 import ru.goodibunakov.iremember.presentation.model.ModelSeparator
 import ru.goodibunakov.iremember.presentation.model.ModelTask
-import ru.goodibunakov.iremember.utils.Utils
+import ru.goodibunakov.iremember.presentation.utils.Utils
 import kotlin.collections.ArrayList
 
 abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

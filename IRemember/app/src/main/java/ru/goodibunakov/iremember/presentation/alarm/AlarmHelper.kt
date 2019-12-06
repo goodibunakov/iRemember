@@ -1,9 +1,10 @@
-package ru.goodibunakov.iremember.alarm
+package ru.goodibunakov.iremember.presentation.alarm
 
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import androidx.core.app.AlarmManagerCompat
 import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 
@@ -25,7 +26,7 @@ class AlarmHelper private constructor() {
         }
     }
 
-    private var alarmManager: AlarmManager? = null
+    private lateinit var alarmManager: AlarmManager
 
 
     fun initAlarmManager() {
@@ -41,12 +42,13 @@ class AlarmHelper private constructor() {
         val pendingIntent = PendingIntent.getBroadcast(RememberApp.getAppContext(),
                 task.timestamp.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        alarmManager!!.set(AlarmManager.RTC_WAKEUP, task.date, pendingIntent)
+//        alarmManager!!.set(AlarmManager.RTC_WAKEUP, task.date, pendingIntent)
+        AlarmManagerCompat.setExact(alarmManager, AlarmManager.RTC_WAKEUP, task.date, pendingIntent)
     }
 
     fun removeAlarm(timestamp: Long) {
         val intent = Intent(RememberApp.getAppContext(), AlarmBroadcastReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(RememberApp.getAppContext(), timestamp.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        alarmManager!!.cancel(pendingIntent)
+        alarmManager.cancel(pendingIntent)
     }
 }

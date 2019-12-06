@@ -1,4 +1,4 @@
-package ru.goodibunakov.iremember.alarm
+package ru.goodibunakov.iremember.presentation.alarm
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -11,13 +11,18 @@ import ru.goodibunakov.iremember.RememberApp
 
 class AlarmSetter : BroadcastReceiver() {
 
-    lateinit var disposable: Disposable
+    private lateinit var disposable: Disposable
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        if (intent?.action != "android.intent.action.BOOT_COMPLETED") return
+        if (intent?.action != Intent.ACTION_BOOT_COMPLETED
+                || intent.action != "android.intent.action.RECEIVE_BOOT_COMPLETED"
+                || intent.action != Intent.ACTION_REBOOT
+                || intent.action != "android.intent.action.QUICKBOOT_POWERON"
+                || intent.action != "com.htc.intent.action.QUICKBOOT_POWERON")
+            return
 
-        val alarmHelper = AlarmHelper.getInstance()
-        alarmHelper.initAlarmManager()
+
+        RememberApp.alarmHelper.initAlarmManager()
         disposable = RememberApp.getBus().getEvent()
                 .subscribe { it ->
                     RememberApp.databaseRepository.findCurrentTasks(it)
@@ -26,7 +31,7 @@ class AlarmSetter : BroadcastReceiver() {
                             .subscribe({
                                 for (element in it) {
                                     if (element.date != 0L) {
-                                        alarmHelper.setAlarm(element)
+                                        RememberApp.alarmHelper.setAlarm(element)
                                     }
                                 }
                                 dispose()
@@ -34,20 +39,6 @@ class AlarmSetter : BroadcastReceiver() {
                                 Log.d("debug", "Ошибка в AlarmSetter ${error!!.localizedMessage!!}")
                             })
                 }
-
-//        RememberApp.getBus().post("")
-
-//        val tasks = ArrayList(dbHelper.query().getTasks(
-//                DbHelper.SELECTION_STATUS + " OR " + DbHelper.SELECTION_STATUS,
-//                arrayOf(ModelTask.STATUS_CURRENT.toString(), ModelTask.STATUS_OVERDUE.toString()),
-//                DbHelper.TASK_DATE_COLUMN)
-//        )
-//
-//        for (task in tasks) {
-//            if (task.date != 0L) {
-//                alarmHelper.setAlarm(task)
-//            }
-//        }
     }
 
     private fun dispose() {

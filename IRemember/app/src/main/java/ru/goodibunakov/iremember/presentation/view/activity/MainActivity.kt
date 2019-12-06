@@ -7,7 +7,6 @@ import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
 import moxy.MvpAppCompatActivity
@@ -15,13 +14,10 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
-import ru.goodibunakov.iremember.alarm.AlarmHelper
-import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.presenter.MainActivityPresenter
 import ru.goodibunakov.iremember.presentation.view.adapter.TabAdapter2
-import ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragment
-import ru.goodibunakov.iremember.presentation.view.fragment.DoneTaskFragment
 import ru.goodibunakov.iremember.presentation.view.fragment.SplashFragment
+
 
 class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityView {
 
@@ -32,7 +28,7 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
 
     @ProvidePresenter
     fun providePresenter(): MainActivityPresenter {
-        return MainActivityPresenter(RememberApp.databaseRepository, RememberApp.sharedPreferencesRepository)
+        return MainActivityPresenter(RememberApp.sharedPreferencesRepository)
     }
 
     companion object {
@@ -41,9 +37,6 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        AlarmHelper.getInstance().initAlarmManager()
-
         fragmentManager = supportFragmentManager
     }
 
@@ -130,9 +123,7 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
                 }).attach()
     }
 
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-
-    }
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {}
 
     interface OnQueryTextListener : SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String): Boolean {

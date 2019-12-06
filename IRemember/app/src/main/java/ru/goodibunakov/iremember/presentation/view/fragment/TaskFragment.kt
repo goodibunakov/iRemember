@@ -2,16 +2,16 @@ package ru.goodibunakov.iremember.presentation.view.fragment
 
 import android.app.Dialog
 import android.os.Bundle
+import android.widget.Toast
 import moxy.MvpAppCompatFragment
-import ru.goodibunakov.iremember.alarm.AlarmHelper
+import ru.goodibunakov.iremember.presentation.alarm.AlarmHelper
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.view.adapter.TasksAdapter
-
 
 abstract class TaskFragment : MvpAppCompatFragment(), TaskFragmentView {
 
     var adapter: TasksAdapter? = null
-    var alarmHelper: AlarmHelper? = null
+    private var alarmHelper: AlarmHelper? = null
 
     protected lateinit var dialog: Dialog
 
@@ -30,15 +30,15 @@ abstract class TaskFragment : MvpAppCompatFragment(), TaskFragmentView {
         adapter?.removeAllItems()
     }
 
-    override fun removeAlarm() {
-
-    }
-
     override fun removeItemFromAdapter(location: Int) {
         adapter?.removeItem(location)
     }
 
     override fun dismissRemoveDialog() {
         dialog.dismiss()
+    }
+
+    override fun showSuccess(text: Int) {
+        Toast.makeText(context, getString(text), Toast.LENGTH_SHORT).show()
     }
 }

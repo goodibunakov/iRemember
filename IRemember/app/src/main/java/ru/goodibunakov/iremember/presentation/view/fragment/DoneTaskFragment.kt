@@ -17,7 +17,7 @@ import ru.goodibunakov.iremember.presentation.OnPriorityClickListener
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.presenter.DoneTaskFragmentPresenter
 import ru.goodibunakov.iremember.presentation.view.adapter.DoneTasksAdapter
-import ru.goodibunakov.iremember.presentation.view.dialog.RemoveDialog
+import ru.goodibunakov.iremember.presentation.view.dialog.RemoveTaskDialog
 
 class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickListener, OnPriorityClickListener {
 
@@ -65,10 +65,11 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
 
     override fun onPriorityClick(modelTask: ModelTask) {
         doneTaskFragmentPresenter.updateTask(modelTask)
+        doneTaskFragmentPresenter.setAlarm(modelTask)
     }
 
     override fun showRemoveTaskDialog(location: Int) {
-        dialog = RemoveDialog.generateRemoveDialog(context!!, DialogInterface.OnClickListener { _, which ->
+        dialog = RemoveTaskDialog.generateRemoveDialog(context!!, DialogInterface.OnClickListener { _, which ->
             if (which == DialogInterface.BUTTON_POSITIVE){
                 doneTaskFragmentPresenter.doRemove(location, (adapter?.getItem(location) as ModelTask).timestamp)
             } else {

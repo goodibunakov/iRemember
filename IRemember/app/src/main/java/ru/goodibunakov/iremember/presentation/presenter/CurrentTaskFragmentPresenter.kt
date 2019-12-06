@@ -11,10 +11,10 @@ import ru.goodibunakov.iremember.presentation.RxBus
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragmentView
 
+
 @InjectViewState
 class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresenter<CurrentTaskFragmentView>() {
 
-//    private var disposable: Disposable? = null
     private lateinit var disposableSearch: Disposable
 
     override fun onFirstViewAttach() {
@@ -45,24 +45,6 @@ class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresent
                 }
     }
 
-//    @SuppressLint("CheckResult")
-//    override fun getTasksFromDb() {
-////        disposable = databaseRepository.getCurrentTasks()
-////                .subscribeOn(Schedulers.io())
-////                .observeOn(AndroidSchedulers.mainThread())
-////                .subscribe({
-////                    viewState.checkAdapter()
-////                    viewState.removeAllItemsFromAdapter()
-////                    Log.d("debug", "it = $it")
-////                    for (element in it) {
-////                        viewState.addTask(element)
-////                    }
-////                }, { error ->
-////                    Log.d("debug", error!!.localizedMessage!!)
-////                    viewState.showError(R.string.error_database_download)
-////                })
-//    }
-
     fun hideFab() {
         viewState.hideFab()
     }
@@ -73,7 +55,6 @@ class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresent
 
     override fun onDestroy() {
         super.onDestroy()
-//        if (disposable != null && !disposable!!.isDisposed) disposable?.dispose()
         if (::disposableSearch.isInitialized && !disposableSearch.isDisposed) disposableSearch.dispose()
     }
 

@@ -1,7 +1,7 @@
 package ru.goodibunakov.iremember.presentation.model
 
 import ru.goodibunakov.iremember.R
-import ru.goodibunakov.iremember.utils.Utils
+import ru.goodibunakov.iremember.presentation.utils.Utils
 import java.util.*
 
 class ModelTask : Item {

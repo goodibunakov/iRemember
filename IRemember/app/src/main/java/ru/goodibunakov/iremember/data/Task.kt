@@ -11,9 +11,7 @@ import ru.goodibunakov.iremember.data.DatabaseConstants.Companion.TASK_TIMESTAMP
 import ru.goodibunakov.iremember.data.DatabaseConstants.Companion.TASK_TITLE_COLUMN
 
 @Entity(tableName = TASKS_TABLE)
-data class Task(
-//        @PrimaryKey(autoGenerate = true) @ColumnInfo(name = BaseColumns._ID) val id: Long,
-                @ColumnInfo(name = TASK_TITLE_COLUMN) val title: String,
+data class Task(@ColumnInfo(name = TASK_TITLE_COLUMN) val title: String,
                 @ColumnInfo(name = TASK_DATE_COLUMN) val date: Long,
                 @ColumnInfo(name = TASK_PRIORITY_COLUMN) val priority: Int,
                 @ColumnInfo(name = TASK_STATUS_COLUMN) val status: Int,

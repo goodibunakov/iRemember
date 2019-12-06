@@ -62,8 +62,7 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
             addingTaskDialogPresenter.okClicked(container.etTitle.text.toString())
             if (container.etDate.length() != 0 || container.etTime.length() != 0) {
                 addingTaskDialogPresenter.setDateToModel()
-//                val alarmHelper = AlarmHelper.getInstance()
-//                alarmHelper.setAlarm(modelTask)
+                addingTaskDialogPresenter.setAlarm()
             }
             addingTaskDialogPresenter.saveTask()
             addingTaskDialogPresenter.dismissDialog()

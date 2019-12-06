@@ -21,7 +21,7 @@ import ru.goodibunakov.iremember.presentation.presenter.CurrentTaskFragmentPrese
 import ru.goodibunakov.iremember.presentation.view.adapter.CurrentTasksAdapter
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment
 import ru.goodibunakov.iremember.presentation.view.dialog.EditTaskDialogFragment
-import ru.goodibunakov.iremember.presentation.view.dialog.RemoveDialog
+import ru.goodibunakov.iremember.presentation.view.dialog.RemoveTaskDialog
 
 class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClickListener, OnItemLongClickListener, OnPriorityClickListener {
 
@@ -43,7 +43,7 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
     }
 
     override fun showRemoveTaskDialog(location: Int) {
-        dialog = RemoveDialog.generateRemoveDialog(context!!, DialogInterface.OnClickListener { _, which ->
+        dialog = RemoveTaskDialog.generateRemoveDialog(context!!, DialogInterface.OnClickListener { _, which ->
             if (which == DialogInterface.BUTTON_POSITIVE){
                 currentTaskFragmentPresenter.doRemove(location, (adapter?.getItem(location) as ModelTask).timestamp)
             } else {
@@ -126,5 +126,6 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
 
     override fun onPriorityClick(modelTask: ModelTask) {
         currentTaskFragmentPresenter.updateTask(modelTask)
+        currentTaskFragmentPresenter.removeAlarm(modelTask.timestamp)
     }
 }

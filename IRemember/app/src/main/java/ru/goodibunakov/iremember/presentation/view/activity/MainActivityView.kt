@@ -1,6 +1,5 @@
 package ru.goodibunakov.iremember.presentation.view.activity
 
-import android.view.MenuItem
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndStrategy
 import moxy.viewstate.strategy.StateStrategyType

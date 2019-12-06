@@ -1,12 +1,12 @@
 package ru.goodibunakov.iremember.presentation.presenter
 
-import io.reactivex.disposables.Disposable
 import moxy.InjectViewState
 import moxy.MvpPresenter
+import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.domain.DatabaseRepository
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragmentView
-import ru.goodibunakov.iremember.utils.Utils
+import ru.goodibunakov.iremember.presentation.utils.Utils
 import java.util.*
 
 @InjectViewState
@@ -65,19 +65,7 @@ class AddingTaskDialogPresenter(private val repository: DatabaseRepository) : Mv
         modelTask.date = calendar.timeInMillis
     }
 
-    lateinit var disposable: Disposable
-
     fun saveTask() {
-//        if (::disposable.isInitialized && !disposable.isDisposed) {
-//            // TODO низя
-//            return
-//        }
-//
-//        disposable = repository.insert(modelTask).doOnError {
-//            // TODO
-//        }.subscribe {
-//            // TODO зя
-//        }
         repository.insert(modelTask)
     }
 
@@ -99,5 +87,9 @@ class AddingTaskDialogPresenter(private val repository: DatabaseRepository) : Mv
 
     fun titleNotEmpty() {
         viewState.setUIWhenTitleNotEmpty()
+    }
+
+    fun setAlarm() {
+        RememberApp.alarmHelper.setAlarm(modelTask)
     }
 }

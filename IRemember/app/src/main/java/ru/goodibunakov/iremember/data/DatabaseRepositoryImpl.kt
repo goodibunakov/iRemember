@@ -9,29 +9,9 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import ru.goodibunakov.iremember.domain.DatabaseRepository
 import ru.goodibunakov.iremember.presentation.model.ModelTask
-import ru.goodibunakov.iremember.utils.Utils
+import ru.goodibunakov.iremember.presentation.utils.Utils
 
 class DatabaseRepositoryImpl(private val taskDao: TaskDao) : DatabaseRepository {
-
-//    override fun getCurrentTasks(): Observable<List<ModelTask>> {
-//        return taskDao.getCurrentTasks()
-//                .flatMap { list ->
-//                    Observable.fromIterable(list)
-//                            .map { item -> Utils.mapToModelTask(item) }
-//                            .toList()
-//                            .toObservable()
-//                }
-//    }
-//
-//    override fun getDoneTasks(): Observable<List<ModelTask>> {
-//        return taskDao.getDoneTasks()
-//                .flatMap { list ->
-//                    Observable.fromIterable(list)
-//                            .map { item -> Utils.mapToModelTask(item) }
-//                            .toList()
-//                            .toObservable()
-//                }
-//    }
 
     override fun insert(modelTask: ModelTask) {
         Completable

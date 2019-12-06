@@ -1,8 +1,6 @@
 package ru.goodibunakov.iremember.presentation.view.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -12,10 +10,6 @@ import ru.goodibunakov.iremember.presentation.OnItemLongClickListener
 import ru.goodibunakov.iremember.presentation.OnPriorityClickListener
 import ru.goodibunakov.iremember.presentation.model.ModelSeparator
 import ru.goodibunakov.iremember.presentation.model.ModelTask
-import ru.goodibunakov.iremember.presentation.presenter.CurrentTaskFragmentPresenter
-import ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragment
-import ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragmentView
-import ru.goodibunakov.iremember.presentation.view.fragment.TaskFragmentView
 import java.util.*
 
 class CurrentTasksAdapter(private val onClickListener: OnItemClickListener,
@@ -127,7 +121,6 @@ class CurrentTasksAdapter(private val onClickListener: OnItemClickListener,
             }
             addItem(newTask)
         }
-        Log.d("debug", "items.size = ${items?.size}")
     }
 
     companion object {

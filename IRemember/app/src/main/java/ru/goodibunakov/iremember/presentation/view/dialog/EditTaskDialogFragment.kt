@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -18,12 +17,13 @@ import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.presenter.EditTaskDialogPresenter
-import ru.goodibunakov.iremember.utils.Utils
+import ru.goodibunakov.iremember.presentation.utils.Utils
 
 class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragmentView {
 
-    lateinit var container: View
-    lateinit var positive: Button
+    private lateinit var container: View
+    private lateinit var positive: Button
+    private lateinit var alertDialog: AlertDialog
 
     @InjectPresenter
     lateinit var editTaskDialogPresenter: EditTaskDialogPresenter
@@ -124,8 +124,7 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
 
                 if (container.etDate.length() != 0 || container.etTime.length() != 0) {
                     editTaskDialogPresenter.setDateToModel()
-//                    val alarmHelper = AlarmHelper.getInstance()
-//                    alarmHelper.setAlarm(modelTask)
+                    editTaskDialogPresenter.setAlarm()
                 }
                 editTaskDialogPresenter.updateTask()
                 editTaskDialogPresenter.dismissDialog()
@@ -133,7 +132,7 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
             }
             builder.setNegativeButton(R.string.dialog_cancel) { _, _ -> editTaskDialogPresenter.cancelDialog() }
 
-            val alertDialog = builder.create()
+            alertDialog = builder.create()
 
             alertDialog.setOnShowListener { dialog ->
                 positive = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
@@ -159,12 +158,10 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
 
     override fun setDateToUI(date: Long) {
         container.etDate.setText(Utils.getDate(date))
-        Log.d("debug", "setDateToUI = " + Utils.getDate(date))
     }
 
     override fun setTimeToUI(time: Long) {
         container.etTime.setText(Utils.getTime(time))
-        Log.d("debug", "setTimeToUI = " + Utils.getTime(time))
     }
 
     override fun setEmptyDateToEditText() {
@@ -216,5 +213,10 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
 
     override fun setPriorityToUI(priority: Int) {
         container.spinnerPriority.setSelection(priority)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        alertDialog.setOnShowListener {}
     }
 }
