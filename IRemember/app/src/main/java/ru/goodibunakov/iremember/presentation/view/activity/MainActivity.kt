@@ -79,7 +79,7 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     override fun itemSelected(id: Int) {
         if (id == R.id.action_splash) {
             val splashItem = toolbar.menu.findItem(id)
-            splashItem!!.isChecked = !splashItem.isChecked
+            splashItem.isChecked = !splashItem.isChecked
             mainActivityPresenter.saveBoolean(splashItem.isChecked)
         }
     }
@@ -92,7 +92,7 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     }
 
     override fun setSplashItemState(id: Int, isChecked: Boolean) {
-        toolbar.menu.findItem(id).isChecked = isChecked
+        toolbar?.menu?.findItem(id)?.isChecked = isChecked
     }
 
     override fun setUI() {

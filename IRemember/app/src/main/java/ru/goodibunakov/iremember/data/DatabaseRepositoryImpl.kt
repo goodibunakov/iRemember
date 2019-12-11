@@ -9,13 +9,14 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import ru.goodibunakov.iremember.domain.DatabaseRepository
 import ru.goodibunakov.iremember.presentation.model.ModelTask
-import ru.goodibunakov.iremember.presentation.utils.Utils
+import ru.goodibunakov.iremember.presentation.utils.DateUtils
+import ru.goodibunakov.iremember.presentation.utils.TaskMapper
 
 class DatabaseRepositoryImpl(private val taskDao: TaskDao) : DatabaseRepository {
 
     override fun insert(modelTask: ModelTask) {
         Completable
-                .fromAction { taskDao.insert(Utils.mapToTask(modelTask)) }
+                .fromAction { taskDao.insert(TaskMapper.mapToTask(modelTask)) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : CompletableObserver {
@@ -35,7 +36,7 @@ class DatabaseRepositoryImpl(private val taskDao: TaskDao) : DatabaseRepository 
 
     override fun update(modelTask: ModelTask) {
         Completable
-                .fromAction { taskDao.update(Utils.mapToTask(modelTask)) }
+                .fromAction { taskDao.update(TaskMapper.mapToTask(modelTask)) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : CompletableObserver {
@@ -57,7 +58,7 @@ class DatabaseRepositoryImpl(private val taskDao: TaskDao) : DatabaseRepository 
         return taskDao.findCurrentTasks(title)
                 .flatMap { list ->
                     Observable.fromIterable(list)
-                            .map { item -> Utils.mapToModelTask(item) }
+                            .map { item -> TaskMapper.mapToModelTask(item) }
                             .toList()
                             .toObservable()
                 }
@@ -67,7 +68,7 @@ class DatabaseRepositoryImpl(private val taskDao: TaskDao) : DatabaseRepository 
         return taskDao.findDoneTasks(title)
                 .flatMap { list ->
                     Observable.fromIterable(list)
-                            .map { item -> Utils.mapToModelTask(item) }
+                            .map { item -> TaskMapper.mapToModelTask(item) }
                             .toList()
                             .toObservable()
                 }

@@ -3,12 +3,17 @@ package ru.goodibunakov.iremember.presentation.view.dialog
 import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.text.format.DateFormat
+import android.util.Log
+import android.view.KeyEvent
 import android.widget.TimePicker
 import ru.goodibunakov.iremember.R
 import java.util.*
 
 open class TimePickerController : TimePickerDialog.OnTimeSetListener {
+
+    lateinit var dialog: TimePickerDialog
 
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
     }

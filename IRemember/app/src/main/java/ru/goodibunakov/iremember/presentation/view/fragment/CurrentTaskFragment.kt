@@ -1,8 +1,10 @@
 package ru.goodibunakov.iremember.presentation.view.fragment
 
+import android.app.Activity
 import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -74,6 +76,7 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
     override fun showAddingTaskDialog() {
         val addingTaskDialogFragment = AddingTaskDialogFragment()
         addingTaskDialogFragment.show(activity!!.supportFragmentManager, "AddingTaskDialogFragment")
+        Log.d("debug", "addingTaskDialogFragment.show")
     }
 
     private fun initRecyclerView() {

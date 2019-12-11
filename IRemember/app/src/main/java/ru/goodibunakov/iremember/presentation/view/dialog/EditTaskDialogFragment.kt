@@ -4,6 +4,8 @@ package ru.goodibunakov.iremember.presentation.view.dialog
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -17,7 +19,9 @@ import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.presenter.EditTaskDialogPresenter
-import ru.goodibunakov.iremember.presentation.utils.Utils
+import ru.goodibunakov.iremember.presentation.utils.DateUtils
+import ru.goodibunakov.iremember.presentation.utils.DateUtils.FORMAT_DATE_ONLY
+import ru.goodibunakov.iremember.presentation.utils.DateUtils.FORMAT_TIME_ONLY
 
 class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragmentView {
 
@@ -96,7 +100,7 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
             editTaskDialogPresenter.setPriorityToUI()
 
             container.spinnerPriority.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                     editTaskDialogPresenter.itemSelected(position)
                 }
 
@@ -157,11 +161,11 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
     }
 
     override fun setDateToUI(date: Long) {
-        container.etDate.setText(Utils.getDate(date))
+        container.etDate.setText(DateUtils.getDate(date, FORMAT_DATE_ONLY))
     }
 
     override fun setTimeToUI(time: Long) {
-        container.etTime.setText(Utils.getTime(time))
+        container.etTime.setText(DateUtils.getDate(time, FORMAT_TIME_ONLY))
     }
 
     override fun setEmptyDateToEditText() {
@@ -216,7 +220,9 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         alertDialog.setOnShowListener {}
+        super.onDestroy()
     }
+
+
 }

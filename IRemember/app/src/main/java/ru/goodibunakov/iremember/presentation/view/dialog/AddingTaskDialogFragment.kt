@@ -1,12 +1,21 @@
 package ru.goodibunakov.iremember.presentation.view.dialog
 
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.*
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.DatePicker
 import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.dialog_task.view.*
 import moxy.MvpAppCompatDialogFragment
@@ -16,10 +25,31 @@ import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.presentation.presenter.AddingTaskDialogPresenter
 
-class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogFragmentView {
+
+class AddingTaskDialogFragment : MvpAppCompatDialogFragment(),
+        AddingTaskDialogFragmentView,
+        TimePickerDialogFragment.TimePickerDialogListener,
+        DatePickerDialogFragment.DatePickerDialogListener {
 
     private lateinit var container: View
     private lateinit var positive: Button
+    private lateinit var timePickerDialogFragment: TimePickerDialogFragment
+    private lateinit var datePickerDialogFragment: DatePickerDialogFragment
+
+    companion object {
+        const val REQUEST_CODE_TIME = 100
+        const val REQUEST_CODE_DATE = 101
+
+        const val TYPE = "type"
+        const val KEY_POSITIVE = "positive"
+        const val KEY_NEGATIVE = "negative"
+        //        const val KEY_TIME_SET = "time_set"
+        const val YEAR = "year"
+        const val MONTH = "month"
+        const val DAY = "day"
+        const val HOUR = "hourOfDaySet"
+        const val MINUTE = "minuteSet"
+    }
 
     @InjectPresenter
     lateinit var addingTaskDialogPresenter: AddingTaskDialogPresenter
@@ -29,18 +59,6 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
         return AddingTaskDialogPresenter(RememberApp.databaseRepository)
     }
 
-    private val datePickerController = object : DatePickerController() {
-        override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-            addingTaskDialogPresenter.dateSelected(year, month, dayOfMonth)
-        }
-    }
-
-    private val timePickerController = object : TimePickerController() {
-        override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-            addingTaskDialogPresenter.timeSelected(hourOfDay, minute)
-        }
-    }
-
     override fun onActivityCreated(arg0: Bundle?) {
         super.onActivityCreated(arg0)
         dialog?.window?.attributes?.windowAnimations = R.style.DialogAnimation
@@ -48,7 +66,8 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity as Context)
+        Log.d("debug", "AddingTaskDialogFragment onCreateDialog")
+        val builder = AlertDialog.Builder(activity as Context, R.style.AppThemeDialog)
         container = View.inflate(activity, R.layout.dialog_task, null)
 
         builder.setTitle(R.string.dialog_title)
@@ -77,7 +96,7 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
                 activity!!.resources.getStringArray(R.array.priority_array))
         container.spinnerPriority.adapter = priorityAdapter
         container.spinnerPriority.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 addingTaskDialogPresenter.itemSelected(position)
             }
 
@@ -86,40 +105,55 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
             }
         }
 
-
-        container.etDate.setOnClickListener {
-            if (container.etDate.length() == 0) {
-                addingTaskDialogPresenter.dateIsEmpty()
-            }
-            addingTaskDialogPresenter.editTextDateClicked()
-        }
-
-        container.etTime.setOnClickListener {
-            if (container.etTime.length() == 0) {
-                addingTaskDialogPresenter.timeIsEmpty()
-            }
-            addingTaskDialogPresenter.editTextTimeClicked()
-        }
-
         val alertDialog = builder.create()
 
-        alertDialog.setOnShowListener { dialog ->
-            positive = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
+        alertDialog.setOnShowListener {
+            addingTaskDialogPresenter.initPositiveButton()
+
             if (container.etTitle.length() == 0) {
                 addingTaskDialogPresenter.titleEmpty()
             }
 
             container.etTitle.addTextChangedListener(object : MyTextWatcher {
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    if (s.isEmpty()) {
-                        addingTaskDialogPresenter.titleEmpty()
-                    } else {
-                        addingTaskDialogPresenter.titleNotEmpty()
-                    }
+                    addingTaskDialogPresenter.onTextChanged(s)
                 }
             })
+
+            container.etTitle.isFocusableInTouchMode = true
+            addingTaskDialogPresenter.getTitleHasFocus()
+            container.etTitle.onFocusChangeListener =
+                    View.OnFocusChangeListener { _, hasFocus ->
+                        if (hasFocus) {
+                            addingTaskDialogPresenter.setTitleHasFocus(hasFocus)
+                        }
+                    }
+
+            container.etDate.setOnClickListener {
+                clearTitleFocus()
+                if (container.etDate.length() == 0) {
+                    addingTaskDialogPresenter.dateIsEmpty()
+                }
+                addingTaskDialogPresenter.editTextDateClicked()
+            }
+
+            container.etTime.setOnClickListener {
+                clearTitleFocus()
+                if (container.etTime.length() == 0) {
+                    addingTaskDialogPresenter.timeIsEmpty()
+                }
+                addingTaskDialogPresenter.editTextTimeClicked()
+            }
         }
         return alertDialog
+    }
+
+    private fun clearTitleFocus() {
+        if (container.etTitle.hasFocus()) {
+            container.etTitle.clearFocus()
+            hideSoftKeyboard()
+            addingTaskDialogPresenter.setTitleHasFocus(false)
+        }
     }
 
     override fun dismissDialog() {
@@ -138,13 +172,54 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
         container.etTime.setText("")
     }
 
-    override fun showDatePickerController() {
-        datePickerController.onCreateDialog(activity as Context).show()
+    override fun showDatePickerDialog() {
+        datePickerDialogFragment = DatePickerDialogFragment()
+        datePickerDialogFragment.setTargetFragment(this@AddingTaskDialogFragment, REQUEST_CODE_DATE)
+        datePickerDialogFragment.show(activity!!.supportFragmentManager, "DatePickerDialogFragment")
     }
 
-    override fun showTimePickerController() {
-        timePickerController.onCreateDialog(activity as Context).show()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_TIME) {
+                when (data?.extras?.get(TYPE)) {
+                    KEY_POSITIVE -> {
+                        getTimeFromIntent(data)
+                        addingTaskDialogPresenter.positiveTimeClicked()
+                    }
+                    KEY_NEGATIVE -> addingTaskDialogPresenter.negativeTimeClicked()
+                }
+            } else if (requestCode == REQUEST_CODE_DATE) {
+                when (data?.extras?.get(TYPE)) {
+                    KEY_POSITIVE -> {
+                        getDateFromIntent(data)
+                        addingTaskDialogPresenter.positiveDateClicked()
+                    }
+                    KEY_NEGATIVE -> addingTaskDialogPresenter.negativeDateClicked()
+                }
+            }
+        }
     }
+
+    private fun getTimeFromIntent(data: Intent?) {
+        val hourOfDay = data?.extras?.get(HOUR) as Int
+        val minute = data.extras?.get(MINUTE) as Int
+        addingTaskDialogPresenter.timeSelected(hourOfDay, minute)
+    }
+
+    private fun getDateFromIntent(data: Intent?) {
+        val year = data?.extras?.get(YEAR) as Int
+        val month = data.extras?.get(MONTH) as Int
+        val day = data.extras?.get(DAY) as Int
+        addingTaskDialogPresenter.dateSelected(year, month, day)
+    }
+
+    override fun showTimePickerDialog() {
+        timePickerDialogFragment = TimePickerDialogFragment()
+        timePickerDialogFragment.setTargetFragment(this@AddingTaskDialogFragment, REQUEST_CODE_TIME)
+        timePickerDialogFragment.show(activity!!.supportFragmentManager, "TimePickerDialogFragment")
+    }
+
 
     override fun setDate(date: String) {
         container.etDate.setText(date)
@@ -159,8 +234,58 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
         container.dialogTaskTitle.error = resources.getString(R.string.dialog_error_empty_title)
     }
 
-    override fun setUIWhenTitleNotEmpty() {
+    override fun setUIWhenTitleNotEmpty(s: String) {
         positive.isEnabled = true
         container.dialogTaskTitle.isErrorEnabled = false
+    }
+
+    override fun initPositiveButton() {
+        positive = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
+    }
+
+    override fun closeTimeDialogFragment() {
+        if (::timePickerDialogFragment.isInitialized) {
+            timePickerDialogFragment.dismiss()
+        }
+    }
+
+    override fun closeDateDialogFragment() {
+        if (::datePickerDialogFragment.isInitialized) {
+            datePickerDialogFragment.dismiss()
+        }
+    }
+
+    override fun onDialogPositiveClick() {
+        addingTaskDialogPresenter.positiveTimeClicked()
+    }
+
+    override fun onDialogNegativeClick() {
+        addingTaskDialogPresenter.negativeTimeClicked()
+    }
+
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        addingTaskDialogPresenter.dateSelected(year, month, dayOfMonth)
+    }
+
+    override fun onTimeSet(hourOfDay: Int, minute: Int) {
+        addingTaskDialogPresenter.timeSelected(hourOfDay, minute)
+    }
+
+    override fun onDestroy() {
+        hideSoftKeyboard()
+        super.onDestroy()
+    }
+
+    private fun hideSoftKeyboard() {
+        (activity!!.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(container.etTitle.windowToken, 0)
+    }
+
+    override fun setTitleFocus(hasFocus: Boolean) {
+        Log.d("debug", "устанавливаем фокус на титл в AddingTaskDialogFragment = $hasFocus")
+        if (hasFocus) {
+            container.etTitle.requestFocus()
+            dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+            (activity!!.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+        }
     }
 }

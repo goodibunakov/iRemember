@@ -5,7 +5,9 @@ import moxy.MvpPresenter
 import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.domain.DatabaseRepository
 import ru.goodibunakov.iremember.presentation.model.ModelTask
-import ru.goodibunakov.iremember.presentation.utils.Utils
+import ru.goodibunakov.iremember.presentation.utils.DateUtils
+import ru.goodibunakov.iremember.presentation.utils.DateUtils.FORMAT_DATE_ONLY
+import ru.goodibunakov.iremember.presentation.utils.DateUtils.FORMAT_TIME_ONLY
 import ru.goodibunakov.iremember.presentation.view.dialog.EditTaskDialogFragmentView
 import java.util.*
 
@@ -64,7 +66,7 @@ class EditTaskDialogPresenter(private val repository: DatabaseRepository) : MvpP
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
         calendar.set(Calendar.MINUTE, minute)
         calendar.set(Calendar.SECOND, 0)
-        viewState.setTimeToEditText(Utils.getTime(calendar.timeInMillis))
+        viewState.setTimeToEditText(DateUtils.getDate(calendar.timeInMillis, FORMAT_TIME_ONLY))
     }
 
     fun timeClicked() {
@@ -75,7 +77,7 @@ class EditTaskDialogPresenter(private val repository: DatabaseRepository) : MvpP
         calendar.set(Calendar.YEAR, year)
         calendar.set(Calendar.MONTH, month)
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-        viewState.setDateToEditText(Utils.getDate(calendar.timeInMillis))
+        viewState.setDateToEditText(DateUtils.getDate(calendar.timeInMillis, FORMAT_DATE_ONLY))
     }
 
     fun setEmptyTimeToEditText() {

@@ -16,7 +16,7 @@
         <item name="android:windowExitAnimation">@anim/slide_to_right</item>
     </style>
 
-    <style name="AppThemeDialog" parent="Theme.AppCompat.Light.Dialog">
+    <style name="AppThemeDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

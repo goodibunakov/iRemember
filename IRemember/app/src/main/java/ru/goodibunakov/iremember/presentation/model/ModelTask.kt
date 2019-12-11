@@ -1,7 +1,9 @@
 package ru.goodibunakov.iremember.presentation.model
 
 import ru.goodibunakov.iremember.R
-import ru.goodibunakov.iremember.presentation.utils.Utils
+import ru.goodibunakov.iremember.presentation.utils.DateUtils
+import ru.goodibunakov.iremember.presentation.utils.DateUtils.FORMAT_DATE_FULL
+import ru.goodibunakov.iremember.presentation.utils.DateUtils.FORMAT_TIME_ONLY
 import java.util.*
 
 class ModelTask : Item {
@@ -63,7 +65,7 @@ class ModelTask : Item {
 
     fun toString(modelTask: ModelTask): String {
         return "title = " + modelTask.title + "  date = " + modelTask.date +
-                "   date = " + Utils.getDate(modelTask.date) + " " + Utils.getTime(modelTask.date) +
+                "   date = " + DateUtils.getDate(modelTask.date, FORMAT_DATE_FULL) + " " + DateUtils.getDate(modelTask.date, FORMAT_TIME_ONLY) +
                 "   priority = " + modelTask.priority +
                 "   status = " + modelTask.status +
                 "   priorityColor + " + modelTask.getPriorityColor()

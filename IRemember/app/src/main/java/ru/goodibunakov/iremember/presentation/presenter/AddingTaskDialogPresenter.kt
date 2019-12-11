@@ -1,12 +1,15 @@
 package ru.goodibunakov.iremember.presentation.presenter
 
+import android.util.Log
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.domain.DatabaseRepository
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragmentView
-import ru.goodibunakov.iremember.presentation.utils.Utils
+import ru.goodibunakov.iremember.presentation.utils.DateUtils
+import ru.goodibunakov.iremember.presentation.utils.DateUtils.FORMAT_DATE_ONLY
+import ru.goodibunakov.iremember.presentation.utils.DateUtils.FORMAT_TIME_ONLY
 import java.util.*
 
 @InjectViewState
@@ -14,6 +17,7 @@ class AddingTaskDialogPresenter(private val repository: DatabaseRepository) : Mv
 
     lateinit var modelTask: ModelTask
     private val calendar: Calendar = Calendar.getInstance()
+    private var hasFocus = false
 
     fun dialogCreated() {
         calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + 1)
@@ -37,14 +41,14 @@ class AddingTaskDialogPresenter(private val repository: DatabaseRepository) : Mv
     }
 
     fun editTextDateClicked() {
-        viewState.showDatePickerController()
+        viewState.showDatePickerDialog()
     }
 
     fun dateSelected(year: Int, month: Int, dayOfMonth: Int) {
         calendar.set(Calendar.YEAR, year)
         calendar.set(Calendar.MONTH, month)
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-        val date = Utils.getDate(calendar.timeInMillis)
+        val date = DateUtils.getDate(calendar.timeInMillis, FORMAT_DATE_ONLY)
         viewState.setDate(date)
     }
 
@@ -70,14 +74,14 @@ class AddingTaskDialogPresenter(private val repository: DatabaseRepository) : Mv
     }
 
     fun editTextTimeClicked() {
-        viewState.showTimePickerController()
+        viewState.showTimePickerDialog()
     }
 
     fun timeSelected(hourOfDay: Int, minute: Int) {
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
         calendar.set(Calendar.MINUTE, minute)
         calendar.set(Calendar.SECOND, 0)
-        val time = Utils.getTime(calendar.timeInMillis)
+        val time = DateUtils.getDate(calendar.timeInMillis, FORMAT_TIME_ONLY)
         viewState.setTime(time)
     }
 
@@ -85,11 +89,49 @@ class AddingTaskDialogPresenter(private val repository: DatabaseRepository) : Mv
         viewState.setUIWhenTitleEmpty()
     }
 
-    fun titleNotEmpty() {
-        viewState.setUIWhenTitleNotEmpty()
+    fun titleNotEmpty(s: String) {
+        viewState.setUIWhenTitleNotEmpty(s)
     }
 
     fun setAlarm() {
         RememberApp.alarmHelper.setAlarm(modelTask)
+    }
+
+    fun initPositiveButton() {
+        viewState.initPositiveButton()
+    }
+
+    fun onTextChanged(s: CharSequence) {
+        if (s.isEmpty()) {
+            titleEmpty()
+        } else {
+            titleNotEmpty(s.toString())
+        }
+    }
+
+    fun positiveTimeClicked() {
+        viewState.closeTimeDialogFragment()
+    }
+
+    fun negativeTimeClicked() {
+        viewState.closeTimeDialogFragment()
+    }
+
+    fun positiveDateClicked() {
+        viewState.closeDateDialogFragment()
+    }
+
+    fun negativeDateClicked() {
+        viewState.closeDateDialogFragment()
+    }
+
+    fun setTitleHasFocus(focus: Boolean) {
+        hasFocus = focus
+        Log.d("debug", "устанавливаем HasFocus в презентер = $hasFocus")
+    }
+
+    fun getTitleHasFocus() {
+        Log.d("debug", "Получаем hasFocus из презентера $hasFocus")
+        viewState.setTitleFocus(hasFocus)
     }
 }

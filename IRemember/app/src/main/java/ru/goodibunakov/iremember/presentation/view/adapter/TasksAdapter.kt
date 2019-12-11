@@ -16,7 +16,8 @@ import ru.goodibunakov.iremember.presentation.OnPriorityClickListener
 import ru.goodibunakov.iremember.presentation.model.Item
 import ru.goodibunakov.iremember.presentation.model.ModelSeparator
 import ru.goodibunakov.iremember.presentation.model.ModelTask
-import ru.goodibunakov.iremember.presentation.utils.Utils
+import ru.goodibunakov.iremember.presentation.utils.DateUtils
+import ru.goodibunakov.iremember.presentation.utils.DateUtils.FORMAT_DATE_FULL
 import kotlin.collections.ArrayList
 
 abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -127,7 +128,7 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             if (model.date != 0L) {
                 itemView.tvDate.visibility = View.VISIBLE
                 itemView.line.visibility = View.VISIBLE
-                itemView.tvDate.text = Utils.getFullDate(model.date)
+                itemView.tvDate.text = DateUtils.getDate(model.date, FORMAT_DATE_FULL)
             } else {
                 itemView.tvDate.visibility = View.GONE
                 itemView.line.visibility = View.GONE
@@ -204,7 +205,7 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             if (model.date != 0L) {
                 itemView.tvDate.visibility = View.VISIBLE
                 itemView.line.visibility = View.VISIBLE
-                itemView.tvDate.text = Utils.getFullDate(model.date)
+                itemView.tvDate.text = DateUtils.getDate(model.date, FORMAT_DATE_FULL)
             } else {
                 itemView.tvDate.visibility = View.GONE
                 itemView.line.visibility = View.GONE
