@@ -37,5 +37,6 @@
 
     <string name="error_database_download">Database error</string>
     <string name="version">Version %1$s</string>
+    <string name="search_hint">Task title</string>
 
 </resources>

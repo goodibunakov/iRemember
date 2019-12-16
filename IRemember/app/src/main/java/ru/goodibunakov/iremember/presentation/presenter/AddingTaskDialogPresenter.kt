@@ -1,15 +1,14 @@
 package ru.goodibunakov.iremember.presentation.presenter
 
-import android.util.Log
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.domain.DatabaseRepository
 import ru.goodibunakov.iremember.presentation.model.ModelTask
-import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragmentView
 import ru.goodibunakov.iremember.presentation.utils.DateUtils
 import ru.goodibunakov.iremember.presentation.utils.DateUtils.FORMAT_DATE_ONLY
 import ru.goodibunakov.iremember.presentation.utils.DateUtils.FORMAT_TIME_ONLY
+import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragmentView
 import java.util.*
 
 @InjectViewState
@@ -89,7 +88,7 @@ class AddingTaskDialogPresenter(private val repository: DatabaseRepository) : Mv
         viewState.setUIWhenTitleEmpty()
     }
 
-    fun titleNotEmpty(s: String) {
+    private fun titleNotEmpty(s: String) {
         viewState.setUIWhenTitleNotEmpty(s)
     }
 
@@ -127,11 +126,9 @@ class AddingTaskDialogPresenter(private val repository: DatabaseRepository) : Mv
 
     fun setTitleHasFocus(focus: Boolean) {
         hasFocus = focus
-        Log.d("debug", "устанавливаем HasFocus в презентер = $hasFocus")
     }
 
     fun getTitleHasFocus() {
-        Log.d("debug", "Получаем hasFocus из презентера $hasFocus")
         viewState.setTitleFocus(hasFocus)
     }
 }

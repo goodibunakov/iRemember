@@ -5,8 +5,8 @@ import ru.goodibunakov.iremember.presentation.model.ModelTask
 
 object TaskMapper {
 
-    fun mapToModelTask(item: Task): ModelTask {
-        return ModelTask(item.title, item.date, item.priority, item.status, item.timestamp)
+    fun mapToModelTask(task: Task): ModelTask {
+        return ModelTask(task.title, task.date, task.priority, task.status, task.timestamp)
     }
 
     fun mapToTask(modelTask: ModelTask): Task {

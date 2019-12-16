@@ -2,6 +2,7 @@ package ru.goodibunakov.iremember.presentation.view.activity
 
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
@@ -37,6 +38,7 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("debug", "MainActivity onCreate")
         fragmentManager = supportFragmentManager
     }
 
@@ -48,15 +50,6 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     override fun onPause() {
         super.onPause()
         RememberApp.activityPaused()
-    }
-
-    override fun onDestroy() {
-        mainActivityPresenter.onDestroyView()
-        super.onDestroy()
-    }
-
-    override fun onDestroyView() {
-        searchView.setOnQueryTextListener(null)
     }
 
     override fun runSplash() {
@@ -96,15 +89,31 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     }
 
     override fun setUI() {
+        Log.d("debug", "setUI")
         setToolbar()
         setTabLayout()
 
         searchView.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextChange(newText: String): Boolean {
+                Log.d("rx", "onQueryTextChange $newText")
                 mainActivityPresenter.find(newText)
-                return false
+                return true
             }
         })
+        searchView.setOnCloseListener {
+            Log.d("debug", "close")
+            mainActivityPresenter.find("")
+            false
+        }
+    }
+
+    override fun onDestroy() {
+        mainActivityPresenter.onDestroyView()
+        super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        searchView?.setOnQueryTextListener(null)
     }
 
     private fun setToolbar() {

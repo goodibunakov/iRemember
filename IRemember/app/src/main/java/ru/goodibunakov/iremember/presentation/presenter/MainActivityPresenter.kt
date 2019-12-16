@@ -1,6 +1,6 @@
 package ru.goodibunakov.iremember.presentation.presenter
 
-import io.reactivex.disposables.Disposable
+import android.util.Log
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.goodibunakov.iremember.RememberApp
@@ -11,20 +11,17 @@ import ru.goodibunakov.iremember.presentation.view.activity.MainActivityView
 @InjectViewState
 class MainActivityPresenter(private val sharedPreferencesRepository: SharedPreferencesRepository) : MvpPresenter<MainActivityView>() {
 
-    private var disp: Disposable? = null
-
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         if (!sharedPreferencesRepository.getBoolean(SharedPreferencesRepositoryImpl.SPLASH_IS_INVISIBLE)) {
             viewState.runSplash()
         }
+
         viewState.setUI()
     }
 
     fun onDestroyView() {
         viewState.onDestroyView()
-        if (disp != null && !disp!!.isDisposed)
-            disp!!.dispose()
     }
 
     fun saveBoolean(isChecked: Boolean) {
@@ -38,11 +35,6 @@ class MainActivityPresenter(private val sharedPreferencesRepository: SharedPrefe
     fun setSplashItemChecked(itemId: Int) {
         val isChecked = sharedPreferencesRepository.getBoolean(SharedPreferencesRepositoryImpl.SPLASH_IS_INVISIBLE)
         viewState.setSplashItemState(itemId, isChecked)
-    }
-
-    override fun onDestroy() {
-        disp?.dispose()
-        super.onDestroy()
     }
 
     fun find(newText: String) {

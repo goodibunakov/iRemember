@@ -26,11 +26,9 @@ import java.util.*
 
 class TimePickerDialogFragment : DialogFragment() {
 
-    interface TimePickerDialogListener {
-        fun onDialogPositiveClick()
-        fun onDialogNegativeClick()
-        fun onTimeSet(hourOfDay: Int, minute: Int)
-    }
+//    interface TimePickerDialogListener {
+//        fun onTimeSet(hourOfDay: Int, minute: Int)
+//    }
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

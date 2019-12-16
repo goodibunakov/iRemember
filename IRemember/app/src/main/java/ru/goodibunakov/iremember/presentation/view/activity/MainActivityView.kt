@@ -5,6 +5,7 @@ import moxy.viewstate.strategy.*
 
 @StateStrategyType(value = AddToEndStrategy::class)
 interface MainActivityView : MvpView {
+    @StateStrategyType(SkipStrategy::class)
     fun onDestroyView()
 
     @StateStrategyType(OneExecutionStateStrategy::class)

@@ -22,11 +22,9 @@ import java.util.*
 
 class DatePickerDialogFragment : DialogFragment() {
 
-    interface DatePickerDialogListener {
-        fun onDialogPositiveClick()
-        fun onDialogNegativeClick()
-        fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int)
-    }
+//    interface DatePickerDialogListener {
+//        fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int)
+//    }
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

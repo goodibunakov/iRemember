@@ -16,10 +16,35 @@ import ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragmentV
 class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresenter<CurrentTaskFragmentView>() {
 
     private lateinit var disposableSearch: Disposable
+    private lateinit var disp: Disposable
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        bus.post("")
+        init()
+    }
+
+    private fun init() {
+        disp = databaseRepository.findCurrentTasks(bus.getQueryString())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    viewState.checkAdapter()
+                    viewState.removeAllItemsFromAdapter()
+                    for (element in it) {
+                        viewState.addTask(element)
+                    }
+                    disposeThis()
+                }, { error ->
+                    disposeThis()
+                    Log.d("debug", error!!.localizedMessage!!)
+                    viewState.showError(R.string.error_database_download)
+                })
+
+    }
+
+    private fun disposeThis() {
+        if (::disp.isInitialized && !disp.isDisposed) disp.dispose()
+        searchSubscribe()
     }
 
     fun showViewToAddTask() {
@@ -29,10 +54,11 @@ class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresent
     override fun searchSubscribe() {
         disposableSearch = bus.getEvent()
                 .subscribe { it ->
-                    databaseRepository.findCurrentTasks(it)
+                    databaseRepository.findCurrentTasks(bus.getQueryString())
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({
+                                Log.d("rx", "CurrentTaskFragmentPresenter search ${it.size}")
                                 viewState.checkAdapter()
                                 viewState.removeAllItemsFromAdapter()
                                 for (element in it) {

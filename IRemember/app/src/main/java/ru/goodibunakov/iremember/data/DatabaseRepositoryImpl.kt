@@ -7,12 +7,14 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.domain.DatabaseRepository
+import ru.goodibunakov.iremember.presentation.RxBus
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.utils.DateUtils
 import ru.goodibunakov.iremember.presentation.utils.TaskMapper
 
-class DatabaseRepositoryImpl(private val taskDao: TaskDao) : DatabaseRepository {
+class DatabaseRepositoryImpl(private val taskDao: TaskDao, private val bus: RxBus) : DatabaseRepository {
 
     override fun insert(modelTask: ModelTask) {
         Completable
@@ -22,6 +24,7 @@ class DatabaseRepositoryImpl(private val taskDao: TaskDao) : DatabaseRepository 
                 .subscribe(object : CompletableObserver {
                     override fun onComplete() {
                         Log.d("debug", "Task saved to DB")
+                        bus.post(bus.getQueryString())
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -42,11 +45,10 @@ class DatabaseRepositoryImpl(private val taskDao: TaskDao) : DatabaseRepository 
                 .subscribe(object : CompletableObserver {
                     override fun onComplete() {
                         Log.d("debug", "Task updated to DB")
+                        bus.post(bus.getQueryString())
                     }
 
-                    override fun onSubscribe(d: Disposable) {
-
-                    }
+                    override fun onSubscribe(d: Disposable) {}
 
                     override fun onError(e: Throwable) {
                         Log.d("debug", "Error!!! task NOT updated to DB")

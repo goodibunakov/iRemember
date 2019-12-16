@@ -16,6 +16,7 @@ class EditTaskDialogPresenter(private val repository: DatabaseRepository) : MvpP
 
     lateinit var modelTask: ModelTask
     private lateinit var calendar: Calendar
+    private var hasFocus = false
 
     private var titleIn = ""
     private var dateIn: Long = 0L
@@ -59,7 +60,7 @@ class EditTaskDialogPresenter(private val repository: DatabaseRepository) : MvpP
     }
 
     fun dateClicked() {
-        viewState.showDateController()
+        viewState.showDatePickerDialog()
     }
 
     fun timeSelected(hourOfDay: Int, minute: Int) {
@@ -70,7 +71,7 @@ class EditTaskDialogPresenter(private val repository: DatabaseRepository) : MvpP
     }
 
     fun timeClicked() {
-        viewState.showTimeController()
+        viewState.showTimePickerDialog()
     }
 
     fun dateSelected(year: Int, month: Int, dayOfMonth: Int) {
@@ -105,7 +106,7 @@ class EditTaskDialogPresenter(private val repository: DatabaseRepository) : MvpP
         viewState.setUIWhenTitleEmpty()
     }
 
-    fun titleNotEmpty() {
+    private fun titleNotEmpty() {
         viewState.setUIWhenTitleNotEmpty()
     }
 
@@ -126,5 +127,37 @@ class EditTaskDialogPresenter(private val repository: DatabaseRepository) : MvpP
 
     fun setAlarm() {
         RememberApp.alarmHelper.setAlarm(modelTask)
+    }
+
+    fun onTextChanged(s: CharSequence) {
+        if (s.isEmpty()) {
+            titleEmpty()
+        } else {
+            titleNotEmpty()
+        }
+    }
+
+    fun setTitleHasFocus(focus: Boolean) {
+        hasFocus = focus
+    }
+
+    fun getTitleHasFocus() {
+        viewState.setTitleFocus(hasFocus)
+    }
+
+    fun positiveTimeClicked() {
+        viewState.closeTimeDialogFragment()
+    }
+
+    fun negativeTimeClicked() {
+        viewState.closeTimeDialogFragment()
+    }
+
+    fun positiveDateClicked() {
+        viewState.closeDateDialogFragment()
+    }
+
+    fun negativeDateClicked() {
+        viewState.closeDateDialogFragment()
     }
 }

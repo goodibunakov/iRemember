@@ -35,4 +35,5 @@
     </string-array>
 
     <string name="version">Версия %1$s</string>
+    <string name="search_hint">Заголовок задачи</string>
 </resources>

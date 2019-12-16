@@ -15,7 +15,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.DatePicker
 import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.dialog_task.view.*
 import moxy.MvpAppCompatDialogFragment
@@ -24,12 +23,10 @@ import moxy.presenter.ProvidePresenter
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.presentation.presenter.AddingTaskDialogPresenter
+import kotlin.math.log10
 
 
-class AddingTaskDialogFragment : MvpAppCompatDialogFragment(),
-        AddingTaskDialogFragmentView,
-        TimePickerDialogFragment.TimePickerDialogListener,
-        DatePickerDialogFragment.DatePickerDialogListener {
+class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogFragmentView {
 
     private lateinit var container: View
     private lateinit var positive: Button
@@ -43,7 +40,6 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(),
         const val TYPE = "type"
         const val KEY_POSITIVE = "positive"
         const val KEY_NEGATIVE = "negative"
-        //        const val KEY_TIME_SET = "time_set"
         const val YEAR = "year"
         const val MONTH = "month"
         const val DAY = "day"
@@ -68,7 +64,7 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(),
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         Log.d("debug", "AddingTaskDialogFragment onCreateDialog")
         val builder = AlertDialog.Builder(activity as Context, R.style.AppThemeDialog)
-        container = View.inflate(activity, R.layout.dialog_task, null)
+        container = View.inflate(context, R.layout.dialog_task, null)
 
         builder.setTitle(R.string.dialog_title)
         builder.setIcon(R.mipmap.ic_launcher)
@@ -79,7 +75,7 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(),
 
         builder.setPositiveButton(R.string.dialog_ok) { _, _ ->
             addingTaskDialogPresenter.okClicked(container.etTitle.text.toString())
-            if (container.etDate.length() != 0 || container.etTime.length() != 0) {
+            if (container.etDate.text.isNotEmpty() || container.etTime.text.isNotEmpty()) {
                 addingTaskDialogPresenter.setDateToModel()
                 addingTaskDialogPresenter.setAlarm()
             }
@@ -253,22 +249,6 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(),
         if (::datePickerDialogFragment.isInitialized) {
             datePickerDialogFragment.dismiss()
         }
-    }
-
-    override fun onDialogPositiveClick() {
-        addingTaskDialogPresenter.positiveTimeClicked()
-    }
-
-    override fun onDialogNegativeClick() {
-        addingTaskDialogPresenter.negativeTimeClicked()
-    }
-
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        addingTaskDialogPresenter.dateSelected(year, month, dayOfMonth)
-    }
-
-    override fun onTimeSet(hourOfDay: Int, minute: Int) {
-        addingTaskDialogPresenter.timeSelected(hourOfDay, minute)
     }
 
     override fun onDestroy() {
