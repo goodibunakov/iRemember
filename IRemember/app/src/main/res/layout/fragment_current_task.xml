@@ -3,9 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray50"
-    tools:context="ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragment"
-    tools:ignore="Overdraw">
+    tools:context="ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -29,5 +27,14 @@
         app:rippleColor="@color/colorAccentLight"
         app:srcCompat="@drawable/ic_add_black_24dp"
         tools:ignore="UnusedAttribute" />
+
+    <TextView
+        android:id="@+id/emptyListText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/empty_list"
+        android:textSize="14sp"
+        android:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

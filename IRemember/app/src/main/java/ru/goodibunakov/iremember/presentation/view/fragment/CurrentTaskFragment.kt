@@ -1,6 +1,5 @@
 package ru.goodibunakov.iremember.presentation.view.fragment
 
-import android.app.Activity
 import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
@@ -111,6 +110,7 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
         if (adapter == null) {
             adapter = CurrentTasksAdapter(this, this, this)
         }
+        removeAllItemsFromAdapter()
     }
 
     override fun onItemClick(task: ModelTask) {
@@ -130,5 +130,13 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
     override fun onPriorityClick(modelTask: ModelTask) {
         currentTaskFragmentPresenter.updateTask(modelTask)
         currentTaskFragmentPresenter.removeAlarm(modelTask.timestamp)
+    }
+
+    override fun showEmptyListText() {
+        emptyListText.visibility = View.VISIBLE
+    }
+
+    override fun hideEmptyListText() {
+        emptyListText.visibility = View.GONE
     }
 }

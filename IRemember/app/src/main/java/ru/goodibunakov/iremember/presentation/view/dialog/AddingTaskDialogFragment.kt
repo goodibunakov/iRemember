@@ -23,7 +23,6 @@ import moxy.presenter.ProvidePresenter
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.presentation.presenter.AddingTaskDialogPresenter
-import kotlin.math.log10
 
 
 class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogFragmentView {
@@ -65,6 +64,7 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
         Log.d("debug", "AddingTaskDialogFragment onCreateDialog")
         val builder = AlertDialog.Builder(activity as Context, R.style.AppThemeDialog)
         container = View.inflate(context, R.layout.dialog_task, null)
+        isCancelable = false
 
         builder.setTitle(R.string.dialog_title)
         builder.setIcon(R.mipmap.ic_launcher)
@@ -74,10 +74,9 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
         addingTaskDialogPresenter.dialogCreated()
 
         builder.setPositiveButton(R.string.dialog_ok) { _, _ ->
-            addingTaskDialogPresenter.okClicked(container.etTitle.text.toString())
+            addingTaskDialogPresenter.okClicked(container.etTitle.text.toString().trim())
             if (container.etDate.text.isNotEmpty() || container.etTime.text.isNotEmpty()) {
                 addingTaskDialogPresenter.setDateToModel()
-                addingTaskDialogPresenter.setAlarm()
             }
             addingTaskDialogPresenter.saveTask()
             addingTaskDialogPresenter.dismissDialog()
@@ -106,7 +105,7 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
         alertDialog.setOnShowListener {
             addingTaskDialogPresenter.initPositiveButton()
 
-            if (container.etTitle.length() == 0) {
+            if (container.etTitle.text.isBlank()) {
                 addingTaskDialogPresenter.titleEmpty()
             }
 
@@ -153,11 +152,22 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
     }
 
     override fun dismissDialog() {
+        clearListeners()
         dialog?.dismiss()
     }
 
     override fun cancelDialog() {
+        clearListeners()
         dialog?.cancel()
+    }
+
+    private fun clearListeners() {
+        container.etDate.setOnClickListener(null)
+        container.etTitle.setOnClickListener(null)
+        container.etTitle.onFocusChangeListener = null
+        container.etTitle.addTextChangedListener(null)
+        container.etTime.setOnClickListener(null)
+        container.spinnerPriority.onItemSelectedListener = null
     }
 
     override fun setEmptyToDateEditText() {

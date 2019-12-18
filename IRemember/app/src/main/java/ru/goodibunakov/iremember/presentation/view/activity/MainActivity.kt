@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import moxy.MvpAppCompatActivity
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
+import ru.goodibunakov.iremember.presentation.bus.QueryEvent
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.presentation.presenter.MainActivityPresenter
@@ -29,7 +30,7 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
 
     @ProvidePresenter
     fun providePresenter(): MainActivityPresenter {
-        return MainActivityPresenter(RememberApp.sharedPreferencesRepository)
+        return MainActivityPresenter(RememberApp.sharedPreferencesRepository, RememberApp.getBus())
     }
 
     companion object {
@@ -40,6 +41,7 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
         super.onCreate(savedInstanceState)
         Log.d("debug", "MainActivity onCreate")
         fragmentManager = supportFragmentManager
+
     }
 
     override fun onResume() {
@@ -96,13 +98,13 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
         searchView.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextChange(newText: String): Boolean {
                 Log.d("rx", "onQueryTextChange $newText")
-                mainActivityPresenter.find(newText)
+                mainActivityPresenter.find(QueryEvent(newText))
                 return true
             }
         })
         searchView.setOnCloseListener {
             Log.d("debug", "close")
-            mainActivityPresenter.find("")
+            mainActivityPresenter.find(QueryEvent(""))
             false
         }
     }

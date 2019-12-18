@@ -63,6 +63,7 @@ class ModelTask : Item {
         return true
     }
 
+    @Suppress("unused")
     fun toString(modelTask: ModelTask): String {
         return "title = " + modelTask.title + "  date = " + modelTask.date +
                 "   date = " + DateUtils.getDate(modelTask.date, FORMAT_DATE_FULL) + " " + DateUtils.getDate(modelTask.date, FORMAT_TIME_ONLY) +

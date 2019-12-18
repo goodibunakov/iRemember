@@ -18,12 +18,12 @@ import ru.goodibunakov.iremember.presentation.model.ModelSeparator
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.utils.DateUtils
 import ru.goodibunakov.iremember.presentation.utils.DateUtils.FORMAT_DATE_FULL
-import kotlin.collections.ArrayList
 
 abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     protected var items: MutableList<Item>? = null
     private var lastPosition = -1
+
 
     var containsSeparatorOverdue: Boolean = false
     var containsSeparatorToday: Boolean = false

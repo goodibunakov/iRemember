@@ -14,6 +14,7 @@ class AlarmHelper private constructor() {
 
         const val ALARM_KEY_TITLE = "title"
         const val ALARM_KEY_TIMESTAMP = "timestamp"
+        const val ALARM_KEY_DATE = "date"
         const val ALARM_KEY_COLOR = "color"
 
         private var instance: AlarmHelper? = null
@@ -36,14 +37,14 @@ class AlarmHelper private constructor() {
     fun setAlarm(task: ModelTask) {
         val intent = Intent(RememberApp.getAppContext(), AlarmBroadcastReceiver::class.java)
         intent.putExtra(ALARM_KEY_TITLE, task.title)
+        intent.putExtra(ALARM_KEY_DATE, task.date)
         intent.putExtra(ALARM_KEY_TIMESTAMP, task.timestamp)
         intent.putExtra(ALARM_KEY_COLOR, task.getPriorityColor())
 
         val pendingIntent = PendingIntent.getBroadcast(RememberApp.getAppContext(),
-                task.timestamp.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                task.date.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-//        alarmManager!!.set(AlarmManager.RTC_WAKEUP, task.date, pendingIntent)
-        AlarmManagerCompat.setExact(alarmManager, AlarmManager.RTC_WAKEUP, task.date, pendingIntent)
+        AlarmManagerCompat.setExactAndAllowWhileIdle(alarmManager, AlarmManager.RTC_WAKEUP, task.date, pendingIntent)
     }
 
     fun removeAlarm(timestamp: Long) {

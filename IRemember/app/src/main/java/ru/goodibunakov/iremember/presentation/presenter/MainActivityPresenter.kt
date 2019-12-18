@@ -1,15 +1,16 @@
 package ru.goodibunakov.iremember.presentation.presenter
 
-import android.util.Log
 import moxy.InjectViewState
 import moxy.MvpPresenter
+import ru.goodibunakov.iremember.presentation.bus.Event
 import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.data.SharedPreferencesRepositoryImpl
 import ru.goodibunakov.iremember.domain.SharedPreferencesRepository
+import ru.goodibunakov.iremember.presentation.bus.RxBus
 import ru.goodibunakov.iremember.presentation.view.activity.MainActivityView
 
 @InjectViewState
-class MainActivityPresenter(private val sharedPreferencesRepository: SharedPreferencesRepository) : MvpPresenter<MainActivityView>() {
+class MainActivityPresenter(private val sharedPreferencesRepository: SharedPreferencesRepository, private val bus: RxBus) : MvpPresenter<MainActivityView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -37,7 +38,7 @@ class MainActivityPresenter(private val sharedPreferencesRepository: SharedPrefe
         viewState.setSplashItemState(itemId, isChecked)
     }
 
-    fun find(newText: String) {
-        RememberApp.getBus().post(newText)
+    fun find(event: Event) {
+        bus.post(event)
     }
 }

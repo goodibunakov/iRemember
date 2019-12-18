@@ -6,7 +6,6 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.DatePicker
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.dialog_datepicker.view.*
@@ -21,10 +20,6 @@ import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragme
 import java.util.*
 
 class DatePickerDialogFragment : DialogFragment() {
-
-//    interface DatePickerDialogListener {
-//        fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int)
-//    }
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -52,7 +47,7 @@ class DatePickerDialogFragment : DialogFragment() {
             intent.putExtra(TYPE, KEY_NEGATIVE)
             targetFragment?.onActivityResult(REQUEST_CODE_DATE, Activity.RESULT_OK, intent)
         }
-
+        isCancelable = false
         return builder.create()
     }
 }

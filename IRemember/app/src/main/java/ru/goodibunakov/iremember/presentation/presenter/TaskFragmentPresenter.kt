@@ -12,12 +12,10 @@ import ru.goodibunakov.iremember.presentation.view.fragment.TaskFragmentView
 
 abstract class TaskFragmentPresenter<V : TaskFragmentView> : MvpPresenter<V>() {
 
-    private lateinit var disposable: Disposable
+    private lateinit var disposableRemove: Disposable
 
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-
-//        searchSubscribe()
+    companion object {
+        var cachedQuery = ""
     }
 
     protected abstract fun searchSubscribe()
@@ -27,10 +25,10 @@ abstract class TaskFragmentPresenter<V : TaskFragmentView> : MvpPresenter<V>() {
     }
 
     fun doRemove(location: Int, timestamp: Long) {
-        disposable = databaseRepository.delete(timestamp)
+        disposableRemove = databaseRepository.delete(timestamp)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe ({
+                .subscribe({
                     viewState.removeItemFromAdapter(location)
                     removeAlarm(timestamp)
                     viewState.dismissRemoveDialog()
@@ -53,7 +51,7 @@ abstract class TaskFragmentPresenter<V : TaskFragmentView> : MvpPresenter<V>() {
     }
 
     override fun onDestroy() {
-        if (::disposable.isInitialized && !disposable.isDisposed) disposable.dispose()
+        if (::disposableRemove.isInitialized && !disposableRemove.isDisposed) disposableRemove.dispose()
         super.onDestroy()
     }
 }

@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import ru.goodibunakov.iremember.data.DatabaseConstants.Companion.DATABASE_NAME
-import ru.goodibunakov.iremember.data.DatabaseConstants.Companion.DATABASE_VERSION
+import ru.goodibunakov.iremember.data.DatabaseConstants.DATABASE_NAME
+import ru.goodibunakov.iremember.data.DatabaseConstants.DATABASE_VERSION
 
 @Database(entities = [Task::class], version = DATABASE_VERSION, exportSchema = true)
 abstract class TasksDatabase : RoomDatabase() {

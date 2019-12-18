@@ -71,6 +71,7 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
 
             val builder = AlertDialog.Builder(activity as Context, R.style.AppThemeDialog)
             container = View.inflate(context, R.layout.dialog_task, null)
+            isCancelable = false
 
             builder.setTitle(R.string.editing_title)
             builder.setIcon(R.mipmap.ic_launcher)
@@ -88,15 +89,13 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
             builder.setView(container)
 
             builder.setPositiveButton(R.string.dialog_ok) { _, _ ->
-                editTaskDialogPresenter.okClicked(container.etTitle.text.toString())
+                editTaskDialogPresenter.okClicked(container.etTitle.text.toString().trim())
 
                 if (container.etDate.length() != 0 || container.etTime.length() != 0) {
                     editTaskDialogPresenter.setDateToModel()
-                    editTaskDialogPresenter.setAlarm()
                 }
                 editTaskDialogPresenter.updateTask()
                 editTaskDialogPresenter.dismissDialog()
-
             }
             builder.setNegativeButton(R.string.dialog_cancel) { _, _ -> editTaskDialogPresenter.cancelDialog() }
 
@@ -237,11 +236,22 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
     }
 
     override fun dismissDialog() {
+        clearListeners()
         dialog?.dismiss()
     }
 
     override fun cancelDialog() {
+        clearListeners()
         dialog?.cancel()
+    }
+
+    private fun clearListeners() {
+        container.etDate.setOnClickListener(null)
+        container.etTitle.setOnClickListener(null)
+        container.etTitle.onFocusChangeListener = null
+        container.etTitle.addTextChangedListener(null)
+        container.etTime.setOnClickListener(null)
+        container.spinnerPriority.onItemSelectedListener = null
     }
 
     override fun setUIWhenTitleEmpty() {

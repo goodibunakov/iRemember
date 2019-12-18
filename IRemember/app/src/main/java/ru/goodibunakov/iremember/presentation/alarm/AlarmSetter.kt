@@ -14,31 +14,27 @@ class AlarmSetter : BroadcastReceiver() {
     private lateinit var disposable: Disposable
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        if (intent?.action != Intent.ACTION_BOOT_COMPLETED
-                || intent.action != "android.intent.action.RECEIVE_BOOT_COMPLETED"
-                || intent.action != Intent.ACTION_REBOOT
-                || intent.action != "android.intent.action.QUICKBOOT_POWERON"
-                || intent.action != "com.htc.intent.action.QUICKBOOT_POWERON")
-            return
-
+        Log.d("debug", "AlarmSetter  onReceive")
+        Log.d("debug", "AlarmSetter  intent?.action = ${intent?.action}")
 
         RememberApp.alarmHelper.initAlarmManager()
-        disposable = RememberApp.getBus().getEvent()
-                .subscribe { it ->
-                    RememberApp.databaseRepository.findCurrentTasks(it)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({
-                                for (element in it) {
-                                    if (element.date != 0L) {
-                                        RememberApp.alarmHelper.setAlarm(element)
-                                    }
-                                }
-                                dispose()
-                            }, { error ->
-                                Log.d("debug", "Ошибка в AlarmSetter ${error!!.localizedMessage!!}")
-                            })
+        disposable = RememberApp.databaseRepository.findCurrentTasks()
+                .map {
+                    it.filter { modelTask -> modelTask.date != 0L }
                 }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ list ->
+                    Log.d("debug", "AlarmSetter  List = ${list.size}")
+                    for (element in list) {
+                        RememberApp.alarmHelper.setAlarm(element)
+                        Log.d("debug", "AlarmSetter   |    $element")
+                    }
+                    dispose()
+                }, { error ->
+                    Log.d("debug", "Ошибка в AlarmSetter ${error!!.localizedMessage!!}")
+                })
+
     }
 
     private fun dispose() {

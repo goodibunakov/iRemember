@@ -36,4 +36,6 @@
 
     <string name="version">Версия %1$s</string>
     <string name="search_hint">Заголовок задачи</string>
+
+    <string name="empty_list">Пока нет задач</string>
 </resources>

@@ -13,7 +13,7 @@ class RemoveTaskDialog {
             builder.setMessage(R.string.dialog_remove_message)
             builder.setTitle(R.string.app_name)
             builder.setIcon(R.mipmap.ic_launcher)
-
+            builder.setCancelable(false)
             builder.setPositiveButton(R.string.dialog_remove, listener)
             builder.setNegativeButton(R.string.dialog_cancel, listener)
             return builder

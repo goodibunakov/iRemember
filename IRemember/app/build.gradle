@@ -7,7 +7,6 @@ apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "ru.goodibunakov.iremember"
         minSdkVersion 16
@@ -66,7 +65,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.1.0'
 
     // RxJava
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.15'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.16'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     // Room
@@ -96,7 +95,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-perf:19.0.3'
 
     // Stetho
-    implementation 'com.facebook.stetho:stetho:1.5.1'
+//    implementation 'com.facebook.stetho:stetho:1.5.1'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('androidx.test.espresso:espresso-core:3.2.0', {

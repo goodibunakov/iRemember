@@ -5,9 +5,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import moxy.InjectViewState
+import ru.goodibunakov.iremember.presentation.bus.QueryEvent
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp.Companion.databaseRepository
-import ru.goodibunakov.iremember.presentation.RxBus
+import ru.goodibunakov.iremember.presentation.bus.UpdateEvent
+import ru.goodibunakov.iremember.presentation.bus.RxBus
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragmentView
 
@@ -16,35 +18,46 @@ import ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragmentV
 class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresenter<CurrentTaskFragmentView>() {
 
     private lateinit var disposableSearch: Disposable
-    private lateinit var disp: Disposable
+    private lateinit var disposable: Disposable
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        init()
+
+        searchSubscribe()
+        bus.post(UpdateEvent())
     }
 
-    private fun init() {
-        disp = databaseRepository.findCurrentTasks(bus.getQueryString())
+    private fun getTasks(query: String = "") {
+        disposable = databaseRepository.findCurrentTasks()
+                .map {
+                    it.filter { modelTask ->
+                        modelTask.title.contains(query, true) || query.isEmpty()
+                    }
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
+                .subscribe({ list ->
+                    Log.d("debug", "getTasks Single")
+                    if (list.isEmpty()) {
+                        viewState.showEmptyListText()
+                    } else {
+                        viewState.hideEmptyListText()
+                    }
+
                     viewState.checkAdapter()
-                    viewState.removeAllItemsFromAdapter()
-                    for (element in it) {
+                    for (element in list) {
                         viewState.addTask(element)
                     }
                     disposeThis()
                 }, { error ->
-                    disposeThis()
                     Log.d("debug", error!!.localizedMessage!!)
                     viewState.showError(R.string.error_database_download)
+                    disposeThis()
                 })
-
     }
 
     private fun disposeThis() {
-        if (::disp.isInitialized && !disp.isDisposed) disp.dispose()
-        searchSubscribe()
+        if (::disposable.isInitialized && !disposable.isDisposed) disposable.dispose()
     }
 
     fun showViewToAddTask() {
@@ -53,21 +66,11 @@ class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresent
 
     override fun searchSubscribe() {
         disposableSearch = bus.getEvent()
-                .subscribe { it ->
-                    databaseRepository.findCurrentTasks(bus.getQueryString())
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({
-                                Log.d("rx", "CurrentTaskFragmentPresenter search ${it.size}")
-                                viewState.checkAdapter()
-                                viewState.removeAllItemsFromAdapter()
-                                for (element in it) {
-                                    viewState.addTask(element)
-                                }
-                            }, { error ->
-                                Log.d("debug", error!!.localizedMessage!!)
-                                viewState.showError(R.string.error_database_download)
-                            })
+                .subscribe { event ->
+                    if (event is QueryEvent) {
+                        cachedQuery = event.query
+                    }
+                    getTasks(cachedQuery)
                 }
     }
 
@@ -80,8 +83,9 @@ class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresent
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         if (::disposableSearch.isInitialized && !disposableSearch.isDisposed) disposableSearch.dispose()
+        if (::disposable.isInitialized && !disposable.isDisposed) disposable.dispose()
+        super.onDestroy()
     }
 
     fun onItemClick(task: ModelTask) {

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_frame"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/gray50">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
@@ -35,8 +36,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    app:queryHint="@string/search_hint"
                     android:theme="@style/Theme.AppCompat.NoActionBar"
+                    app:queryHint="@string/search_hint"
                     app:searchIcon="@drawable/magnify" />
 
             </androidx.appcompat.widget.Toolbar>
@@ -46,8 +47,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 app:tabGravity="fill"
-                app:tabMaxWidth="0dp"
                 app:tabIndicatorColor="@color/colorAccent"
+                app:tabMaxWidth="0dp"
                 app:tabMode="fixed"
                 app:tabSelectedTextColor="@color/colorAccent"
                 app:tabTextColor="@color/colorPrimaryDark">

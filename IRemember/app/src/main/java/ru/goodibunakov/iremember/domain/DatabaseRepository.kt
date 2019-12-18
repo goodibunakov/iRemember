@@ -9,6 +9,6 @@ interface DatabaseRepository {
     fun update(modelTask: ModelTask)
     fun delete(timestamp: Long): Completable
 
-    fun findCurrentTasks(title: String): Observable<List<ModelTask>>
-    fun findDoneTasks(title: String): Observable<List<ModelTask>>
+    fun findCurrentTasks(): Observable<List<ModelTask>>
+    fun findDoneTasks(): Observable<List<ModelTask>>
 }

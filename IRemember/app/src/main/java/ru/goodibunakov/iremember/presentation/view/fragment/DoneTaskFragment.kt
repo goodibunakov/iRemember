@@ -56,6 +56,7 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
         if (adapter == null) {
             adapter = DoneTasksAdapter(this, this)
         }
+        removeAllItemsFromAdapter()
     }
 
     override fun onItemLongClick(location: Int): Boolean {
@@ -80,5 +81,14 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
 
     override fun cancelRemoveDialog() {
         dialog.cancel()
+    }
+
+
+    override fun showEmptyListText() {
+        emptyListText.visibility = View.VISIBLE
+    }
+
+    override fun hideEmptyListText() {
+        emptyListText.visibility = View.GONE
     }
 }

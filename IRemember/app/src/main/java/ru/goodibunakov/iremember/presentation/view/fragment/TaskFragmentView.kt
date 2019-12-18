@@ -1,7 +1,9 @@
 package ru.goodibunakov.iremember.presentation.view.fragment
 
 import moxy.MvpView
+import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.AddToEndStrategy
+import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 
@@ -15,5 +17,10 @@ interface TaskFragmentView : MvpView {
     fun showRemoveTaskDialog(location: Int)
     fun cancelRemoveDialog()
     fun dismissRemoveDialog()
+    @StateStrategyType(OneExecutionStateStrategy::class)
     fun showSuccess(text: Int)
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun showEmptyListText()
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun hideEmptyListText()
 }

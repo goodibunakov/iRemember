@@ -113,7 +113,7 @@ class EditTaskDialogPresenter(private val repository: DatabaseRepository) : MvpP
     fun updateTask() {
         if (titleIn != modelTask.title || dateIn != modelTask.date || priorityIn != modelTask.priority || timestampIn != modelTask.timestamp) {
             repository.update(modelTask)
-            RememberApp.alarmHelper.setAlarm(modelTask)
+            if (modelTask.date != 0L) RememberApp.alarmHelper.setAlarm(modelTask)
         }
     }
 

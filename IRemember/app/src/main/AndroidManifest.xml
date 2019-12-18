@@ -26,7 +26,7 @@
             android:name="ru.goodibunakov.iremember.presentation.alarm.AlarmBroadcastReceiver"
             android:process=":remote" />
 
-        <receiver android:name=".presentation.alarm.AlarmSetter">
+        <receiver android:name="ru.goodibunakov.iremember.presentation.alarm.AlarmSetter">
             <intent-filter>
                 <action android:name="android.intent.action.RECEIVE_BOOT_COMPLETED" />
                 <action android:name="android.intent.action.ACTION_BOOT_COMPLETED" />

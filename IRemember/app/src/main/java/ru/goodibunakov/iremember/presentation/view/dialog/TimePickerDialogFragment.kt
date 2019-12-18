@@ -24,11 +24,8 @@ import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragme
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment.Companion.REQUEST_CODE_TIME
 import java.util.*
 
+@Suppress("DEPRECATION")
 class TimePickerDialogFragment : DialogFragment() {
-
-//    interface TimePickerDialogListener {
-//        fun onTimeSet(hourOfDay: Int, minute: Int)
-//    }
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -73,6 +70,7 @@ class TimePickerDialogFragment : DialogFragment() {
         }
 
         hideKeyboardInputInTimePicker(this.resources.configuration.orientation, view.timePicker)
+        isCancelable = false
         return builder.create()
     }
 

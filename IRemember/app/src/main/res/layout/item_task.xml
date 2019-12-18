@@ -44,6 +44,8 @@
                 android:layout_gravity="start"
                 android:layout_weight="2"
                 android:gravity="start"
+                android:maxLines="3"
+                android:ellipsize="end"
                 android:textColor="@android:color/black"
                 android:textSize="26sp"
                 tools:text="Заголовок" />

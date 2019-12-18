@@ -70,6 +70,7 @@ class AddingTaskDialogPresenter(private val repository: DatabaseRepository) : Mv
 
     fun saveTask() {
         repository.insert(modelTask)
+        if (modelTask.date != 0L) RememberApp.alarmHelper.setAlarm(modelTask)
     }
 
     fun editTextTimeClicked() {
@@ -92,16 +93,12 @@ class AddingTaskDialogPresenter(private val repository: DatabaseRepository) : Mv
         viewState.setUIWhenTitleNotEmpty(s)
     }
 
-    fun setAlarm() {
-        RememberApp.alarmHelper.setAlarm(modelTask)
-    }
-
     fun initPositiveButton() {
         viewState.initPositiveButton()
     }
 
     fun onTextChanged(s: CharSequence) {
-        if (s.isEmpty()) {
+        if (s.isBlank()) {
             titleEmpty()
         } else {
             titleNotEmpty(s.toString())

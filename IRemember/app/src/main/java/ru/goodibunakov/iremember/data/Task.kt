@@ -3,12 +3,12 @@ package ru.goodibunakov.iremember.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import ru.goodibunakov.iremember.data.DatabaseConstants.Companion.TASKS_TABLE
-import ru.goodibunakov.iremember.data.DatabaseConstants.Companion.TASK_DATE_COLUMN
-import ru.goodibunakov.iremember.data.DatabaseConstants.Companion.TASK_PRIORITY_COLUMN
-import ru.goodibunakov.iremember.data.DatabaseConstants.Companion.TASK_STATUS_COLUMN
-import ru.goodibunakov.iremember.data.DatabaseConstants.Companion.TASK_TIMESTAMP_COLUMN
-import ru.goodibunakov.iremember.data.DatabaseConstants.Companion.TASK_TITLE_COLUMN
+import ru.goodibunakov.iremember.data.DatabaseConstants.TASKS_TABLE
+import ru.goodibunakov.iremember.data.DatabaseConstants.TASK_DATE_COLUMN
+import ru.goodibunakov.iremember.data.DatabaseConstants.TASK_PRIORITY_COLUMN
+import ru.goodibunakov.iremember.data.DatabaseConstants.TASK_STATUS_COLUMN
+import ru.goodibunakov.iremember.data.DatabaseConstants.TASK_TIMESTAMP_COLUMN
+import ru.goodibunakov.iremember.data.DatabaseConstants.TASK_TITLE_COLUMN
 
 @Entity(tableName = TASKS_TABLE)
 data class Task(@ColumnInfo(name = TASK_TITLE_COLUMN) val title: String,
