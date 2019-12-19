@@ -2,10 +2,9 @@ package ru.goodibunakov.iremember.presentation.presenter
 
 import moxy.InjectViewState
 import moxy.MvpPresenter
-import ru.goodibunakov.iremember.presentation.bus.Event
-import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.data.SharedPreferencesRepositoryImpl
 import ru.goodibunakov.iremember.domain.SharedPreferencesRepository
+import ru.goodibunakov.iremember.presentation.bus.Event
 import ru.goodibunakov.iremember.presentation.bus.RxBus
 import ru.goodibunakov.iremember.presentation.view.activity.MainActivityView
 

@@ -23,7 +23,7 @@ class DatabaseRepositoryImpl(private val taskDao: TaskDao, private val bus: RxBu
                 .subscribe(object : CompletableObserver {
                     override fun onComplete() {
                         Log.d("debug", "Task saved to DB")
-                        bus.post(UpdateEvent())
+                        bus.post(UpdateEvent)
                     }
 
                     override fun onSubscribe(d: Disposable) {}
@@ -42,7 +42,7 @@ class DatabaseRepositoryImpl(private val taskDao: TaskDao, private val bus: RxBu
                 .subscribe(object : CompletableObserver {
                     override fun onComplete() {
                         Log.d("debug", "Task updated to DB")
-                        bus.post(UpdateEvent())
+                        bus.post(UpdateEvent)
                     }
 
                     override fun onSubscribe(d: Disposable) {}

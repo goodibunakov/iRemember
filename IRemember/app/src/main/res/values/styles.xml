@@ -5,6 +5,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:actionOverflowButtonStyle">@style/ActionButtonOverflow</item>
+        <item name="android:windowBackground">@null</item>
     </style>
 
     <style name="ActionButtonOverflow" parent="ThemeOverlay.AppCompat.Dark">

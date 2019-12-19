@@ -125,10 +125,6 @@ class EditTaskDialogPresenter(private val repository: DatabaseRepository) : MvpP
         viewState.setPriorityToUI(modelTask.priority)
     }
 
-    fun setAlarm() {
-        RememberApp.alarmHelper.setAlarm(modelTask)
-    }
-
     fun onTextChanged(s: CharSequence) {
         if (s.isEmpty()) {
             titleEmpty()

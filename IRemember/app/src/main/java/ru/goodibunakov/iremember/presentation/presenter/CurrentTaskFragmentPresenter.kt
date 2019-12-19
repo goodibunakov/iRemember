@@ -24,7 +24,7 @@ class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresent
         super.onFirstViewAttach()
 
         searchSubscribe()
-        bus.post(UpdateEvent())
+        bus.post(UpdateEvent)
     }
 
     private fun getTasks(query: String = "") {
@@ -67,9 +67,12 @@ class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresent
     override fun searchSubscribe() {
         disposableSearch = bus.getEvent()
                 .subscribe { event ->
-                    if (event is QueryEvent) {
-                        cachedQuery = event.query
+                    when (event) {
+                        is QueryEvent -> cachedQuery = event.query
                     }
+                    /*if (event is QueryEvent) {
+                        cachedQuery = event.query
+                    }*/
                     getTasks(cachedQuery)
                 }
     }

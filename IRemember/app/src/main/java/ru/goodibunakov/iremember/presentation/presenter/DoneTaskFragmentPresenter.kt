@@ -23,7 +23,7 @@ class DoneTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresenter<
         super.onFirstViewAttach()
 
         searchSubscribe()
-        bus.post(UpdateEvent())
+        bus.post(UpdateEvent)
     }
 
     private fun getTasks(query: String = "") {

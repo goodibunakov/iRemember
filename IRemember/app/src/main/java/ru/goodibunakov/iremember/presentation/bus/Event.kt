@@ -1,3 +1,7 @@
 package ru.goodibunakov.iremember.presentation.bus
 
-open class Event
+sealed class Event
+
+data class QueryEvent(val query: String) : Event()
+
+object UpdateEvent : Event()

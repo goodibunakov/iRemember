@@ -236,22 +236,11 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
     }
 
     override fun dismissDialog() {
-        clearListeners()
         dialog?.dismiss()
     }
 
     override fun cancelDialog() {
-        clearListeners()
         dialog?.cancel()
-    }
-
-    private fun clearListeners() {
-        container.etDate.setOnClickListener(null)
-        container.etTitle.setOnClickListener(null)
-        container.etTitle.onFocusChangeListener = null
-        container.etTitle.addTextChangedListener(null)
-        container.etTime.setOnClickListener(null)
-        container.spinnerPriority.onItemSelectedListener = null
     }
 
     override fun setUIWhenTitleEmpty() {
