@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/IRemember.iml" filepath="$PROJECT_DIR$/IRemember.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/IRemember-app.iml" filepath="$PROJECT_DIR$/app/IRemember-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/iRemember-IRemember.iml" filepath="$PROJECT_DIR$/iRemember-IRemember.iml" />
     </modules>
   </component>
 </project>

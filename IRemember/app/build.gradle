@@ -57,7 +57,7 @@ dependencies {
     // AndroidX
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.2.0-alpha02'
+    implementation 'com.google.android.material:material:1.2.0-alpha03'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
     // Kotlin
@@ -92,7 +92,7 @@ dependencies {
     // Firebase
     implementation 'com.google.firebase:firebase-core:17.2.1'
     implementation 'com.google.firebase:firebase-analytics:17.2.1'
-    implementation 'com.google.firebase:firebase-perf:19.0.3'
+    implementation 'com.google.firebase:firebase-perf:19.0.4'
 
     // Stetho
 //    implementation 'com.facebook.stetho:stetho:1.5.1'
