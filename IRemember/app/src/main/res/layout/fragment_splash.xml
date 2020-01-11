@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context="ru.goodibunakov.iremember.presentation.view.fragment.SplashFragment">
+    tools:context="ru.goodibunakov.iremember.presentation.view.fragment.SplashFragment"
+    tools:ignore="Overdraw">
 
     <ImageView
         android:id="@+id/logo"
@@ -18,11 +19,11 @@
         android:id="@+id/version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="@string/version"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="32dp"
+        android:textColor="@color/colorLightGrey"
         android:textSize="12sp"
         android:textStyle="normal"
-        android:layout_gravity="center_horizontal|bottom"
-        android:textColor="@color/colorLightGrey"
-        android:layout_marginBottom="32dp"/>
+        tools:text="@string/version" />
 
 </FrameLayout>
