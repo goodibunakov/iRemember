@@ -71,25 +71,29 @@ class CurrentTasksAdapter(private val onClickListener: OnItemClickListener,
         if (newTask.date != 0L) {
             calendar.timeInMillis = newTask.date
 
-            if (calendar.get(Calendar.DAY_OF_YEAR) < Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) {
+            if (calendar.get(Calendar.DAY_OF_YEAR) < Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
+                    || calendar.get(Calendar.YEAR) < Calendar.getInstance().get(Calendar.YEAR)) {
                 newTask.dateStatus = ModelSeparator.TYPE_OVERDUE
                 if (!containsSeparatorOverdue) {
                     containsSeparatorOverdue = true
                     separator = ModelSeparator(ModelSeparator.TYPE_OVERDUE)
                 }
-            } else if (calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) {
+            } else if (calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
+                    && calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
                 newTask.dateStatus = ModelSeparator.TYPE_TODAY
                 if (!containsSeparatorToday) {
                     containsSeparatorToday = true
                     separator = ModelSeparator(ModelSeparator.TYPE_TODAY)
                 }
-            } else if (calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + 1) {
+            } else if (calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + 1
+                    && calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
                 newTask.dateStatus = ModelSeparator.TYPE_TOMORROW
                 if (!containsSeparatorTomorrow) {
                     containsSeparatorTomorrow = true
                     separator = ModelSeparator(ModelSeparator.TYPE_TOMORROW)
                 }
-            } else if (calendar.get(Calendar.DAY_OF_YEAR) > Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + 1) {
+            } else if (calendar.get(Calendar.DAY_OF_YEAR) > Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + 1
+                    || calendar.get(Calendar.YEAR) > Calendar.getInstance().get(Calendar.YEAR)) {
                 newTask.dateStatus = ModelSeparator.TYPE_FUTURE
                 if (!containsSeparatorFuture) {
                     containsSeparatorFuture = true
