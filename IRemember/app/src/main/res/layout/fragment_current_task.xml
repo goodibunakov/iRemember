@@ -12,20 +12,23 @@
         android:clipToPadding="false"
         android:paddingBottom="48dp"
         android:scrollbars="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_task" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
+        android:backgroundTint="@color/colorPrimary"
         app:elevation="1dp"
         app:fabSize="normal"
         app:rippleColor="@color/colorAccentLight"
-        app:srcCompat="@drawable/ic_add_black_24dp"
+        app:srcCompat="@drawable/ic_add_white_24dp"
         tools:ignore="UnusedAttribute" />
 
     <TextView

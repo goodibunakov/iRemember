@@ -5,14 +5,14 @@
     android:id="@+id/content_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray50"
+    android:background="@color/colorGray50"
     tools:ignore="Overdraw">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="ru.goodibunakov.iremember.presentation.view.activity.MainActivityJ">
+        tools:context="ru.goodibunakov.iremember.presentation.view.activity.MainActivity">
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager2"
@@ -37,7 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:theme="@style/Theme.AppCompat.NoActionBar"
+                    android:theme="@style/Theme.MaterialComponents.NoActionBar"
                     app:queryHint="@string/search_hint"
                     app:searchIcon="@drawable/magnify" />
 
@@ -45,14 +45,12 @@
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
+                style="@style/AppTheme.TabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 app:tabGravity="fill"
-                app:tabIndicatorColor="@color/colorAccent"
                 app:tabMaxWidth="0dp"
-                app:tabMode="fixed"
-                app:tabSelectedTextColor="@color/colorAccent"
-                app:tabTextColor="@color/colorPrimaryDark">
+                app:tabMode="fixed">
 
             </com.google.android.material.tabs.TabLayout>
 

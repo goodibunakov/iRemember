@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,11 +13,12 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/dialogTaskTitle"
             android:layout_width="match_parent"
-            android:hint="@string/task_title"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginRight="16dp">
+            android:layout_marginRight="16dp"
+            android:hint="@string/task_title"
+            app:boxBackgroundColor="@android:color/white">
 
             <EditText
                 android:id="@+id/etTitle"
@@ -31,11 +33,12 @@
             android:id="@+id/dialogTaskDate"
             android:layout_width="130dp"
             android:layout_height="wrap_content"
-            android:hint="@string/task_date"
             android:layout_below="@id/dialogTaskTitle"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginRight="16dp">
+            android:layout_marginRight="16dp"
+            android:hint="@string/task_date"
+            app:boxBackgroundColor="@android:color/white">
 
             <EditText
                 android:id="@+id/etDate"
@@ -52,13 +55,14 @@
             android:id="@+id/dialogTaskTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/task_time"
             android:layout_below="@id/dialogTaskTitle"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
             android:layout_toEndOf="@id/dialogTaskDate"
-            android:layout_toRightOf="@id/dialogTaskDate">
+            android:layout_toRightOf="@id/dialogTaskDate"
+            android:hint="@string/task_time"
+            app:boxBackgroundColor="@android:color/white">
 
             <EditText
                 android:id="@+id/etTime"
@@ -76,8 +80,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/dialogTaskDate"
-            android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
             android:layout_marginRight="13dp"
             tools:ignore="RtlHardcoded" />
     </RelativeLayout>

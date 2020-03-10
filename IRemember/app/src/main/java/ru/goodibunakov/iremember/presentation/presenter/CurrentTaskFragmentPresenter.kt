@@ -25,6 +25,7 @@ class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresent
 
         searchSubscribe()
         bus.post(UpdateEvent)
+        viewState.initRateBottomSheet()
     }
 
     private fun getTasks(query: String = "") {

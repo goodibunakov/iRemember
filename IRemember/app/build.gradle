@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'io.fabric'
 apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
@@ -92,10 +91,14 @@ dependencies {
     // Firebase
     implementation 'com.google.firebase:firebase-core:17.2.3'
     implementation 'com.google.firebase:firebase-analytics:17.2.3'
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta01'
     implementation 'com.google.firebase:firebase-perf:19.0.5'
 
     // Stetho
 //    implementation 'com.facebook.stetho:stetho:1.5.1'
+
+    // RateBottomSheet
+    implementation 'com.mikhaellopez:ratebottomsheet:1.0.3'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('androidx.test.espresso:espresso-core:3.2.0', {
@@ -105,3 +108,4 @@ dependencies {
     testImplementation 'androidx.test.ext:junit:1.1.1'
 }
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'

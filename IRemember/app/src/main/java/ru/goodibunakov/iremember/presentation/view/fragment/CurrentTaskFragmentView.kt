@@ -10,7 +10,11 @@ interface CurrentTaskFragmentView : TaskFragmentView {
     override fun checkAdapter()
     fun showFab()
     fun hideFab()
+
     @StateStrategyType(SkipStrategy::class)
     fun showEditTaskDialog(task: ModelTask)
     override fun cancelRemoveDialog()
+
+    @StateStrategyType(OneExecutionStateStrategy::class)
+    fun initRateBottomSheet()
 }

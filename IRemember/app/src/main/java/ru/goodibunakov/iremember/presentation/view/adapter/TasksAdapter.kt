@@ -139,7 +139,7 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 itemView.priority.isEnabled = false
                 model.status = ModelTask.STATUS_DONE
 
-                itemView.tvTitle.setTextColor(ContextCompat.getColor(itemView.tvTitle.context, R.color.gray50))
+                itemView.tvTitle.setTextColor(ContextCompat.getColor(itemView.tvTitle.context, R.color.colorGray50))
                 itemView.tvDate.setTextColor(ContextCompat.getColor(itemView.tvDate.context, android.R.color.darker_gray))
                 itemView.priority.setColorFilter(ContextCompat.getColor(itemView.priority.context, model.getPriorityColor()))
 

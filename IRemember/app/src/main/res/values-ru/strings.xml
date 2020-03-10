@@ -38,4 +38,15 @@
     <string name="search_hint">Заголовок задачи</string>
 
     <string name="empty_list">Пока нет задач</string>
+
+    <string name="rate_popup_ask_title">Нравится приложение?</string>
+    <string name="rate_popup_ask_message">Вам нравится пользоваться приложением?</string>
+    <string name="rate_popup_ask_ok">Да</string>
+    <string name="rate_popup_ask_no">Нет</string>
+
+    <string name="rate_popup_title">Оцените это приложение</string>
+    <string name="rate_popup_message">Не могли бы вы уделить минуту, чтобы оценить это приложение? Это не займет больше минуты. Спасибо за поддержку!</string>
+    <string name="rate_popup_ok">Оценить сейчас</string>
+    <string name="rate_popup_later">Напомнить позже</string>
+    <string name="rate_popup_no">Нет, спасибо</string>
 </resources>

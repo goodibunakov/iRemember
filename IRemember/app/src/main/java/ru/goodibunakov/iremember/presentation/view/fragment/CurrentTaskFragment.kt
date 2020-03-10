@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.mikhaellopez.ratebottomsheet.RateBottomSheet
+import com.mikhaellopez.ratebottomsheet.RateBottomSheetManager
 import kotlinx.android.synthetic.main.fragment_current_task.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -45,7 +47,7 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
 
     override fun showRemoveTaskDialog(location: Int) {
         dialog = RemoveTaskDialog.generateRemoveDialog(context!!, DialogInterface.OnClickListener { _, which ->
-            if (which == DialogInterface.BUTTON_POSITIVE){
+            if (which == DialogInterface.BUTTON_POSITIVE) {
                 currentTaskFragmentPresenter.doRemove(location, (adapter?.getItem(location) as ModelTask).timestamp)
             } else {
                 currentTaskFragmentPresenter.cancelDialog()
@@ -138,5 +140,22 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
 
     override fun hideEmptyListText() {
         emptyListText.visibility = View.GONE
+    }
+
+    override fun initRateBottomSheet() {
+        context?.let {
+            RateBottomSheetManager(it)
+                    .setInstallDays(1) // 3 by default
+                    .setLaunchTimes(5) // 5 by default
+                    .setRemindInterval(2) // 2 by default
+                    .setShowAskBottomSheet(true) // True by default
+                    .setShowLaterButton(true) // True by default
+                    .setShowCloseButtonIcon(true) // True by default
+                    .monitor()
+        }
+
+        // Show bottom sheet if meets conditions
+        // With AppCompatActivity or Fragment
+        RateBottomSheet.showRateBottomSheetIfMeetsConditions(this)
     }
 }
