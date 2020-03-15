@@ -18,7 +18,8 @@
             android:id="@+id/viewPager2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_marginBottom="64dp"/>
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar_layout"
@@ -43,18 +44,24 @@
 
             </androidx.appcompat.widget.Toolbar>
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabLayout"
-                style="@style/AppTheme.TabLayout"
-                android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize"
-                app:tabGravity="fill"
-                app:tabMaxWidth="0dp"
-                app:tabMode="fixed">
-
-            </com.google.android.material.tabs.TabLayout>
-
         </com.google.android.material.appbar.AppBarLayout>
+
+        <nl.joery.animatedbottombar.AnimatedBottomBar
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_gravity="bottom"
+            android:elevation="16dp"
+            app:abb_indicatorColor="@color/colorAccent"
+            app:abb_rippleEnabled="true"
+            app:abb_textAppearance="@style/BottomMenuButtonStyle"
+            android:background="@color/colorPrimary"
+            app:abb_tabColor="@color/colorPrimaryDark"
+            app:abb_tabAnimationSelected="slide"
+            app:abb_tabColorSelected="@color/colorPrimaryLight"
+            app:abb_selectedTabType="text"
+            app:abb_animationInterpolator="@android:anim/overshoot_interpolator"
+            android:id="@+id/bottomMenu"
+            app:abb_tabs="@menu/menu_bottom"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

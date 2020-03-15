@@ -86,7 +86,7 @@ dependencies {
 //    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
     // LeakCanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 
     // Firebase
     implementation 'com.google.firebase:firebase-core:17.2.3'
@@ -99,6 +99,9 @@ dependencies {
 
     // RateBottomSheet
     implementation 'com.mikhaellopez:ratebottomsheet:1.0.3'
+
+    //AnimatedBottomBar
+    implementation 'nl.joery.animatedbottombar:library:1.0.4'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('androidx.test.espresso:espresso-core:3.2.0', {

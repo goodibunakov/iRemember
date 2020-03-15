@@ -8,7 +8,6 @@ import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
-import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
 import moxy.MvpAppCompatActivity
 import moxy.presenter.InjectPresenter
@@ -127,11 +126,7 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
 
     private fun setTabLayout() {
         viewPager2.adapter = TabAdapter2(this)
-        TabLayoutMediator(tabLayout, viewPager2,
-                TabLayoutMediator.TabConfigurationStrategy { tab, position ->
-                    if (position == 0) tab.text = getString(R.string.current_task)
-                    else tab.text = getString(R.string.done_task)
-                }).attach()
+        bottomMenu.setupWithViewPager2(viewPager2)
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {}

@@ -156,6 +156,6 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
 
         // Show bottom sheet if meets conditions
         // With AppCompatActivity or Fragment
-        RateBottomSheet.showRateBottomSheetIfMeetsConditions(this)
+        Handler().postDelayed({ RateBottomSheet.showRateBottomSheetIfMeetsConditions(this) }, 3500)
     }
 }
