@@ -145,7 +145,7 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
     override fun initRateBottomSheet() {
         context?.let {
             RateBottomSheetManager(it)
-                    .setInstallDays(1) // 3 by default
+                    .setInstallDays(3) // 3 by default
                     .setLaunchTimes(5) // 5 by default
                     .setRemindInterval(2) // 2 by default
                     .setShowAskBottomSheet(true) // True by default
