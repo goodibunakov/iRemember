@@ -100,7 +100,7 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
             builder.setNegativeButton(R.string.dialog_cancel) { _, _ -> editTaskDialogPresenter.cancelDialog() }
 
 
-            val priorityAdapter = ArrayAdapter<String>(activity!!,
+            val priorityAdapter = ArrayAdapter(activity!!,
                     android.R.layout.simple_spinner_dropdown_item,
                     activity!!.resources.getStringArray(R.array.priority_array))
 

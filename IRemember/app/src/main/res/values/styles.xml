@@ -24,7 +24,7 @@
     </style>
 
     <style name="BottomMenuButtonStyle" parent="TextAppearance.MaterialComponents.Button">
-        <item name="android:textColor">@color/colorPrimaryLight</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
 </resources>

@@ -86,7 +86,7 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
         }
 
 
-        val priorityAdapter = ArrayAdapter<String>(activity!!,
+        val priorityAdapter = ArrayAdapter(activity!!,
                 android.R.layout.simple_spinner_dropdown_item,
                 activity!!.resources.getStringArray(R.array.priority_array))
         container.spinnerPriority.adapter = priorityAdapter
