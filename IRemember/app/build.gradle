@@ -10,8 +10,8 @@ android {
         applicationId "ru.goodibunakov.iremember"
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -101,7 +101,7 @@ dependencies {
     implementation 'com.mikhaellopez:ratebottomsheet:1.0.3'
 
     //AnimatedBottomBar
-    implementation 'nl.joery.animatedbottombar:library:1.0.4'
+    implementation 'nl.joery.animatedbottombar:library:1.0.7'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('androidx.test.espresso:espresso-core:3.2.0', {

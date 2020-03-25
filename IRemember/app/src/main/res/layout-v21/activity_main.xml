@@ -52,6 +52,7 @@
             android:layout_height="@dimen/bottom_menu_height"
             android:layout_gravity="bottom"
             android:background="@color/colorPrimary"
+            android:elevation="16dp"
             app:abb_animationInterpolator="@android:anim/overshoot_interpolator"
             app:abb_indicatorColor="@color/colorAccent"
             app:abb_rippleEnabled="true"
