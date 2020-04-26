@@ -3,7 +3,7 @@ package ru.goodibunakov.iremember.presentation.bus
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-class RxBus {
+class EventRxBus {
 
     private val bus: PublishSubject<Event> = PublishSubject.create()
 

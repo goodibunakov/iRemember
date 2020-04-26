@@ -9,13 +9,13 @@ import ru.goodibunakov.iremember.presentation.bus.QueryEvent
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp.Companion.databaseRepository
 import ru.goodibunakov.iremember.presentation.bus.UpdateEvent
-import ru.goodibunakov.iremember.presentation.bus.RxBus
+import ru.goodibunakov.iremember.presentation.bus.EventRxBus
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragmentView
 
 
 @InjectViewState
-class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresenter<CurrentTaskFragmentView>() {
+class CurrentTaskFragmentPresenter(private val bus: EventRxBus) : TaskFragmentPresenter<CurrentTaskFragmentView>() {
 
     private lateinit var disposableSearch: Disposable
     private lateinit var disposable: Disposable
@@ -68,12 +68,9 @@ class CurrentTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresent
     override fun searchSubscribe() {
         disposableSearch = bus.getEvent()
                 .subscribe { event ->
-                    when (event) {
-                        is QueryEvent -> cachedQuery = event.query
-                    }
-                    /*if (event is QueryEvent) {
+                    if (event is QueryEvent) {
                         cachedQuery = event.query
-                    }*/
+                    }
                     getTasks(cachedQuery)
                 }
     }

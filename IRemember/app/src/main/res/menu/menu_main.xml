@@ -6,6 +6,12 @@
         android:id="@+id/action_splash"
         android:checkable="true"
         android:orderInCategory="100"
-        android:title="@string/do_not_show_splash"
+        android:title="@string/menu_do_not_show_splash"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_trash"
+        android:title="@string/menu_trash"
+        android:visible="false"
+        android:icon="@drawable/ic_delete_black_24dp"
+        app:showAsAction="ifRoom" />
 </menu>

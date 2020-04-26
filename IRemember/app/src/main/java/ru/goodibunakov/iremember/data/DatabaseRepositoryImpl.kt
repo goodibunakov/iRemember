@@ -9,11 +9,11 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import ru.goodibunakov.iremember.presentation.bus.UpdateEvent
 import ru.goodibunakov.iremember.domain.DatabaseRepository
-import ru.goodibunakov.iremember.presentation.bus.RxBus
+import ru.goodibunakov.iremember.presentation.bus.EventRxBus
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.utils.TaskMapper
 
-class DatabaseRepositoryImpl(private val taskDao: TaskDao, private val bus: RxBus) : DatabaseRepository {
+class DatabaseRepositoryImpl(private val taskDao: TaskDao, private val bus: EventRxBus) : DatabaseRepository {
 
     override fun insert(modelTask: ModelTask) {
         Completable
@@ -75,5 +75,9 @@ class DatabaseRepositoryImpl(private val taskDao: TaskDao, private val bus: RxBu
 
     override fun delete(timestamp: Long): Completable {
         return taskDao.delete(timestamp)
+    }
+
+    override fun deleteAllDoneTasks(): Completable {
+        return taskDao.deleteAllDoneTasks()
     }
 }

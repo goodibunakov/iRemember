@@ -34,7 +34,7 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
 
     @ProvidePresenter
     fun providePresenter(): CurrentTaskFragmentPresenter {
-        return CurrentTaskFragmentPresenter(RememberApp.getBus())
+        return CurrentTaskFragmentPresenter(RememberApp.getEventBus())
     }
 
     init {

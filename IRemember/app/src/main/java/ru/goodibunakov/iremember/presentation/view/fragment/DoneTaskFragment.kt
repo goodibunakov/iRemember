@@ -26,7 +26,7 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
 
     @ProvidePresenter
     fun providePresenter(): DoneTaskFragmentPresenter {
-        return DoneTaskFragmentPresenter(RememberApp.getBus())
+        return DoneTaskFragmentPresenter(RememberApp.getEventBus())
     }
 
     init {
@@ -71,7 +71,7 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
 
     override fun showRemoveTaskDialog(location: Int) {
         dialog = RemoveTaskDialog.generateRemoveDialog(context!!, DialogInterface.OnClickListener { _, which ->
-            if (which == DialogInterface.BUTTON_POSITIVE){
+            if (which == DialogInterface.BUTTON_POSITIVE) {
                 doneTaskFragmentPresenter.doRemove(location, (adapter?.getItem(location) as ModelTask).timestamp)
             } else {
                 doneTaskFragmentPresenter.cancelDialog()
@@ -82,7 +82,6 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
     override fun cancelRemoveDialog() {
         dialog.cancel()
     }
-
 
     override fun showEmptyListText() {
         emptyListText.visibility = View.VISIBLE

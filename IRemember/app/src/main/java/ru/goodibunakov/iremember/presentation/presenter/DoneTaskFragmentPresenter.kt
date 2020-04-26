@@ -2,28 +2,41 @@ package ru.goodibunakov.iremember.presentation.presenter
 
 import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import moxy.InjectViewState
 import ru.goodibunakov.iremember.presentation.bus.QueryEvent
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp.Companion.databaseRepository
+import ru.goodibunakov.iremember.presentation.bus.DeleteAllDoneTasksEvent
 import ru.goodibunakov.iremember.presentation.bus.UpdateEvent
-import ru.goodibunakov.iremember.presentation.bus.RxBus
+import ru.goodibunakov.iremember.presentation.bus.EventRxBus
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.view.fragment.DoneTaskFragmentView
 
 @InjectViewState
-class DoneTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresenter<DoneTaskFragmentView>() {
+class DoneTaskFragmentPresenter(private val bus: EventRxBus) : TaskFragmentPresenter<DoneTaskFragmentView>() {
 
-    private lateinit var disposableSearch: Disposable
     private lateinit var disposable: Disposable
+    private val disposables = CompositeDisposable()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
         searchSubscribe()
+        deleteAllDoneTasksSubscribe()
         bus.post(UpdateEvent)
+    }
+
+    private fun deleteAllDoneTasksSubscribe() {
+        val disposableDeleteAllDoneTasks = bus.getEvent()
+                .subscribe { event ->
+                    if (event is DeleteAllDoneTasksEvent) {
+                        viewState.removeAllItemsFromAdapter()
+                    }
+                }
+        disposables.add(disposableDeleteAllDoneTasks)
     }
 
     private fun getTasks(query: String = "") {
@@ -54,18 +67,19 @@ class DoneTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresenter<
                 })
     }
 
-    private fun disposeThis(){
+    private fun disposeThis() {
         if (::disposable.isInitialized && !disposable.isDisposed) disposable.dispose()
     }
 
     override fun searchSubscribe() {
-        disposableSearch = bus.getEvent()
+        val disposableSearch = bus.getEvent()
                 .subscribe { event ->
                     if (event is QueryEvent) {
                         cachedQuery = event.query
                     }
                     getTasks(cachedQuery)
                 }
+        disposables.add(disposableSearch)
     }
 
 
@@ -78,7 +92,7 @@ class DoneTaskFragmentPresenter(private val bus: RxBus) : TaskFragmentPresenter<
     }
 
     override fun onDestroy() {
-        if (::disposableSearch.isInitialized && !disposableSearch.isDisposed) disposableSearch.dispose()
+        if (!disposables.isDisposed) disposables.dispose()
         if (::disposable.isInitialized && !disposable.isDisposed) disposable.dispose()
         super.onDestroy()
     }

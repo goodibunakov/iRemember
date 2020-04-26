@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="do_not_show_splash">Не показывать заставку</string>
+    <string name="menu_do_not_show_splash">Не показывать заставку</string>
+    <string name="menu_trash">Удалить все выполненные задачи</string>
 
     <string name="current_task">Текущие</string>
     <string name="done_task">Выполненные</string>
@@ -9,6 +10,11 @@
     <string name="dialog_ok">Сохранить</string>
     <string name="dialog_cancel">Отмена</string>
 
+    <string name="dialog_delete_title">Внимание!</string>
+    <string name="dialog_delete_message">Удалить все выполненные задачи?</string>
+    <string name="dialog_delete_ok">Удалить</string>
+    <string name="dialog_delete_cancel">Отмена</string>
+
     <string name="editing_title">Изменить задачу</string>
 
     <string name="dialog_error_empty_title">Пожалуйста, заполните это поле</string>
@@ -16,6 +22,7 @@
     <string name="dialog_remove_message">Удалить задачу?</string>
     <string name="dialog_remove">Удалить</string>
     <string name="removed">Запись удалена</string>
+    <string name="removed_all_done_tasks">Все выполненные задания удалены</string>
 
     <string name="task_title">Заголовок</string>
     <string name="task_date">Дата</string>
@@ -27,6 +34,7 @@
     <string name="separator_future">Будущие</string>
 
     <string name="error_database_download">Ошибка базы данных</string>
+    <string name="error_delete_all_done_tasks">Что-то пошло не так!</string>
 
     <string-array name="priority_array">
         <item>Низкий приоритет</item>

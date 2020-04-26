@@ -28,4 +28,7 @@ interface TaskDao {
 
     @Query("DELETE FROM $TASKS_TABLE WHERE $TASK_TIMESTAMP_COLUMN = :timestamp")
     fun delete(timestamp: Long): Completable
+
+    @Query("DELETE FROM $TASKS_TABLE WHERE $TASK_STATUS_COLUMN = $STATUS_DONE")
+    fun deleteAllDoneTasks(): Completable
 }

@@ -17,4 +17,10 @@ interface MainActivityView : MvpView {
     fun itemSelected(id: Int)
 
     fun setSplashItemState(id: Int, isChecked: Boolean)
+
+    @StateStrategyType(OneExecutionStateStrategy::class)
+    fun showDeleteDoneTasksDialog()
+
+    @StateStrategyType(OneExecutionStateStrategy::class)
+    fun showDeleteAllTasksIcon(visible: Boolean)
 }

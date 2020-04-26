@@ -1,15 +1,24 @@
 package ru.goodibunakov.iremember.presentation.presenter
 
+import io.reactivex.disposables.Disposable
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.goodibunakov.iremember.data.SharedPreferencesRepositoryImpl
+import ru.goodibunakov.iremember.domain.DatabaseRepository
 import ru.goodibunakov.iremember.domain.SharedPreferencesRepository
 import ru.goodibunakov.iremember.presentation.bus.Event
-import ru.goodibunakov.iremember.presentation.bus.RxBus
+import ru.goodibunakov.iremember.presentation.bus.EventRxBus
 import ru.goodibunakov.iremember.presentation.view.activity.MainActivityView
 
 @InjectViewState
-class MainActivityPresenter(private val sharedPreferencesRepository: SharedPreferencesRepository, private val bus: RxBus) : MvpPresenter<MainActivityView>() {
+class MainActivityPresenter(
+        private val sharedPreferencesRepository: SharedPreferencesRepository,
+        private val bus: EventRxBus,
+        private val repository: DatabaseRepository
+) : MvpPresenter<MainActivityView>() {
+
+    private var isDeleteAllDoneTasksVisible = false
+    private lateinit var disposable: Disposable
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -39,5 +48,28 @@ class MainActivityPresenter(private val sharedPreferencesRepository: SharedPrefe
 
     fun find(event: Event) {
         bus.post(event)
+    }
+
+    fun showDeleteDoneTasksDialog() {
+        disposable = repository.findDoneTasks()
+                .firstOrError()
+                .filter { it.isNotEmpty() }
+                .subscribe({
+                    viewState.showDeleteDoneTasksDialog()
+                }, {})
+    }
+
+    fun showDeleteAllTasksIcon(visible: Boolean) {
+        isDeleteAllDoneTasksVisible = visible
+        viewState.showDeleteAllTasksIcon(visible)
+    }
+
+    fun setDeleteAllDoneTasksIconVisible() {
+        viewState.showDeleteAllTasksIcon(isDeleteAllDoneTasksVisible)
+    }
+
+    override fun onDestroy() {
+        if (::disposable.isInitialized && !disposable.isDisposed) disposable.dispose()
+        super.onDestroy()
     }
 }
