@@ -3,6 +3,7 @@ package ru.goodibunakov.iremember.presentation.view.fragment
 import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,7 +61,7 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
     }
 
     override fun onItemLongClick(location: Int): Boolean {
-        Handler().postDelayed({ doneTaskFragmentPresenter.onItemLongClick(location) }, 500)
+        Handler(Looper.getMainLooper()).postDelayed({ doneTaskFragmentPresenter.onItemLongClick(location) }, 500)
         return true
     }
 
@@ -70,13 +71,13 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
     }
 
     override fun showRemoveTaskDialog(location: Int) {
-        dialog = RemoveTaskDialog.generateRemoveDialog(context!!, DialogInterface.OnClickListener { _, which ->
+        dialog = RemoveTaskDialog.generateRemoveDialog(context!!) { _, which ->
             if (which == DialogInterface.BUTTON_POSITIVE) {
                 doneTaskFragmentPresenter.doRemove(location, (adapter?.getItem(location) as ModelTask).timestamp)
             } else {
                 doneTaskFragmentPresenter.cancelDialog()
             }
-        }).show()
+        }.show()
     }
 
     override fun cancelRemoveDialog() {

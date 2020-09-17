@@ -3,6 +3,7 @@ package ru.goodibunakov.iremember.presentation.view.fragment
 import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -46,13 +47,13 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
     }
 
     override fun showRemoveTaskDialog(location: Int) {
-        dialog = RemoveTaskDialog.generateRemoveDialog(context!!, DialogInterface.OnClickListener { _, which ->
+        dialog = RemoveTaskDialog.generateRemoveDialog(context!!) { _, which ->
             if (which == DialogInterface.BUTTON_POSITIVE) {
                 currentTaskFragmentPresenter.doRemove(location, (adapter?.getItem(location) as ModelTask).timestamp)
             } else {
                 currentTaskFragmentPresenter.cancelDialog()
             }
-        }).show()
+        }.show()
     }
 
     override fun cancelRemoveDialog() {
@@ -125,7 +126,7 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
     }
 
     override fun onItemLongClick(location: Int): Boolean {
-        Handler().postDelayed({ currentTaskFragmentPresenter.onItemLongClick(location) }, 500)
+        Handler(Looper.getMainLooper()).postDelayed({ currentTaskFragmentPresenter.onItemLongClick(location) }, 500)
         return true
     }
 
@@ -156,6 +157,6 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
 
         // Show bottom sheet if meets conditions
         // With AppCompatActivity or Fragment
-        Handler().postDelayed({ RateBottomSheet.showRateBottomSheetIfMeetsConditions(this) }, 3500)
+        Handler(Looper.getMainLooper()).postDelayed({ RateBottomSheet.showRateBottomSheetIfMeetsConditions(this) }, 3500)
     }
 }
