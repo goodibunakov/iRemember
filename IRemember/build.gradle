@@ -1,8 +1,8 @@
 buildscript {
-    ext.kotlin_version = '1.4.20'
-    ext.moxy_version = '2.1.1'
+    ext.kotlin_version = '1.4.21'
+    ext.moxy_version = '2.2.1'
     ext.dagger_version = '2.25.2'
-    ext.room_version = '2.2.5'
+    ext.room_version = '2.2.6'
     repositories {
         google()
         jcenter()
