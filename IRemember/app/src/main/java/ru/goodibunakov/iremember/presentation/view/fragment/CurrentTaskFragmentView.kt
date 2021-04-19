@@ -14,7 +14,4 @@ interface CurrentTaskFragmentView : TaskFragmentView {
     @StateStrategyType(SkipStrategy::class)
     fun showEditTaskDialog(task: ModelTask)
     override fun cancelRemoveDialog()
-
-    @StateStrategyType(OneExecutionStateStrategy::class)
-    fun initRateBottomSheet()
 }
