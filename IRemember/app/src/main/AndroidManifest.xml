@@ -17,7 +17,8 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".presentation.view.activity.MainActivity">
+        <activity android:name=".presentation.view.activity.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -28,7 +29,8 @@
             android:name="ru.goodibunakov.iremember.presentation.alarm.AlarmBroadcastReceiver"
             android:process=":remote" />
 
-        <receiver android:name="ru.goodibunakov.iremember.presentation.alarm.AlarmSetter">
+        <receiver android:name="ru.goodibunakov.iremember.presentation.alarm.AlarmSetter"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.RECEIVE_BOOT_COMPLETED" />
                 <action android:name="android.intent.action.ACTION_BOOT_COMPLETED" />
