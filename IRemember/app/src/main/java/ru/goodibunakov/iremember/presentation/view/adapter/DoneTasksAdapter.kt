@@ -8,9 +8,10 @@ import ru.goodibunakov.iremember.presentation.OnItemLongClickListener
 import ru.goodibunakov.iremember.presentation.OnPriorityClickListener
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 
-class DoneTasksAdapter(private val onLongClickListener: OnItemLongClickListener,
-                       private val onPriorityClickListener: OnPriorityClickListener)
-    : TasksAdapter() {
+class DoneTasksAdapter(
+    private val onLongClickListener: OnItemLongClickListener,
+    private val onPriorityClickListener: OnPriorityClickListener
+) : TasksAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)

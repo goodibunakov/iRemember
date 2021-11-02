@@ -5,6 +5,6 @@ import moxy.viewstate.strategy.AddToEndStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(value = AddToEndStrategy::class)
-interface SplashFragmentVew: MvpView {
+interface SplashFragmentVew : MvpView {
     fun close()
 }

@@ -20,7 +20,8 @@ import ru.goodibunakov.iremember.presentation.presenter.DoneTaskFragmentPresente
 import ru.goodibunakov.iremember.presentation.view.adapter.DoneTasksAdapter
 import ru.goodibunakov.iremember.presentation.view.dialog.RemoveTaskDialog
 
-class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickListener, OnPriorityClickListener {
+class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickListener,
+    OnPriorityClickListener {
 
     @InjectPresenter
     lateinit var doneTaskFragmentPresenter: DoneTaskFragmentPresenter
@@ -34,8 +35,10 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
         adapter = DoneTasksAdapter(this, this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_done_task, container, false)
     }
 
@@ -61,7 +64,11 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
     }
 
     override fun onItemLongClick(location: Int): Boolean {
-        Handler(Looper.getMainLooper()).postDelayed({ doneTaskFragmentPresenter.onItemLongClick(location) }, 500)
+        Handler(Looper.getMainLooper()).postDelayed({
+            doneTaskFragmentPresenter.onItemLongClick(
+                location
+            )
+        }, 500)
         return true
     }
 
@@ -73,7 +80,10 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
     override fun showRemoveTaskDialog(location: Int) {
         dialog = RemoveTaskDialog.generateRemoveDialog(context!!) { _, which ->
             if (which == DialogInterface.BUTTON_POSITIVE) {
-                doneTaskFragmentPresenter.doRemove(location, (adapter?.getItem(location) as ModelTask).timestamp)
+                doneTaskFragmentPresenter.doRemove(
+                    location,
+                    (adapter?.getItem(location) as ModelTask).timestamp
+                )
             } else {
                 doneTaskFragmentPresenter.cancelDialog()
             }

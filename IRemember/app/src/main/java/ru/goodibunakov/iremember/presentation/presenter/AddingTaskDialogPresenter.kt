@@ -12,7 +12,9 @@ import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragme
 import java.util.*
 
 @InjectViewState
-class AddingTaskDialogPresenter(private val repository: DatabaseRepository) : MvpPresenter<AddingTaskDialogFragmentView>() {
+class AddingTaskDialogPresenter(
+    private val repository: DatabaseRepository
+) : MvpPresenter<AddingTaskDialogFragmentView>() {
 
     lateinit var modelTask: ModelTask
     private val calendar: Calendar = Calendar.getInstance()

@@ -34,8 +34,9 @@ class TimePickerDialogFragment : DialogFragment() {
         val calendar = Calendar.getInstance()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
-        val builder: AlertDialog.Builder = AlertDialog.Builder(activity as Context, R.style.AppThemeDialog)
-        val view = activity!!.layoutInflater.inflate(R.layout.dialog_timepicker, null)
+        val builder: AlertDialog.Builder =
+            AlertDialog.Builder(activity as Context, R.style.AppThemeDialog)
+        val view = requireActivity().layoutInflater.inflate(R.layout.dialog_timepicker, null)
         builder.setView(view)
         builder.setPositiveButton(R.string.dialog_ok) { _, _ ->
             val intent = Intent()
@@ -79,9 +80,13 @@ class TimePickerDialogFragment : DialogFragment() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             try {
                 if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    ((timePicker.getChildAt(0) as LinearLayout).getChildAt(4) as LinearLayout).getChildAt(0)?.visibility = View.GONE
+                    ((timePicker.getChildAt(0) as LinearLayout).getChildAt(4) as LinearLayout).getChildAt(
+                        0
+                    )?.visibility = View.GONE
                 } else {
-                    (((timePicker.getChildAt(0) as LinearLayout).getChildAt(2) as LinearLayout).getChildAt(2) as LinearLayout).getChildAt(0)?.visibility = View.GONE
+                    (((timePicker.getChildAt(0) as LinearLayout).getChildAt(2) as LinearLayout).getChildAt(
+                        2
+                    ) as LinearLayout).getChildAt(0)?.visibility = View.GONE
                 }
             } catch (ex: Exception) {
                 ex.printStackTrace()

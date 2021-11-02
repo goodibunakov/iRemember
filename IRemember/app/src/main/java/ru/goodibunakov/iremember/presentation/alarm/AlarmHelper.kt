@@ -31,7 +31,8 @@ class AlarmHelper private constructor() {
 
 
     fun initAlarmManager() {
-        alarmManager = RememberApp.getAppContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager =
+            RememberApp.getAppContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
     }
 
     fun setAlarm(task: ModelTask) {
@@ -41,15 +42,27 @@ class AlarmHelper private constructor() {
         intent.putExtra(ALARM_KEY_TIMESTAMP, task.timestamp)
         intent.putExtra(ALARM_KEY_COLOR, task.getPriorityColor())
 
-        val pendingIntent = PendingIntent.getBroadcast(RememberApp.getAppContext(),
-                task.date.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getBroadcast(
+            RememberApp.getAppContext(),
+            task.date.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
-        AlarmManagerCompat.setExactAndAllowWhileIdle(alarmManager, AlarmManager.RTC_WAKEUP, task.date, pendingIntent)
+        AlarmManagerCompat.setExactAndAllowWhileIdle(
+            alarmManager,
+            AlarmManager.RTC_WAKEUP,
+            task.date,
+            pendingIntent
+        )
     }
 
     fun removeAlarm(timestamp: Long) {
         val intent = Intent(RememberApp.getAppContext(), AlarmBroadcastReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(RememberApp.getAppContext(), timestamp.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getBroadcast(
+            RememberApp.getAppContext(),
+            timestamp.toInt(),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
         alarmManager.cancel(pendingIntent)
     }
 }

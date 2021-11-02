@@ -100,22 +100,30 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
             builder.setNegativeButton(R.string.dialog_cancel) { _, _ -> editTaskDialogPresenter.cancelDialog() }
 
 
-            val priorityAdapter = ArrayAdapter(activity!!,
-                    android.R.layout.simple_spinner_dropdown_item,
-                    activity!!.resources.getStringArray(R.array.priority_array))
+            val priorityAdapter = ArrayAdapter(
+                requireActivity(),
+                android.R.layout.simple_spinner_dropdown_item,
+                requireActivity().resources.getStringArray(R.array.priority_array)
+            )
 
             container.spinnerPriority.adapter = priorityAdapter
             editTaskDialogPresenter.setPriorityToUI()
 
-            container.spinnerPriority.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                    editTaskDialogPresenter.itemSelected(position)
-                }
+            container.spinnerPriority.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        editTaskDialogPresenter.itemSelected(position)
+                    }
 
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                    editTaskDialogPresenter.nothingSelected()
+                    override fun onNothingSelected(parent: AdapterView<*>) {
+                        editTaskDialogPresenter.nothingSelected()
+                    }
                 }
-            }
 
             val alertDialog = builder.create()
 
@@ -127,7 +135,12 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
                 }
 
                 container.etTitle.addTextChangedListener(object : MyTextWatcher {
-                    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    override fun onTextChanged(
+                        s: CharSequence,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
                         editTaskDialogPresenter.onTextChanged(s)
                     }
                 })
@@ -135,11 +148,11 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
                 container.etTitle.isFocusableInTouchMode = true
                 editTaskDialogPresenter.getTitleHasFocus()
                 container.etTitle.onFocusChangeListener =
-                        View.OnFocusChangeListener { _, hasFocus ->
-                            if (hasFocus) {
-                                editTaskDialogPresenter.setTitleHasFocus(hasFocus)
-                            }
+                    View.OnFocusChangeListener { _, hasFocus ->
+                        if (hasFocus) {
+                            editTaskDialogPresenter.setTitleHasFocus(hasFocus)
                         }
+                    }
 
                 container.etDate.setOnClickListener {
                     clearTitleFocus()
@@ -178,13 +191,19 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
     override fun showDatePickerDialog() {
         datePickerDialogFragment = DatePickerDialogFragment()
         datePickerDialogFragment.setTargetFragment(this@EditTaskDialogFragment, REQUEST_CODE_DATE)
-        datePickerDialogFragment.show(activity!!.supportFragmentManager, "DatePickerDialogFragment")
+        datePickerDialogFragment.show(
+            requireActivity().supportFragmentManager,
+            "DatePickerDialogFragment"
+        )
     }
 
     override fun showTimePickerDialog() {
         timePickerDialogFragment = TimePickerDialogFragment()
         timePickerDialogFragment.setTargetFragment(this@EditTaskDialogFragment, REQUEST_CODE_TIME)
-        timePickerDialogFragment.show(activity!!.supportFragmentManager, "TimePickerDialogFragment")
+        timePickerDialogFragment.show(
+            requireActivity().supportFragmentManager,
+            "TimePickerDialogFragment"
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -245,7 +264,7 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
 
     override fun setUIWhenTitleEmpty() {
         positive.isEnabled = false
-        dialogTaskTitle.error = resources.getString(R.string.dialog_error_empty_title)
+        container.dialogTaskTitle.error = resources.getString(R.string.dialog_error_empty_title)
     }
 
     override fun setUIWhenTitleNotEmpty() {
@@ -262,7 +281,10 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
         if (hasFocus) {
             container.etTitle.requestFocus()
             dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
-            (activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+            (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).toggleSoftInput(
+                InputMethodManager.SHOW_FORCED,
+                InputMethodManager.HIDE_IMPLICIT_ONLY
+            )
         }
     }
 
@@ -296,7 +318,10 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
     }
 
     private fun hideSoftKeyboard() {
-        (activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(container.etTitle.windowToken, 0)
+        (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+            container.etTitle.windowToken,
+            0
+        )
     }
 
     override fun onActivityCreated(arg0: Bundle?) {

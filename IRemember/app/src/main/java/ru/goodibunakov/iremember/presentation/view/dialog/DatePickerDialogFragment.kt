@@ -29,11 +29,11 @@ class DatePickerDialogFragment : DialogFragment() {
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
         val builder = AlertDialog.Builder(activity as Context, R.style.AppThemeDialog)
-        val view = activity!!.layoutInflater.inflate(R.layout.dialog_datepicker, null)
+        val view = requireActivity().layoutInflater.inflate(R.layout.dialog_datepicker, null)
         view.datePicker.minDate = System.currentTimeMillis() - 1000
         view.datePicker.init(year, month, day, null)
         builder.setView(view)
-        builder.setPositiveButton(R.string.dialog_ok) {_,_ ->
+        builder.setPositiveButton(R.string.dialog_ok) { _, _ ->
             val yearSet: Int = view.datePicker.year
             val monthSet: Int = view.datePicker.month
             val daySet: Int = view.datePicker.dayOfMonth
@@ -43,7 +43,7 @@ class DatePickerDialogFragment : DialogFragment() {
             intent.putExtra(TYPE, KEY_POSITIVE)
             targetFragment?.onActivityResult(REQUEST_CODE_DATE, Activity.RESULT_OK, intent)
         }
-        builder.setNegativeButton(R.string.dialog_cancel) {_,_ ->
+        builder.setNegativeButton(R.string.dialog_cancel) { _, _ ->
             intent.putExtra(TYPE, KEY_NEGATIVE)
             targetFragment?.onActivityResult(REQUEST_CODE_DATE, Activity.RESULT_OK, intent)
         }

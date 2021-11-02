@@ -87,7 +87,8 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     protected fun setAnimation(viewToAnimate: View, position: Int) {
         if (position > lastPosition) {
-            val animation = AnimationUtils.loadAnimation(viewToAnimate.context, android.R.anim.slide_in_left)
+            val animation =
+                AnimationUtils.loadAnimation(viewToAnimate.context, android.R.anim.slide_in_left)
             viewToAnimate.startAnimation(animation)
             lastPosition = position
         }
@@ -104,10 +105,11 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    inner class TaskViewHolderCurrent(itemView: View, private val onClickListener: OnItemClickListener,
-                                      private val onLongClickListener: OnItemLongClickListener,
-                                      private val onPriorityClickListener: OnPriorityClickListener)
-        : RecyclerView.ViewHolder(itemView) {
+    inner class TaskViewHolderCurrent(
+        itemView: View, private val onClickListener: OnItemClickListener,
+        private val onLongClickListener: OnItemLongClickListener,
+        private val onPriorityClickListener: OnPriorityClickListener
+    ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Item) {
             val model = item as ModelTask
@@ -117,10 +119,25 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             itemView.priority.isEnabled = true
 
             itemView.tvTitle.text = model.title
-            itemView.tvTitle.setTextColor(ContextCompat.getColor(itemView.tvTitle.context, android.R.color.black))
-            itemView.tvDate.setTextColor(ContextCompat.getColor(itemView.tvDate.context, android.R.color.darker_gray))
+            itemView.tvTitle.setTextColor(
+                ContextCompat.getColor(
+                    itemView.tvTitle.context,
+                    android.R.color.black
+                )
+            )
+            itemView.tvDate.setTextColor(
+                ContextCompat.getColor(
+                    itemView.tvDate.context,
+                    android.R.color.darker_gray
+                )
+            )
             itemView.priority.setImageResource(R.drawable.circle_full)
-            itemView.priority.setColorFilter(ContextCompat.getColor(itemView.priority.context, model.getPriorityColor()))
+            itemView.priority.setColorFilter(
+                ContextCompat.getColor(
+                    itemView.priority.context,
+                    model.getPriorityColor()
+                )
+            )
 
             itemView.setOnClickListener { onClickListener.onItemClick(model) }
             itemView.setOnLongClickListener { onLongClickListener.onItemLongClick(layoutPosition) }
@@ -139,9 +156,24 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 itemView.priority.isEnabled = false
                 model.status = ModelTask.STATUS_DONE
 
-                itemView.tvTitle.setTextColor(ContextCompat.getColor(itemView.tvTitle.context, R.color.colorGray50))
-                itemView.tvDate.setTextColor(ContextCompat.getColor(itemView.tvDate.context, android.R.color.darker_gray))
-                itemView.priority.setColorFilter(ContextCompat.getColor(itemView.priority.context, model.getPriorityColor()))
+                itemView.tvTitle.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.tvTitle.context,
+                        R.color.colorGray50
+                    )
+                )
+                itemView.tvDate.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.tvDate.context,
+                        android.R.color.darker_gray
+                    )
+                )
+                itemView.priority.setColorFilter(
+                    ContextCompat.getColor(
+                        itemView.priority.context,
+                        model.getPriorityColor()
+                    )
+                )
 
                 val flipIn = ObjectAnimator.ofFloat(itemView.priority, View.ROTATION_Y, -180f, 0f)
                 flipIn.addListener(object : Animator.AnimatorListener {
@@ -151,8 +183,18 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         if (model.status == ModelTask.STATUS_DONE) {
                             itemView.priority.setImageResource(R.drawable.circle_checked)
 
-                            val trans = ObjectAnimator.ofFloat(itemView, View.TRANSLATION_X, 0f, itemView.width.toFloat())
-                            val transBack = ObjectAnimator.ofFloat(itemView, View.TRANSLATION_X, itemView.width.toFloat(), 0f)
+                            val trans = ObjectAnimator.ofFloat(
+                                itemView,
+                                View.TRANSLATION_X,
+                                0f,
+                                itemView.width.toFloat()
+                            )
+                            val transBack = ObjectAnimator.ofFloat(
+                                itemView,
+                                View.TRANSLATION_X,
+                                itemView.width.toFloat(),
+                                0f
+                            )
 
                             trans.addListener(object : Animator.AnimatorListener {
                                 override fun onAnimationStart(animation: Animator) {}
@@ -185,9 +227,10 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
 
-    inner class TaskViewHolderDone(itemView: View, private val onLongClickListener: OnItemLongClickListener,
-                                   private val onPriorityClickListener: OnPriorityClickListener)
-        : RecyclerView.ViewHolder(itemView) {
+    inner class TaskViewHolderDone(
+        itemView: View, private val onLongClickListener: OnItemLongClickListener,
+        private val onPriorityClickListener: OnPriorityClickListener
+    ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Item) {
             itemView.isEnabled = true
@@ -196,9 +239,19 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
             val model = item as ModelTask
             itemView.tvTitle.text = model.title
-            itemView.tvTitle.setTextColor(ContextCompat.getColor(itemView.tvTitle.context, android.R.color.darker_gray))
+            itemView.tvTitle.setTextColor(
+                ContextCompat.getColor(
+                    itemView.tvTitle.context,
+                    android.R.color.darker_gray
+                )
+            )
             itemView.priority.setImageResource(R.drawable.circle_checked)
-            itemView.priority.setColorFilter(ContextCompat.getColor(itemView.priority.context, model.getPriorityColor()))
+            itemView.priority.setColorFilter(
+                ContextCompat.getColor(
+                    itemView.priority.context,
+                    model.getPriorityColor()
+                )
+            )
 
             itemView.setOnLongClickListener { onLongClickListener.onItemLongClick(layoutPosition) }
 
@@ -216,9 +269,24 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 itemView.priority.isEnabled = false
                 model.status = ModelTask.STATUS_CURRENT
 
-                itemView.tvTitle.setTextColor(ContextCompat.getColor(itemView.tvTitle.context, android.R.color.black))
-                itemView.tvDate.setTextColor(ContextCompat.getColor(itemView.tvDate.context, android.R.color.darker_gray))
-                itemView.priority.setColorFilter(ContextCompat.getColor(itemView.priority.context, model.getPriorityColor()))
+                itemView.tvTitle.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.tvTitle.context,
+                        android.R.color.black
+                    )
+                )
+                itemView.tvDate.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.tvDate.context,
+                        android.R.color.darker_gray
+                    )
+                )
+                itemView.priority.setColorFilter(
+                    ContextCompat.getColor(
+                        itemView.priority.context,
+                        model.getPriorityColor()
+                    )
+                )
 
                 val flipIn = ObjectAnimator.ofFloat(itemView.priority, View.ROTATION_Y, 180f, 0f)
                 itemView.priority.setImageResource(R.drawable.circle_full)
@@ -228,8 +296,18 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     override fun onAnimationEnd(animation: Animator) {
                         if (model.status != ModelTask.STATUS_DONE) {
 
-                            val trans = ObjectAnimator.ofFloat(itemView, View.TRANSLATION_X, 0f, -itemView.width.toFloat())
-                            val transBack = ObjectAnimator.ofFloat(itemView, View.TRANSLATION_X, -itemView.width.toFloat(), 0f)
+                            val trans = ObjectAnimator.ofFloat(
+                                itemView,
+                                View.TRANSLATION_X,
+                                0f,
+                                -itemView.width.toFloat()
+                            )
+                            val transBack = ObjectAnimator.ofFloat(
+                                itemView,
+                                View.TRANSLATION_X,
+                                -itemView.width.toFloat(),
+                                0f
+                            )
 
                             trans.addListener(object : Animator.AnimatorListener {
                                 override fun onAnimationStart(animation: Animator) {}
@@ -261,5 +339,6 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    inner class SeparatorViewHolder(itemView: View, val type: TextView) : RecyclerView.ViewHolder(itemView)
+    inner class SeparatorViewHolder(itemView: View, val type: TextView) :
+        RecyclerView.ViewHolder(itemView)
 }

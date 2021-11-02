@@ -18,7 +18,10 @@ class DeleteDoneTasksDialogFragment : MvpAppCompatDialogFragment(), DeleteDoneTa
 
     @ProvidePresenter
     fun providePresenter(): DeleteDoneTasksDialogPresenter {
-        return DeleteDoneTasksDialogPresenter(RememberApp.databaseRepository, RememberApp.getEventBus())
+        return DeleteDoneTasksDialogPresenter(
+            RememberApp.databaseRepository,
+            RememberApp.getEventBus()
+        )
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

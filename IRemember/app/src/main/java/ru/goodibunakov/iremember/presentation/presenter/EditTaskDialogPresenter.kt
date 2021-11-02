@@ -12,7 +12,9 @@ import ru.goodibunakov.iremember.presentation.view.dialog.EditTaskDialogFragment
 import java.util.*
 
 @InjectViewState
-class EditTaskDialogPresenter(private val repository: DatabaseRepository) : MvpPresenter<EditTaskDialogFragmentView>() {
+class EditTaskDialogPresenter(
+    private val repository: DatabaseRepository
+) : MvpPresenter<EditTaskDialogFragmentView>() {
 
     lateinit var modelTask: ModelTask
     private lateinit var calendar: Calendar

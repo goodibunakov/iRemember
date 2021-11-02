@@ -27,11 +27,14 @@ class SplashFragment : MvpAppCompatFragment(), SplashFragmentVew, MyAnimationLis
         return SplashFragmentPresenter()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         val view = inflater.inflate(R.layout.fragment_splash, container, false)
-        view.version.text = String.format(resources.getString(R.string.version), BuildConfig.VERSION_NAME)
+        view.version.text =
+            String.format(resources.getString(R.string.version), BuildConfig.VERSION_NAME)
 
         splashIn = AnimationUtils.loadAnimation(activity, R.anim.splash_anim_in)
         splashOut = AnimationUtils.loadAnimation(activity, R.anim.splash_anim_out)
@@ -47,10 +50,10 @@ class SplashFragment : MvpAppCompatFragment(), SplashFragmentVew, MyAnimationLis
 
     override fun close() {
         if (activity != null) {
-            activity!!.supportFragmentManager
-                    .beginTransaction()
-                    .remove(this@SplashFragment)
-                    .commitAllowingStateLoss()
+            requireActivity().supportFragmentManager
+                .beginTransaction()
+                .remove(this@SplashFragment)
+                .commitAllowingStateLoss()
         }
     }
 

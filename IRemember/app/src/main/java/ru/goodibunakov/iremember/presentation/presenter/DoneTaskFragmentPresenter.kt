@@ -16,7 +16,9 @@ import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.view.fragment.DoneTaskFragmentView
 
 @InjectViewState
-class DoneTaskFragmentPresenter(private val bus: EventRxBus) : TaskFragmentPresenter<DoneTaskFragmentView>() {
+class DoneTaskFragmentPresenter(
+    private val bus: EventRxBus
+) : TaskFragmentPresenter<DoneTaskFragmentView>() {
 
     private lateinit var disposable: Disposable
     private val disposables = CompositeDisposable()
@@ -31,40 +33,40 @@ class DoneTaskFragmentPresenter(private val bus: EventRxBus) : TaskFragmentPrese
 
     private fun deleteAllDoneTasksSubscribe() {
         val disposableDeleteAllDoneTasks = bus.getEvent()
-                .subscribe { event ->
-                    if (event is DeleteAllDoneTasksEvent) {
-                        viewState.removeAllItemsFromAdapter()
-                    }
+            .subscribe { event ->
+                if (event is DeleteAllDoneTasksEvent) {
+                    viewState.removeAllItemsFromAdapter()
                 }
+            }
         disposables.add(disposableDeleteAllDoneTasks)
     }
 
     private fun getTasks(query: String = "") {
         disposable = databaseRepository.findDoneTasks()
-                .map {
-                    it.filter { modelTask ->
-                        modelTask.title.contains(query, true) || query.isEmpty()
-                    }
+            .map {
+                it.filter { modelTask ->
+                    modelTask.title.contains(query, true) || query.isEmpty()
                 }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ list ->
-                    if (list.isEmpty()) {
-                        viewState.showEmptyListText()
-                    } else {
-                        viewState.hideEmptyListText()
-                    }
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ list ->
+                if (list.isEmpty()) {
+                    viewState.showEmptyListText()
+                } else {
+                    viewState.hideEmptyListText()
+                }
 
-                    viewState.checkAdapter()
-                    for (element in list) {
-                        viewState.addTask(element)
-                    }
-                    disposeThis()
-                }, { error ->
-                    Log.d("debug", error!!.localizedMessage!!)
-                    viewState.showError(R.string.error_database_download)
-                    disposeThis()
-                })
+                viewState.checkAdapter()
+                for (element in list) {
+                    viewState.addTask(element)
+                }
+                disposeThis()
+            }, { error ->
+                Log.d("debug", error!!.localizedMessage!!)
+                viewState.showError(R.string.error_database_download)
+                disposeThis()
+            })
     }
 
     private fun disposeThis() {
@@ -73,12 +75,12 @@ class DoneTaskFragmentPresenter(private val bus: EventRxBus) : TaskFragmentPrese
 
     override fun searchSubscribe() {
         val disposableSearch = bus.getEvent()
-                .subscribe { event ->
-                    if (event is QueryEvent) {
-                        cachedQuery = event.query
-                    }
-                    getTasks(cachedQuery)
+            .subscribe { event ->
+                if (event is QueryEvent) {
+                    cachedQuery = event.query
                 }
+                getTasks(cachedQuery)
+            }
         disposables.add(disposableSearch)
     }
 

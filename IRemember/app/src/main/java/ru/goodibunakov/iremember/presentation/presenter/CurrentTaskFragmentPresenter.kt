@@ -15,7 +15,9 @@ import ru.goodibunakov.iremember.presentation.view.fragment.CurrentTaskFragmentV
 
 
 @InjectViewState
-class CurrentTaskFragmentPresenter(private val bus: EventRxBus) : TaskFragmentPresenter<CurrentTaskFragmentView>() {
+class CurrentTaskFragmentPresenter(
+    private val bus: EventRxBus
+) : TaskFragmentPresenter<CurrentTaskFragmentView>() {
 
     private lateinit var disposableSearch: Disposable
     private lateinit var disposable: Disposable
@@ -29,31 +31,31 @@ class CurrentTaskFragmentPresenter(private val bus: EventRxBus) : TaskFragmentPr
 
     private fun getTasks(query: String = "") {
         disposable = databaseRepository.findCurrentTasks()
-                .map {
-                    it.filter { modelTask ->
-                        modelTask.title.contains(query, true) || query.isEmpty()
-                    }
+            .map {
+                it.filter { modelTask ->
+                    modelTask.title.contains(query, true) || query.isEmpty()
                 }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ list ->
-                    Log.d("debug", "getTasks Single")
-                    if (list.isEmpty()) {
-                        viewState.showEmptyListText()
-                    } else {
-                        viewState.hideEmptyListText()
-                    }
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ list ->
+                Log.d("debug", "getTasks Single")
+                if (list.isEmpty()) {
+                    viewState.showEmptyListText()
+                } else {
+                    viewState.hideEmptyListText()
+                }
 
-                    viewState.checkAdapter()
-                    for (element in list) {
-                        viewState.addTask(element)
-                    }
-                    disposeThis()
-                }, { error ->
-                    Log.d("debug", error!!.localizedMessage!!)
-                    viewState.showError(R.string.error_database_download)
-                    disposeThis()
-                })
+                viewState.checkAdapter()
+                for (element in list) {
+                    viewState.addTask(element)
+                }
+                disposeThis()
+            }, { error ->
+                Log.d("debug", error!!.localizedMessage!!)
+                viewState.showError(R.string.error_database_download)
+                disposeThis()
+            })
     }
 
     private fun disposeThis() {
@@ -66,12 +68,12 @@ class CurrentTaskFragmentPresenter(private val bus: EventRxBus) : TaskFragmentPr
 
     override fun searchSubscribe() {
         disposableSearch = bus.getEvent()
-                .subscribe { event ->
-                    if (event is QueryEvent) {
-                        cachedQuery = event.query
-                    }
-                    getTasks(cachedQuery)
+            .subscribe { event ->
+                if (event is QueryEvent) {
+                    cachedQuery = event.query
                 }
+                getTasks(cachedQuery)
+            }
     }
 
     fun hideFab() {

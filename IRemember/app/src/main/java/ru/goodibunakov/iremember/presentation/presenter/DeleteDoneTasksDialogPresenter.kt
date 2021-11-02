@@ -12,7 +12,10 @@ import ru.goodibunakov.iremember.presentation.bus.EventRxBus
 import ru.goodibunakov.iremember.presentation.view.dialog.DeleteDoneTasksDialogView
 
 @InjectViewState
-class DeleteDoneTasksDialogPresenter(private val repository: DatabaseRepository, private val bus: EventRxBus) : MvpPresenter<DeleteDoneTasksDialogView>() {
+class DeleteDoneTasksDialogPresenter(
+    private val repository: DatabaseRepository,
+    private val bus: EventRxBus
+) : MvpPresenter<DeleteDoneTasksDialogView>() {
 
     private lateinit var disposable: Disposable
 
@@ -22,14 +25,14 @@ class DeleteDoneTasksDialogPresenter(private val repository: DatabaseRepository,
 
     fun okClicked() {
         disposable = repository.deleteAllDoneTasks()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    viewState.showSuccess(R.string.removed_all_done_tasks)
-                    bus.post(DeleteAllDoneTasksEvent)
-                }, {
-                    viewState.showError(R.string.error_delete_all_done_tasks)
-                })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                viewState.showSuccess(R.string.removed_all_done_tasks)
+                bus.post(DeleteAllDoneTasksEvent)
+            }, {
+                viewState.showError(R.string.error_delete_all_done_tasks)
+            })
     }
 
     override fun onDestroy() {

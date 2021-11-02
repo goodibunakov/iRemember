@@ -10,6 +10,12 @@ object TaskMapper {
     }
 
     fun mapToTask(modelTask: ModelTask): Task {
-        return Task(modelTask.title, modelTask.date, modelTask.priority, modelTask.status, modelTask.timestamp)
+        return Task(
+            modelTask.title,
+            modelTask.date,
+            modelTask.priority,
+            modelTask.status,
+            modelTask.timestamp
+        )
     }
 }

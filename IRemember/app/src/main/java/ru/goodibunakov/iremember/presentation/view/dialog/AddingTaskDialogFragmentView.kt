@@ -9,6 +9,7 @@ import moxy.viewstate.strategy.StateStrategyType
 interface AddingTaskDialogFragmentView : MvpView {
     fun setEmptyToDateEditText()
     fun setEmptyToTimeEditText()
+
     @StateStrategyType(SkipStrategy::class)
     fun showDatePickerDialog()
     fun setDate(date: String)
@@ -22,6 +23,7 @@ interface AddingTaskDialogFragmentView : MvpView {
     fun setUIWhenTitleNotEmpty(s: String)
     fun initPositiveButton()
     fun closeTimeDialogFragment()
+
     @StateStrategyType(SkipStrategy::class)
     fun setTitleFocus(hasFocus: Boolean)
     fun closeDateDialogFragment()

@@ -25,7 +25,8 @@ import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragme
 import ru.goodibunakov.iremember.presentation.view.dialog.EditTaskDialogFragment
 import ru.goodibunakov.iremember.presentation.view.dialog.RemoveTaskDialog
 
-class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClickListener, OnItemLongClickListener, OnPriorityClickListener {
+class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClickListener,
+    OnItemLongClickListener, OnPriorityClickListener {
 
 
     @InjectPresenter
@@ -45,9 +46,12 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
     }
 
     override fun showRemoveTaskDialog(location: Int) {
-        dialog = RemoveTaskDialog.generateRemoveDialog(context!!) { _, which ->
+        dialog = RemoveTaskDialog.generateRemoveDialog(requireContext()) { _, which ->
             if (which == DialogInterface.BUTTON_POSITIVE) {
-                currentTaskFragmentPresenter.doRemove(location, (adapter?.getItem(location) as ModelTask).timestamp)
+                currentTaskFragmentPresenter.doRemove(
+                    location,
+                    (adapter?.getItem(location) as ModelTask).timestamp
+                )
             } else {
                 currentTaskFragmentPresenter.cancelDialog()
             }
@@ -58,8 +62,10 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
         dialog.cancel()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_current_task, container, false)
     }
 
@@ -75,7 +81,10 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
 
     override fun showAddingTaskDialog() {
         val addingTaskDialogFragment = AddingTaskDialogFragment()
-        addingTaskDialogFragment.show(activity!!.supportFragmentManager, "AddingTaskDialogFragment")
+        addingTaskDialogFragment.show(
+            requireActivity().supportFragmentManager,
+            "AddingTaskDialogFragment"
+        )
         Log.d("debug", "addingTaskDialogFragment.show")
     }
 
@@ -120,11 +129,15 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
 
     override fun showEditTaskDialog(task: ModelTask) {
         val editingDialog = EditTaskDialogFragment.newInstance(task)
-        editingDialog.show(activity!!.supportFragmentManager, "EditTaskDialogFragment")
+        editingDialog.show(requireActivity().supportFragmentManager, "EditTaskDialogFragment")
     }
 
     override fun onItemLongClick(location: Int): Boolean {
-        Handler(Looper.getMainLooper()).postDelayed({ currentTaskFragmentPresenter.onItemLongClick(location) }, 500)
+        Handler(Looper.getMainLooper()).postDelayed({
+            currentTaskFragmentPresenter.onItemLongClick(
+                location
+            )
+        }, 500)
         return true
     }
 

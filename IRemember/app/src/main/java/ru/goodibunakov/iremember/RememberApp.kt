@@ -50,7 +50,12 @@ class RememberApp : MultiDexApplication() {
         appContext = this
         bus = EventRxBus()
         databaseRepository = DatabaseRepositoryImpl(TasksDatabase.getDatabase(this).taskDao(), bus)
-        sharedPreferencesRepository = SharedPreferencesRepositoryImpl(getSharedPreferences("preferences", Context.MODE_PRIVATE))
+        sharedPreferencesRepository = SharedPreferencesRepositoryImpl(
+            getSharedPreferences(
+                "preferences",
+                Context.MODE_PRIVATE
+            )
+        )
         alarmHelper = AlarmHelper.getInstance()
         alarmHelper.initAlarmManager()
     }

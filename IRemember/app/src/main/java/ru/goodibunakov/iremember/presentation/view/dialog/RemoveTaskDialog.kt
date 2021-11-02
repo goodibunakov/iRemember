@@ -8,7 +8,10 @@ import ru.goodibunakov.iremember.R
 class RemoveTaskDialog {
 
     companion object {
-        fun generateRemoveDialog(context: Context, listener: DialogInterface.OnClickListener): AlertDialog.Builder {
+        fun generateRemoveDialog(
+            context: Context,
+            listener: DialogInterface.OnClickListener
+        ): AlertDialog.Builder {
             val builder = AlertDialog.Builder(context)
             builder.setMessage(R.string.dialog_remove_message)
             builder.setTitle(R.string.app_name)

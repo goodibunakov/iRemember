@@ -17,10 +17,13 @@ interface TaskFragmentView : MvpView {
     fun showRemoveTaskDialog(location: Int)
     fun cancelRemoveDialog()
     fun dismissRemoveDialog()
+
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showSuccess(text: Int)
+
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun showEmptyListText()
+
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun hideEmptyListText()
 }

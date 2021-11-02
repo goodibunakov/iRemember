@@ -19,21 +19,21 @@ class AlarmSetter : BroadcastReceiver() {
 
         RememberApp.alarmHelper.initAlarmManager()
         disposable = RememberApp.databaseRepository.findCurrentTasks()
-                .map {
-                    it.filter { modelTask -> modelTask.date != 0L }
+            .map {
+                it.filter { modelTask -> modelTask.date != 0L }
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ list ->
+                Log.d("debug", "AlarmSetter  List = ${list.size}")
+                for (element in list) {
+                    RememberApp.alarmHelper.setAlarm(element)
+                    Log.d("debug", "AlarmSetter   |    $element")
                 }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ list ->
-                    Log.d("debug", "AlarmSetter  List = ${list.size}")
-                    for (element in list) {
-                        RememberApp.alarmHelper.setAlarm(element)
-                        Log.d("debug", "AlarmSetter   |    $element")
-                    }
-                    dispose()
-                }, { error ->
-                    Log.d("debug", "Ошибка в AlarmSetter ${error!!.localizedMessage!!}")
-                })
+                dispose()
+            }, { error ->
+                Log.d("debug", "Ошибка в AlarmSetter ${error!!.localizedMessage!!}")
+            })
 
     }
 

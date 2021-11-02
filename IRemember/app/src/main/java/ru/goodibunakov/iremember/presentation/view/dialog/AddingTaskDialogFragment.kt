@@ -86,19 +86,27 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
         }
 
 
-        val priorityAdapter = ArrayAdapter(activity!!,
-                android.R.layout.simple_spinner_dropdown_item,
-                activity!!.resources.getStringArray(R.array.priority_array))
+        val priorityAdapter = ArrayAdapter(
+            requireActivity(),
+            android.R.layout.simple_spinner_dropdown_item,
+            requireActivity().resources.getStringArray(R.array.priority_array)
+        )
         container.spinnerPriority.adapter = priorityAdapter
-        container.spinnerPriority.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                addingTaskDialogPresenter.itemSelected(position)
-            }
+        container.spinnerPriority.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    addingTaskDialogPresenter.itemSelected(position)
+                }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                addingTaskDialogPresenter.nothingSelected()
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    addingTaskDialogPresenter.nothingSelected()
+                }
             }
-        }
 
         val alertDialog = builder.create()
 
@@ -118,11 +126,11 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
             container.etTitle.isFocusableInTouchMode = true
             addingTaskDialogPresenter.getTitleHasFocus()
             container.etTitle.onFocusChangeListener =
-                    View.OnFocusChangeListener { _, hasFocus ->
-                        if (hasFocus) {
-                            addingTaskDialogPresenter.setTitleHasFocus(hasFocus)
-                        }
+                View.OnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        addingTaskDialogPresenter.setTitleHasFocus(hasFocus)
                     }
+                }
 
             container.etDate.setOnClickListener {
                 clearTitleFocus()
@@ -170,7 +178,10 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
     override fun showDatePickerDialog() {
         datePickerDialogFragment = DatePickerDialogFragment()
         datePickerDialogFragment.setTargetFragment(this@AddingTaskDialogFragment, REQUEST_CODE_DATE)
-        datePickerDialogFragment.show(activity!!.supportFragmentManager, "DatePickerDialogFragment")
+        datePickerDialogFragment.show(
+            requireActivity().supportFragmentManager,
+            "DatePickerDialogFragment"
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -212,7 +223,10 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
     override fun showTimePickerDialog() {
         timePickerDialogFragment = TimePickerDialogFragment()
         timePickerDialogFragment.setTargetFragment(this@AddingTaskDialogFragment, REQUEST_CODE_TIME)
-        timePickerDialogFragment.show(activity!!.supportFragmentManager, "TimePickerDialogFragment")
+        timePickerDialogFragment.show(
+            requireActivity().supportFragmentManager,
+            "TimePickerDialogFragment"
+        )
     }
 
 
@@ -256,7 +270,10 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
     }
 
     private fun hideSoftKeyboard() {
-        (activity!!.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(container.etTitle.windowToken, 0)
+        (requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+            container.etTitle.windowToken,
+            0
+        )
     }
 
     override fun setTitleFocus(hasFocus: Boolean) {
@@ -264,7 +281,10 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
         if (hasFocus) {
             container.etTitle.requestFocus()
             dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
-            (activity!!.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+            (requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).toggleSoftInput(
+                InputMethodManager.SHOW_FORCED,
+                InputMethodManager.HIDE_IMPLICIT_ONLY
+            )
         }
     }
 }

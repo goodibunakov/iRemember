@@ -34,19 +34,24 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
         }
 
         resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        val pendingIntent = PendingIntent.getActivity(context, timestamp.toInt(),
-                resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(
+            context, timestamp.toInt(),
+            resultIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
-        val builder = NotificationCompat.Builder(context, context.getString(R.string.default_notification_channel_id))
-                .setContentTitle(context.getString(R.string.app_name))
-                .setContentText(title)
-                .setSound(soundURI)
-                .setColor(color)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setAutoCancel(true)
-                .setLights(color, 100, 100)
-                .setVibrate(longArrayOf(500, 100, 500))
-                .setContentIntent(pendingIntent)
+        val builder = NotificationCompat.Builder(
+            context,
+            context.getString(R.string.default_notification_channel_id)
+        )
+            .setContentTitle(context.getString(R.string.app_name))
+            .setContentText(title)
+            .setSound(soundURI)
+            .setColor(color)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setAutoCancel(true)
+            .setLights(color, 100, 100)
+            .setVibrate(longArrayOf(500, 100, 500))
+            .setContentIntent(pendingIntent)
 
         val notification = builder.build()
         notification.flags = notification.flags or Notification.FLAG_AUTO_CANCEL
@@ -54,8 +59,9 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                    context.applicationContext.getString(R.string.default_notification_channel_id),
-                    context.applicationContext.getString(R.string.app_name), NotificationManager.IMPORTANCE_HIGH
+                context.applicationContext.getString(R.string.default_notification_channel_id),
+                context.applicationContext.getString(R.string.app_name),
+                NotificationManager.IMPORTANCE_HIGH
             ).apply {
                 description = title
                 setShowBadge(true)
@@ -63,13 +69,14 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
                 enableVibration(true)
                 lightColor = color
                 setSound(
-                        soundURI,
-                        AudioAttributes.Builder()
-                                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                                .build()
+                    soundURI,
+                    AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                        .build()
                 )
             }
-            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
+            val notificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
             notificationManager?.apply {
                 createNotificationChannel(channel)
                 notify(timestamp.toInt(), notification) //Show notification for Oreo

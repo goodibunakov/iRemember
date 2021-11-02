@@ -33,9 +33,9 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     @ProvidePresenter
     fun providePresenter(): MainActivityPresenter {
         return MainActivityPresenter(
-                RememberApp.sharedPreferencesRepository,
-                RememberApp.getEventBus(),
-                RememberApp.databaseRepository
+            RememberApp.sharedPreferencesRepository,
+            RememberApp.getEventBus(),
+            RememberApp.databaseRepository
         )
     }
 
@@ -62,9 +62,9 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     override fun runSplash() {
         val splashFragment = SplashFragment()
         fragmentManager?.beginTransaction()
-                ?.replace(R.id.content_frame, splashFragment)
-                ?.addToBackStack(null)
-                ?.commit()
+            ?.replace(R.id.content_frame, splashFragment)
+            ?.addToBackStack(null)
+            ?.commit()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -145,7 +145,10 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     private fun setToolbar() {
         toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white))
         toolbar.setLogo(R.drawable.toolbar_icon)
-        toolbar.titleMarginStart = ContextCompat.getDrawable(this, R.drawable.toolbar_icon)!!.intrinsicWidth + TOOLBAR_TITLE_PADDING
+        toolbar.titleMarginStart = ContextCompat.getDrawable(
+            this,
+            R.drawable.toolbar_icon
+        )!!.intrinsicWidth + TOOLBAR_TITLE_PADDING
         setSupportActionBar(toolbar)
     }
 

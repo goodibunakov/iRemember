@@ -12,9 +12,9 @@ import ru.goodibunakov.iremember.presentation.view.activity.MainActivityView
 
 @InjectViewState
 class MainActivityPresenter(
-        private val sharedPreferencesRepository: SharedPreferencesRepository,
-        private val bus: EventRxBus,
-        private val repository: DatabaseRepository
+    private val sharedPreferencesRepository: SharedPreferencesRepository,
+    private val bus: EventRxBus,
+    private val repository: DatabaseRepository
 ) : MvpPresenter<MainActivityView>() {
 
     private var isDeleteAllDoneTasksVisible = false
@@ -34,7 +34,10 @@ class MainActivityPresenter(
     }
 
     fun saveBoolean(isChecked: Boolean) {
-        sharedPreferencesRepository.putBoolean(SharedPreferencesRepositoryImpl.SPLASH_IS_INVISIBLE, isChecked)
+        sharedPreferencesRepository.putBoolean(
+            SharedPreferencesRepositoryImpl.SPLASH_IS_INVISIBLE,
+            isChecked
+        )
     }
 
     fun itemSelected(id: Int) {
@@ -42,7 +45,8 @@ class MainActivityPresenter(
     }
 
     fun setSplashItemChecked(itemId: Int) {
-        val isChecked = sharedPreferencesRepository.getBoolean(SharedPreferencesRepositoryImpl.SPLASH_IS_INVISIBLE)
+        val isChecked =
+            sharedPreferencesRepository.getBoolean(SharedPreferencesRepositoryImpl.SPLASH_IS_INVISIBLE)
         viewState.setSplashItemState(itemId, isChecked)
     }
 
@@ -52,11 +56,11 @@ class MainActivityPresenter(
 
     fun showDeleteDoneTasksDialog() {
         disposable = repository.findDoneTasks()
-                .firstOrError()
-                .filter { it.isNotEmpty() }
-                .subscribe({
-                    viewState.showDeleteDoneTasksDialog()
-                }, {})
+            .firstOrError()
+            .filter { it.isNotEmpty() }
+            .subscribe({
+                viewState.showDeleteDoneTasksDialog()
+            }, {})
     }
 
     fun showDeleteAllTasksIcon(visible: Boolean) {

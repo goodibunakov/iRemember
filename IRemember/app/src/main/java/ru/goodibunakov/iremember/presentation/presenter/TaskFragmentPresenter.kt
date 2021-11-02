@@ -26,16 +26,16 @@ abstract class TaskFragmentPresenter<V : TaskFragmentView> : MvpPresenter<V>() {
 
     fun doRemove(location: Int, timestamp: Long) {
         disposableRemove = databaseRepository.delete(timestamp)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    viewState.removeItemFromAdapter(location)
-                    removeAlarm(timestamp)
-                    viewState.dismissRemoveDialog()
-                    viewState.showSuccess(R.string.removed)
-                }, {
-                    viewState.showError(R.string.error_database_download)
-                })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                viewState.removeItemFromAdapter(location)
+                removeAlarm(timestamp)
+                viewState.dismissRemoveDialog()
+                viewState.showSuccess(R.string.removed)
+            }, {
+                viewState.showError(R.string.error_database_download)
+            })
     }
 
     fun setAlarm(modelTask: ModelTask) {
