@@ -5,7 +5,6 @@
     android:id="@+id/content_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorGray50"
     tools:ignore="Overdraw">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -26,11 +25,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.Toolbar
+            <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 android:layout_marginRight="8dp"
+                app:popupTheme="@style/ThemeOverlay.Material3.Light"
                 tools:ignore="RtlHardcoded">
 
                 <androidx.appcompat.widget.SearchView
@@ -38,11 +38,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:theme="@style/Theme.MaterialComponents.NoActionBar"
+                    android:theme="@style/Theme.Material3.Dark.NoActionBar"
                     app:queryHint="@string/search_hint"
                     app:searchIcon="@drawable/magnify" />
 
-            </androidx.appcompat.widget.Toolbar>
+            </com.google.android.material.appbar.MaterialToolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
 

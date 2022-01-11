@@ -17,7 +17,6 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
-        style="@style/Widget.MaterialComponents.FloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
@@ -29,7 +28,8 @@
         app:fabSize="normal"
         app:rippleColor="@color/colorAccentLight"
         app:srcCompat="@drawable/ic_add_white_24dp"
-        tools:ignore="UnusedAttribute" />
+        app:tint="@android:color/white"
+        tools:ignore="ContentDescription,UnusedAttribute" />
 
     <TextView
         android:id="@+id/emptyListText"

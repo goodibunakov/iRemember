@@ -59,6 +59,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
+            style="@style/ThemeOverlay.Material3.TextInputEditText.FilledBox"
             android:layout_toEndOf="@id/dialogTaskDate"
             android:layout_toRightOf="@id/dialogTaskDate"
             android:hint="@string/task_time"
