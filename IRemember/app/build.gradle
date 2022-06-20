@@ -10,10 +10,10 @@ android {
         applicationId "ru.goodibunakov.iremember"
         minSdkVersion 19
         targetSdkVersion 32
-        versionCode 16
-        versionName "1.4.3"
+        versionCode 17
+        versionName "1.4.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        android.defaultConfig.vectorDrawables.useSupportLibrary = true
+        vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         archivesBaseName = "iremember-$versionName($versionCode)"
         javaCompileOptions {
@@ -55,12 +55,12 @@ dependencies {
 
     // AndroidX
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.6.0-beta01'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
     // Kotlin
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.core:core-ktx:1.8.0'
 
     // RxJava
     implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
@@ -85,13 +85,13 @@ dependencies {
 //    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
     // LeakCanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:20.1.2'
-    implementation 'com.google.firebase:firebase-analytics:20.1.2'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.9'
-    implementation 'com.google.firebase:firebase-perf:20.0.6'
+    implementation 'com.google.firebase:firebase-core:21.0.0'
+    implementation 'com.google.firebase:firebase-analytics:21.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.11'
+    implementation 'com.google.firebase:firebase-perf:20.1.0'
 
     // Stetho
     implementation 'com.facebook.stetho:stetho:1.6.0'

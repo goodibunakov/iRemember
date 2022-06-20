@@ -15,6 +15,7 @@ abstract class TaskFragment : MvpAppCompatFragment(), TaskFragmentView {
 
     protected lateinit var dialog: Dialog
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         alarmHelper = AlarmHelper.getInstance()

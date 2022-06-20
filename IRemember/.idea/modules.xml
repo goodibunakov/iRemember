@@ -4,6 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/IRemember.iml" filepath="$PROJECT_DIR$/IRemember.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/IRemember.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/IRemember.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/IRemember.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/IRemember.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/IRemember.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/IRemember.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/IRemember.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/IRemember.app.unitTest.iml" />
     </modules>
   </component>
 </project>
