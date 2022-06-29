@@ -12,7 +12,6 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import kotlinx.android.synthetic.main.dialog_task.*
 import kotlinx.android.synthetic.main.dialog_task.view.*
 import moxy.MvpAppCompatDialogFragment
 import moxy.presenter.InjectPresenter

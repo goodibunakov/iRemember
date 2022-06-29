@@ -78,7 +78,7 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
     }
 
     override fun showRemoveTaskDialog(location: Int) {
-        dialog = RemoveTaskDialog.generateRemoveDialog(context!!) { _, which ->
+        dialog = RemoveTaskDialog.generateRemoveDialog(requireContext()) { _, which ->
             if (which == DialogInterface.BUTTON_POSITIVE) {
                 doneTaskFragmentPresenter.doRemove(
                     location,
