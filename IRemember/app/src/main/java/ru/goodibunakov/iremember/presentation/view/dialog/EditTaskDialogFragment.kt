@@ -210,7 +210,7 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_TIME) {
-                when (data?.extras?.get(AddingTaskDialogFragment.TYPE)) {
+                when (data?.extras?.getString(AddingTaskDialogFragment.TYPE)) {
                     KEY_POSITIVE -> {
                         getTimeFromIntent(data)
                         editTaskDialogPresenter.positiveTimeClicked()
@@ -218,7 +218,7 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
                     KEY_NEGATIVE -> editTaskDialogPresenter.negativeTimeClicked()
                 }
             } else if (requestCode == REQUEST_CODE_DATE) {
-                when (data?.extras?.get(AddingTaskDialogFragment.TYPE)) {
+                when (data?.extras?.getString(AddingTaskDialogFragment.TYPE)) {
                     KEY_POSITIVE -> {
                         getDateFromIntent(data)
                         editTaskDialogPresenter.positiveDateClicked()
@@ -230,16 +230,20 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
     }
 
     private fun getTimeFromIntent(data: Intent?) {
-        val hourOfDay = data?.extras?.get(AddingTaskDialogFragment.HOUR) as Int
-        val minute = data.extras?.get(AddingTaskDialogFragment.MINUTE) as Int
-        editTaskDialogPresenter.timeSelected(hourOfDay, minute)
+        val hourOfDay = data?.extras?.getInt(AddingTaskDialogFragment.HOUR)
+        val minute = data?.extras?.getInt(AddingTaskDialogFragment.MINUTE)
+        if (hourOfDay != null && minute != null) {
+            editTaskDialogPresenter.timeSelected(hourOfDay, minute)
+        }
     }
 
     private fun getDateFromIntent(data: Intent?) {
-        val year = data?.extras?.get(AddingTaskDialogFragment.YEAR) as Int
-        val month = data.extras?.get(AddingTaskDialogFragment.MONTH) as Int
-        val day = data.extras?.get(AddingTaskDialogFragment.DAY) as Int
-        editTaskDialogPresenter.dateSelected(year, month, day)
+        val year = data?.extras?.getInt(AddingTaskDialogFragment.YEAR)
+        val month = data?.extras?.getInt(AddingTaskDialogFragment.MONTH)
+        val day = data?.extras?.getInt(AddingTaskDialogFragment.DAY)
+        if (year != null && month != null && day != null) {
+            editTaskDialogPresenter.dateSelected(year, month, day)
+        }
     }
 
     override fun setTimeToEditText(time: String) {

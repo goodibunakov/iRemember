@@ -190,7 +190,7 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_TIME) {
-                when (data?.extras?.get(TYPE)) {
+                when (data?.extras?.getString(TYPE)) {
                     KEY_POSITIVE -> {
                         getTimeFromIntent(data)
                         addingTaskDialogPresenter.positiveTimeClicked()
@@ -198,7 +198,7 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
                     KEY_NEGATIVE -> addingTaskDialogPresenter.negativeTimeClicked()
                 }
             } else if (requestCode == REQUEST_CODE_DATE) {
-                when (data?.extras?.get(TYPE)) {
+                when (data?.extras?.getString(TYPE)) {
                     KEY_POSITIVE -> {
                         getDateFromIntent(data)
                         addingTaskDialogPresenter.positiveDateClicked()
@@ -210,16 +210,20 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
     }
 
     private fun getTimeFromIntent(data: Intent?) {
-        val hourOfDay = data?.extras?.get(HOUR) as Int
-        val minute = data.extras?.get(MINUTE) as Int
-        addingTaskDialogPresenter.timeSelected(hourOfDay, minute)
+        val hourOfDay = data?.extras?.getInt(HOUR)
+        val minute = data?.extras?.getInt(MINUTE)
+        if (hourOfDay != null && minute != null) {
+            addingTaskDialogPresenter.timeSelected(hourOfDay, minute)
+        }
     }
 
     private fun getDateFromIntent(data: Intent?) {
-        val year = data?.extras?.get(YEAR) as Int
-        val month = data.extras?.get(MONTH) as Int
-        val day = data.extras?.get(DAY) as Int
-        addingTaskDialogPresenter.dateSelected(year, month, day)
+        val year = data?.extras?.getInt(YEAR)
+        val month = data?.extras?.getInt(MONTH)
+        val day = data?.extras?.getInt(DAY)
+        if (year != null && month != null && day != null) {
+            addingTaskDialogPresenter.dateSelected(year, month, day)
+        }
     }
 
     override fun showTimePickerDialog() {
