@@ -11,8 +11,8 @@ android {
         namespace 'ru.goodibunakov.iremember'
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 18
-        versionName "1.4.5"
+        versionCode 19
+        versionName "1.4.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -83,10 +83,10 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-analytics:21.1.1'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.13'
-    implementation 'com.google.firebase:firebase-perf:20.1.1'
+    implementation platform('com.google.firebase:firebase-bom:31.0.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-perf-ktx'
 
     // Stetho
     implementation 'com.facebook.stetho:stetho:1.6.0'
