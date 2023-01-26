@@ -4,15 +4,14 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import kotlinx.android.synthetic.main.fragment_done_task.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
+import ru.goodibunakov.iremember.databinding.FragmentDoneTaskBinding
 import ru.goodibunakov.iremember.presentation.OnItemLongClickListener
 import ru.goodibunakov.iremember.presentation.OnPriorityClickListener
 import ru.goodibunakov.iremember.presentation.model.ModelTask
@@ -20,7 +19,9 @@ import ru.goodibunakov.iremember.presentation.presenter.DoneTaskFragmentPresente
 import ru.goodibunakov.iremember.presentation.view.adapter.DoneTasksAdapter
 import ru.goodibunakov.iremember.presentation.view.dialog.RemoveTaskDialog
 
-class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickListener,
+class DoneTaskFragment : TaskFragment(R.layout.fragment_done_task),
+    DoneTaskFragmentView,
+    OnItemLongClickListener,
     OnPriorityClickListener {
 
     @InjectPresenter
@@ -31,15 +32,10 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
         return DoneTaskFragmentPresenter(RememberApp.getEventBus())
     }
 
+    private val binding by viewBinding(FragmentDoneTaskBinding::bind)
+
     init {
         adapter = DoneTasksAdapter(this, this)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_done_task, container, false)
     }
 
     override fun showError(s: Int) {
@@ -52,8 +48,8 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
     }
 
     private fun initRecyclerView() {
-        recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = adapter
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.adapter = adapter
     }
 
     override fun checkAdapter() {
@@ -95,10 +91,10 @@ class DoneTaskFragment : TaskFragment(), DoneTaskFragmentView, OnItemLongClickLi
     }
 
     override fun showEmptyListText() {
-        emptyListText.visibility = View.VISIBLE
+        binding.emptyListText.visibility = View.VISIBLE
     }
 
     override fun hideEmptyListText() {
-        emptyListText.visibility = View.GONE
+        binding.emptyListText.visibility = View.GONE
     }
 }

@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.goodibunakov.iremember.R
+import ru.goodibunakov.iremember.databinding.ItemTaskBinding
 import ru.goodibunakov.iremember.presentation.OnItemLongClickListener
 import ru.goodibunakov.iremember.presentation.OnPriorityClickListener
 import ru.goodibunakov.iremember.presentation.model.ModelTask
@@ -15,8 +16,8 @@ class DoneTasksAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val itemView = layoutInflater.inflate(R.layout.item_task, parent, false)
-        return TaskViewHolderDone(itemView, onLongClickListener, onPriorityClickListener)
+        val binding = ItemTaskBinding.inflate(layoutInflater, parent, false)
+        return TaskViewHolderDone(binding, onLongClickListener, onPriorityClickListener)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

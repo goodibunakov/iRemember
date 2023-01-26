@@ -9,12 +9,13 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
-import kotlinx.android.synthetic.main.activity_main.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import moxy.MvpAppCompatActivity
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
+import ru.goodibunakov.iremember.databinding.ActivityMainBinding
 import ru.goodibunakov.iremember.presentation.bus.QueryEvent
 import ru.goodibunakov.iremember.presentation.presenter.MainActivityPresenter
 import ru.goodibunakov.iremember.presentation.view.adapter.TabAdapter2
@@ -26,6 +27,7 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
 
     private var fragmentManager: FragmentManager? = null
     private lateinit var onPageChangeCallback: ViewPager2.OnPageChangeCallback
+    private val binding by viewBinding(ActivityMainBinding::bind)
 
     @InjectPresenter
     lateinit var mainActivityPresenter: MainActivityPresenter
@@ -84,7 +86,7 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     override fun itemSelected(id: Int) {
         when (id) {
             R.id.action_splash -> {
-                val splashItem = toolbar.menu.findItem(id)
+                val splashItem = binding.toolbar.menu.findItem(id)
                 splashItem.isChecked = !splashItem.isChecked
                 mainActivityPresenter.saveBoolean(splashItem.isChecked)
             }
@@ -110,7 +112,7 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     }
 
     override fun setSplashItemState(id: Int, isChecked: Boolean) {
-        toolbar?.menu?.findItem(id)?.isChecked = isChecked
+        binding.toolbar.menu?.findItem(id)?.isChecked = isChecked
     }
 
     override fun setUI() {
@@ -118,14 +120,14 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
         setToolbar()
         setBottomMenuAndViewpager()
 
-        searchView.setOnQueryTextListener(object : OnQueryTextListener {
+        binding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextChange(newText: String): Boolean {
                 Log.d("rx", "onQueryTextChange $newText")
                 mainActivityPresenter.find(QueryEvent(newText))
                 return true
             }
         })
-        searchView.setOnCloseListener {
+        binding.searchView.setOnCloseListener {
             Log.d("debug", "close")
             mainActivityPresenter.find(QueryEvent(""))
             false
@@ -138,35 +140,35 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     }
 
     override fun onDestroyView() {
-        searchView?.setOnQueryTextListener(null)
-        viewPager2.unregisterOnPageChangeCallback(onPageChangeCallback)
+        binding.searchView.setOnQueryTextListener(null)
+        binding.viewPager2.unregisterOnPageChangeCallback(onPageChangeCallback)
     }
 
     private fun setToolbar() {
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white))
-        toolbar.setLogo(R.drawable.toolbar_icon)
-        toolbar.titleMarginStart = ContextCompat.getDrawable(
+        binding.toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white))
+        binding.toolbar.setLogo(R.drawable.toolbar_icon)
+        binding.toolbar.titleMarginStart = ContextCompat.getDrawable(
             this,
             R.drawable.toolbar_icon
         )!!.intrinsicWidth + TOOLBAR_TITLE_PADDING
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
     }
 
     private fun setBottomMenuAndViewpager() {
-        viewPager2.adapter = TabAdapter2(this)
-        bottomMenu.setupWithViewPager2(viewPager2)
+        binding.viewPager2.adapter = TabAdapter2(this)
+        binding.bottomMenu.setupWithViewPager2(binding.viewPager2)
         onPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 mainActivityPresenter.showDeleteAllTasksIcon(position == 1)
             }
         }
-        viewPager2.registerOnPageChangeCallback(onPageChangeCallback)
+        binding.viewPager2.registerOnPageChangeCallback(onPageChangeCallback)
     }
 
 
     override fun showDeleteAllTasksIcon(visible: Boolean) {
-        toolbar?.menu?.findItem(R.id.action_trash)?.isVisible = visible
+        binding.toolbar.menu?.findItem(R.id.action_trash)?.isVisible = visible
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {}

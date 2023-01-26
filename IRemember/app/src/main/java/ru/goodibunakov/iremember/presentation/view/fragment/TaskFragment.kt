@@ -3,12 +3,13 @@ package ru.goodibunakov.iremember.presentation.view.fragment
 import android.app.Dialog
 import android.os.Bundle
 import android.widget.Toast
+import androidx.annotation.LayoutRes
 import moxy.MvpAppCompatFragment
 import ru.goodibunakov.iremember.presentation.alarm.AlarmHelper
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.view.adapter.TasksAdapter
 
-abstract class TaskFragment : MvpAppCompatFragment(), TaskFragmentView {
+abstract class TaskFragment(@LayoutRes layout: Int) : MvpAppCompatFragment(layout), TaskFragmentView {
 
     var adapter: TasksAdapter? = null
     private var alarmHelper: AlarmHelper? = null

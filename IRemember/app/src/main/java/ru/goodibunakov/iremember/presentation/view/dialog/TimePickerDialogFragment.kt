@@ -14,8 +14,9 @@ import android.widget.LinearLayout
 import android.widget.TimePicker
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import kotlinx.android.synthetic.main.dialog_timepicker.view.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.goodibunakov.iremember.R
+import ru.goodibunakov.iremember.databinding.DialogTimepickerBinding
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment.Companion.HOUR
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment.Companion.KEY_NEGATIVE
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment.Companion.KEY_POSITIVE
@@ -25,7 +26,9 @@ import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragme
 import java.util.*
 
 @Suppress("DEPRECATION")
-class TimePickerDialogFragment : DialogFragment() {
+class TimePickerDialogFragment : DialogFragment(R.layout.dialog_timepicker) {
+
+    private val binding by viewBinding(DialogTimepickerBinding::bind)
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -34,21 +37,19 @@ class TimePickerDialogFragment : DialogFragment() {
         val calendar = Calendar.getInstance()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
-        val builder: AlertDialog.Builder =
-            AlertDialog.Builder(activity as Context, R.style.AppThemeDialog)
-        val view = requireActivity().layoutInflater.inflate(R.layout.dialog_timepicker, null)
-        builder.setView(view)
+        val builder = AlertDialog.Builder(activity as Context, R.style.AppThemeDialog)
+        builder.setView(binding.root)
         builder.setPositiveButton(R.string.dialog_ok) { _, _ ->
             val intent = Intent()
-            view.timePicker.clearFocus()
+            binding.timePicker.clearFocus()
             val hourSet: Int
             val minuteSet: Int
             if (Build.VERSION.SDK_INT > 23) {
-                hourSet = view.timePicker.hour
-                minuteSet = view.timePicker.minute
+                hourSet = binding.timePicker.hour
+                minuteSet = binding.timePicker.minute
             } else {
-                hourSet = view.timePicker.currentHour
-                minuteSet = view.timePicker.currentMinute
+                hourSet = binding.timePicker.currentHour
+                minuteSet = binding.timePicker.currentMinute
             }
             intent.putExtra(HOUR, hourSet)
             intent.putExtra(MINUTE, minuteSet)
@@ -59,18 +60,18 @@ class TimePickerDialogFragment : DialogFragment() {
             val intent = Intent()
             intent.putExtra(TYPE, KEY_NEGATIVE)
             targetFragment?.onActivityResult(REQUEST_CODE_TIME, Activity.RESULT_OK, intent)
-            view.timePicker.clearFocus()
+            binding.timePicker.clearFocus()
         }
-        view.timePicker.setIs24HourView(true)
+        binding.timePicker.setIs24HourView(true)
         if (Build.VERSION.SDK_INT > 23) {
-            view.timePicker.hour = hour
-            view.timePicker.minute = minute
+            binding.timePicker.hour = hour
+            binding.timePicker.minute = minute
         } else {
-            view.timePicker.currentHour = hour
-            view.timePicker.currentMinute = minute
+            binding.timePicker.currentHour = hour
+            binding.timePicker.currentMinute = minute
         }
 
-        hideKeyboardInputInTimePicker(this.resources.configuration.orientation, view.timePicker)
+        hideKeyboardInputInTimePicker(this.resources.configuration.orientation, binding.timePicker)
         isCancelable = false
         return builder.create()
     }

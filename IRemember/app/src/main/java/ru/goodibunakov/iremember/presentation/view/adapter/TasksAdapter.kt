@@ -8,8 +8,9 @@ import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_task.view.*
 import ru.goodibunakov.iremember.R
+import ru.goodibunakov.iremember.databinding.ItemTaskBinding
+import ru.goodibunakov.iremember.databinding.SeparatorBinding
 import ru.goodibunakov.iremember.presentation.OnItemClickListener
 import ru.goodibunakov.iremember.presentation.OnItemLongClickListener
 import ru.goodibunakov.iremember.presentation.OnPriorityClickListener
@@ -106,93 +107,94 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     inner class TaskViewHolderCurrent(
-        itemView: View, private val onClickListener: OnItemClickListener,
+        private val binding: ItemTaskBinding,
+        private val onClickListener: OnItemClickListener,
         private val onLongClickListener: OnItemLongClickListener,
         private val onPriorityClickListener: OnPriorityClickListener
-    ) : RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Item) {
             val model = item as ModelTask
 
-            itemView.isEnabled = true
-            itemView.visibility = View.VISIBLE
-            itemView.priority.isEnabled = true
+            binding.root.isEnabled = true
+            binding.root.visibility = View.VISIBLE
+            binding.priority.isEnabled = true
 
-            itemView.tvTitle.text = model.title
-            itemView.tvTitle.setTextColor(
+            binding.tvTitle.text = model.title
+            binding.tvTitle.setTextColor(
                 ContextCompat.getColor(
-                    itemView.tvTitle.context,
+                    binding.tvTitle.context,
                     android.R.color.black
                 )
             )
-            itemView.tvDate.setTextColor(
+            binding.tvDate.setTextColor(
                 ContextCompat.getColor(
-                    itemView.tvDate.context,
+                    binding.tvDate.context,
                     android.R.color.darker_gray
                 )
             )
-            itemView.priority.setImageResource(R.drawable.circle_full)
-            itemView.priority.setColorFilter(
+            binding.priority.setImageResource(R.drawable.circle_full)
+            binding.priority.setColorFilter(
                 ContextCompat.getColor(
-                    itemView.priority.context,
+                    binding.priority.context,
                     model.getPriorityColor()
                 )
             )
 
-            itemView.setOnClickListener { onClickListener.onItemClick(model) }
-            itemView.setOnLongClickListener { onLongClickListener.onItemLongClick(layoutPosition) }
+            binding.root.setOnClickListener { onClickListener.onItemClick(model) }
+            binding.root.setOnLongClickListener { onLongClickListener.onItemLongClick(layoutPosition) }
 
             if (model.date != 0L) {
-                itemView.tvDate.visibility = View.VISIBLE
-                itemView.line.visibility = View.VISIBLE
-                itemView.tvDate.text = DateUtils.getDate(model.date, FORMAT_DATE_FULL)
+                binding.tvDate.visibility = View.VISIBLE
+                binding.line.visibility = View.VISIBLE
+                binding.tvDate.text = DateUtils.getDate(model.date, FORMAT_DATE_FULL)
             } else {
-                itemView.tvDate.visibility = View.GONE
-                itemView.line.visibility = View.GONE
+                binding.tvDate.visibility = View.GONE
+                binding.line.visibility = View.GONE
             }
 
 
-            itemView.priority.setOnClickListener {
-                itemView.priority.isEnabled = false
+            binding.priority.setOnClickListener {
+                binding.priority.isEnabled = false
                 model.status = ModelTask.STATUS_DONE
 
-                itemView.tvTitle.setTextColor(
+                binding.tvTitle.setTextColor(
                     ContextCompat.getColor(
-                        itemView.tvTitle.context,
+                        binding.tvTitle.context,
                         R.color.colorGray50
                     )
                 )
-                itemView.tvDate.setTextColor(
+                binding.tvDate.setTextColor(
                     ContextCompat.getColor(
-                        itemView.tvDate.context,
+                        binding.tvDate.context,
                         android.R.color.darker_gray
                     )
                 )
-                itemView.priority.setColorFilter(
+                binding.priority.setColorFilter(
                     ContextCompat.getColor(
-                        itemView.priority.context,
+                        binding.priority.context,
                         model.getPriorityColor()
                     )
                 )
 
-                val flipIn = ObjectAnimator.ofFloat(itemView.priority, View.ROTATION_Y, -180f, 0f)
+                val flipIn = ObjectAnimator.ofFloat(binding.priority, View.ROTATION_Y, -180f, 0f)
                 flipIn.addListener(object : Animator.AnimatorListener {
                     override fun onAnimationStart(animation: Animator) {}
 
                     override fun onAnimationEnd(animation: Animator) {
                         if (model.status == ModelTask.STATUS_DONE) {
-                            itemView.priority.setImageResource(R.drawable.circle_checked)
+                            binding.priority.setImageResource(R.drawable.circle_checked)
 
                             val trans = ObjectAnimator.ofFloat(
-                                itemView,
+                                binding.root,
                                 View.TRANSLATION_X,
                                 0f,
-                                itemView.width.toFloat()
+                                binding.root.width.toFloat()
                             )
                             val transBack = ObjectAnimator.ofFloat(
-                                itemView,
+                                binding.root,
                                 View.TRANSLATION_X,
-                                itemView.width.toFloat(),
+                                binding.root.width.toFloat(),
                                 0f
                             )
 
@@ -200,7 +202,7 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                                 override fun onAnimationStart(animation: Animator) {}
 
                                 override fun onAnimationEnd(animation: Animator) {
-                                    itemView.visibility = View.GONE
+                                    binding.root.visibility = View.GONE
                                     removeItem(layoutPosition)
                                     onPriorityClickListener.onPriorityClick(model)
                                 }
@@ -228,68 +230,69 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     inner class TaskViewHolderDone(
-        itemView: View, private val onLongClickListener: OnItemLongClickListener,
+        private val binding: ItemTaskBinding,
+        private val onLongClickListener: OnItemLongClickListener,
         private val onPriorityClickListener: OnPriorityClickListener
-    ) : RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Item) {
-            itemView.isEnabled = true
-            itemView.visibility = View.VISIBLE
-            itemView.priority.isEnabled = true
+            binding.root.isEnabled = true
+            binding.root.visibility = View.VISIBLE
+            binding.priority.isEnabled = true
 
             val model = item as ModelTask
-            itemView.tvTitle.text = model.title
-            itemView.tvTitle.setTextColor(
+            binding.tvTitle.text = model.title
+            binding.tvTitle.setTextColor(
                 ContextCompat.getColor(
-                    itemView.tvTitle.context,
+                    binding.tvTitle.context,
                     android.R.color.darker_gray
                 )
             )
-            itemView.priority.setImageResource(R.drawable.circle_checked)
-            itemView.priority.setColorFilter(
+            binding.priority.setImageResource(R.drawable.circle_checked)
+            binding.priority.setColorFilter(
                 ContextCompat.getColor(
-                    itemView.priority.context,
+                    binding.priority.context,
                     model.getPriorityColor()
                 )
             )
 
-            itemView.setOnLongClickListener { onLongClickListener.onItemLongClick(layoutPosition) }
+            binding.root.setOnLongClickListener { onLongClickListener.onItemLongClick(layoutPosition) }
 
             if (model.date != 0L) {
-                itemView.tvDate.visibility = View.VISIBLE
-                itemView.line.visibility = View.VISIBLE
-                itemView.tvDate.text = DateUtils.getDate(model.date, FORMAT_DATE_FULL)
+                binding.tvDate.visibility = View.VISIBLE
+                binding.line.visibility = View.VISIBLE
+                binding.tvDate.text = DateUtils.getDate(model.date, FORMAT_DATE_FULL)
             } else {
-                itemView.tvDate.visibility = View.GONE
-                itemView.line.visibility = View.GONE
+                binding.tvDate.visibility = View.GONE
+                binding.line.visibility = View.GONE
             }
 
 
-            itemView.priority.setOnClickListener {
-                itemView.priority.isEnabled = false
+            binding.priority.setOnClickListener {
+                binding.priority.isEnabled = false
                 model.status = ModelTask.STATUS_CURRENT
 
-                itemView.tvTitle.setTextColor(
+                binding.tvTitle.setTextColor(
                     ContextCompat.getColor(
-                        itemView.tvTitle.context,
+                        binding.tvTitle.context,
                         android.R.color.black
                     )
                 )
-                itemView.tvDate.setTextColor(
+                binding.tvDate.setTextColor(
                     ContextCompat.getColor(
-                        itemView.tvDate.context,
+                        binding.tvDate.context,
                         android.R.color.darker_gray
                     )
                 )
-                itemView.priority.setColorFilter(
+                binding.priority.setColorFilter(
                     ContextCompat.getColor(
-                        itemView.priority.context,
+                        binding.priority.context,
                         model.getPriorityColor()
                     )
                 )
 
-                val flipIn = ObjectAnimator.ofFloat(itemView.priority, View.ROTATION_Y, 180f, 0f)
-                itemView.priority.setImageResource(R.drawable.circle_full)
+                val flipIn = ObjectAnimator.ofFloat(binding.priority, View.ROTATION_Y, 180f, 0f)
+                binding.priority.setImageResource(R.drawable.circle_full)
                 flipIn.addListener(object : Animator.AnimatorListener {
                     override fun onAnimationStart(animation: Animator) {}
 
@@ -297,15 +300,15 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         if (model.status != ModelTask.STATUS_DONE) {
 
                             val trans = ObjectAnimator.ofFloat(
-                                itemView,
+                                binding.root,
                                 View.TRANSLATION_X,
                                 0f,
-                                -itemView.width.toFloat()
+                                -binding.root.width.toFloat()
                             )
                             val transBack = ObjectAnimator.ofFloat(
-                                itemView,
+                                binding.root,
                                 View.TRANSLATION_X,
-                                -itemView.width.toFloat(),
+                                -binding.root.width.toFloat(),
                                 0f
                             )
 
@@ -313,7 +316,7 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                                 override fun onAnimationStart(animation: Animator) {}
 
                                 override fun onAnimationEnd(animation: Animator) {
-                                    itemView.visibility = View.GONE
+                                    binding.root.visibility = View.GONE
                                     removeItem(layoutPosition)
                                     onPriorityClickListener.onPriorityClick(model)
                                 }
@@ -339,6 +342,6 @@ abstract class TasksAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    inner class SeparatorViewHolder(itemView: View, val type: TextView) :
-        RecyclerView.ViewHolder(itemView)
+    inner class SeparatorViewHolder(binding: SeparatorBinding, val type: TextView) :
+        RecyclerView.ViewHolder(binding.root)
 }

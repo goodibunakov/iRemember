@@ -9,6 +9,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -16,18 +17,22 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
-import kotlinx.android.synthetic.main.dialog_task.view.*
 import moxy.MvpAppCompatDialogFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
+import ru.goodibunakov.iremember.databinding.DialogTaskBinding
 import ru.goodibunakov.iremember.presentation.presenter.AddingTaskDialogPresenter
 
 
 class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogFragmentView {
 
-    private lateinit var container: View
+    private var _binding: DialogTaskBinding? = null
+    // This property is only valid between onCreateDialog and onDestroyView.
+    private val binding get() = _binding!!
+
+//    private lateinit var container: View
     private lateinit var positive: Button
     private lateinit var timePickerDialogFragment: TimePickerDialogFragment
     private lateinit var datePickerDialogFragment: DatePickerDialogFragment
@@ -62,21 +67,22 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        _binding = DialogTaskBinding.inflate(LayoutInflater.from(context))
         Log.d("debug", "AddingTaskDialogFragment onCreateDialog")
         val builder = AlertDialog.Builder(activity as Context, R.style.AppThemeDialog)
-        container = View.inflate(context, R.layout.dialog_task, null)
+//        container = View.inflate(context, R.layout.dialog_task, null)
         isCancelable = false
 
         builder.setTitle(R.string.dialog_title)
         builder.setIcon(R.mipmap.ic_launcher)
 
-        builder.setView(container)
+        builder.setView(binding.root)
 
         addingTaskDialogPresenter.dialogCreated()
 
         builder.setPositiveButton(R.string.dialog_ok) { _, _ ->
-            addingTaskDialogPresenter.okClicked(container.etTitle.text.toString().trim())
-            if (container.etDate.text.isNotEmpty() || container.etTime.text.isNotEmpty()) {
+            addingTaskDialogPresenter.okClicked(binding.etTitle.text.toString().trim())
+            if (binding.etDate.text.isNotEmpty() || binding.etTime.text.isNotEmpty()) {
                 addingTaskDialogPresenter.setDateToModel()
             }
             addingTaskDialogPresenter.saveTask()
@@ -92,8 +98,8 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
             android.R.layout.simple_spinner_dropdown_item,
             requireActivity().resources.getStringArray(R.array.priority_array)
         )
-        container.spinnerPriority.adapter = priorityAdapter
-        container.spinnerPriority.onItemSelectedListener =
+        binding.spinnerPriority.adapter = priorityAdapter
+        binding.spinnerPriority.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>,
@@ -114,36 +120,36 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
         alertDialog.setOnShowListener {
             addingTaskDialogPresenter.initPositiveButton()
 
-            if (container.etTitle.text.isBlank()) {
+            if (binding.etTitle.text.isBlank()) {
                 addingTaskDialogPresenter.titleEmpty()
             }
 
-            container.etTitle.addTextChangedListener(object : MyTextWatcher {
+            binding.etTitle.addTextChangedListener(object : MyTextWatcher {
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                     addingTaskDialogPresenter.onTextChanged(s)
                 }
             })
 
-            container.etTitle.isFocusableInTouchMode = true
+            binding.etTitle.isFocusableInTouchMode = true
             addingTaskDialogPresenter.getTitleHasFocus()
-            container.etTitle.onFocusChangeListener =
+            binding.etTitle.onFocusChangeListener =
                 View.OnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
                         addingTaskDialogPresenter.setTitleHasFocus(hasFocus)
                     }
                 }
 
-            container.etDate.setOnClickListener {
+            binding.etDate.setOnClickListener {
                 clearTitleFocus()
-                if (container.etDate.length() == 0) {
+                if (binding.etDate.length() == 0) {
                     addingTaskDialogPresenter.dateIsEmpty()
                 }
                 addingTaskDialogPresenter.editTextDateClicked()
             }
 
-            container.etTime.setOnClickListener {
+            binding.etTime.setOnClickListener {
                 clearTitleFocus()
-                if (container.etTime.length() == 0) {
+                if (binding.etTime.length() == 0) {
                     addingTaskDialogPresenter.timeIsEmpty()
                 }
                 addingTaskDialogPresenter.editTextTimeClicked()
@@ -153,8 +159,8 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
     }
 
     private fun clearTitleFocus() {
-        if (container.etTitle.hasFocus()) {
-            container.etTitle.clearFocus()
+        if (binding.etTitle.hasFocus()) {
+            binding.etTitle.clearFocus()
             hideSoftKeyboard()
             addingTaskDialogPresenter.setTitleHasFocus(false)
         }
@@ -169,11 +175,11 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
     }
 
     override fun setEmptyToDateEditText() {
-        container.etDate.setText("")
+        binding.etDate.setText("")
     }
 
     override fun setEmptyToTimeEditText() {
-        container.etTime.setText("")
+        binding.etTime.setText("")
     }
 
     override fun showDatePickerDialog() {
@@ -237,21 +243,21 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
 
 
     override fun setDate(date: String) {
-        container.etDate.setText(date)
+        binding.etDate.setText(date)
     }
 
     override fun setTime(time: String) {
-        container.etTime.setText(time)
+        binding.etTime.setText(time)
     }
 
     override fun setUIWhenTitleEmpty() {
         positive.isEnabled = false
-        container.dialogTaskTitle.error = resources.getString(R.string.dialog_error_empty_title)
+        binding.dialogTaskTitle.error = resources.getString(R.string.dialog_error_empty_title)
     }
 
     override fun setUIWhenTitleNotEmpty(s: String) {
         positive.isEnabled = true
-        container.dialogTaskTitle.isErrorEnabled = false
+        binding.dialogTaskTitle.isErrorEnabled = false
     }
 
     override fun initPositiveButton() {
@@ -270,14 +276,15 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
         }
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
+        super.onDestroyView()
         hideSoftKeyboard()
-        super.onDestroy()
+        _binding = null
     }
 
     private fun hideSoftKeyboard() {
         (requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-            container.etTitle.windowToken,
+            binding.etTitle.windowToken,
             0
         )
     }
@@ -285,7 +292,7 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
     override fun setTitleFocus(hasFocus: Boolean) {
         Log.d("debug", "устанавливаем фокус на титл в AddingTaskDialogFragment = $hasFocus")
         if (hasFocus) {
-            container.etTitle.requestFocus()
+            binding.etTitle.requestFocus()
             dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
             (requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).toggleSoftInput(
                 InputMethodManager.SHOW_FORCED,

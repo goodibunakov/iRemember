@@ -7,17 +7,18 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import kotlinx.android.synthetic.main.dialog_task.view.*
 import moxy.MvpAppCompatDialogFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
+import ru.goodibunakov.iremember.databinding.DialogTaskBinding
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.presenter.EditTaskDialogPresenter
 import ru.goodibunakov.iremember.presentation.utils.DateUtils
@@ -30,7 +31,11 @@ import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragme
 
 class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragmentView {
 
-    private lateinit var container: View
+    private var _binding: DialogTaskBinding? = null
+    // This property is only valid between onCreateDialog and onDestroyView.
+    private val binding get() = _binding!!
+
+//    private lateinit var container: View
     private lateinit var positive: Button
     private lateinit var timePickerDialogFragment: TimePickerDialogFragment
     private lateinit var datePickerDialogFragment: DatePickerDialogFragment
@@ -59,8 +64,9 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val args = arguments
+        _binding = DialogTaskBinding.inflate(LayoutInflater.from(context))
 
+        val args = arguments
         if (args != null) {
             val title = args.getString("title")!!
             val date = args.getLong("date")
@@ -69,7 +75,7 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
             editTaskDialogPresenter.onCreateDialog(title, date, priority, timestamp)
 
             val builder = AlertDialog.Builder(activity as Context, R.style.AppThemeDialog)
-            container = View.inflate(context, R.layout.dialog_task, null)
+//            container = View.inflate(context, R.layout.dialog_task, null)
             isCancelable = false
 
             builder.setTitle(R.string.editing_title)
@@ -81,16 +87,16 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
                 editTaskDialogPresenter.setTimeToUI()
             }
 
-            container.dialogTaskTitle.hint = resources.getString(R.string.task_title)
-            container.dialogTaskDate.hint = resources.getString(R.string.task_date)
-            container.dialogTaskTime.hint = resources.getString(R.string.task_time)
+            binding.dialogTaskTitle.hint = resources.getString(R.string.task_title)
+            binding.dialogTaskDate.hint = resources.getString(R.string.task_date)
+            binding.dialogTaskTime.hint = resources.getString(R.string.task_time)
 
-            builder.setView(container)
+            builder.setView(binding.root)
 
             builder.setPositiveButton(R.string.dialog_ok) { _, _ ->
-                editTaskDialogPresenter.okClicked(container.etTitle.text.toString().trim())
+                editTaskDialogPresenter.okClicked(binding.etTitle.text.toString().trim())
 
-                if (container.etDate.length() != 0 || container.etTime.length() != 0) {
+                if (binding.etDate.length() != 0 || binding.etTime.length() != 0) {
                     editTaskDialogPresenter.setDateToModel()
                 }
                 editTaskDialogPresenter.updateTask()
@@ -105,10 +111,10 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
                 requireActivity().resources.getStringArray(R.array.priority_array)
             )
 
-            container.spinnerPriority.adapter = priorityAdapter
+            binding.spinnerPriority.adapter = priorityAdapter
             editTaskDialogPresenter.setPriorityToUI()
 
-            container.spinnerPriority.onItemSelectedListener =
+            binding.spinnerPriority.onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(
                         parent: AdapterView<*>,
@@ -129,11 +135,11 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
             alertDialog.setOnShowListener { dialog ->
                 positive = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
 
-                if (container.etTitle.length() == 0) {
+                if (binding.etTitle.length() == 0) {
                     editTaskDialogPresenter.titleEmpty()
                 }
 
-                container.etTitle.addTextChangedListener(object : MyTextWatcher {
+                binding.etTitle.addTextChangedListener(object : MyTextWatcher {
                     override fun onTextChanged(
                         s: CharSequence,
                         start: Int,
@@ -144,25 +150,25 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
                     }
                 })
 
-                container.etTitle.isFocusableInTouchMode = true
+                binding.etTitle.isFocusableInTouchMode = true
                 editTaskDialogPresenter.getTitleHasFocus()
-                container.etTitle.onFocusChangeListener =
+                binding.etTitle.onFocusChangeListener =
                     View.OnFocusChangeListener { _, hasFocus ->
                         if (hasFocus) {
                             editTaskDialogPresenter.setTitleHasFocus(hasFocus)
                         }
                     }
 
-                container.etDate.setOnClickListener {
+                binding.etDate.setOnClickListener {
                     clearTitleFocus()
-                    if (container.etDate.length() == 0) {
+                    if (binding.etDate.length() == 0) {
                         editTaskDialogPresenter.setEmptyDateToEditText()
                     }
                     editTaskDialogPresenter.dateClicked()
                 }
 
-                container.etTime.setOnClickListener {
-                    if (container.etTime.length() == 0) {
+                binding.etTime.setOnClickListener {
+                    if (binding.etTime.length() == 0) {
                         editTaskDialogPresenter.setEmptyTimeToEditText()
                     }
                     editTaskDialogPresenter.timeClicked()
@@ -176,15 +182,15 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
     }
 
     override fun setDateToUI(date: Long) {
-        container.etDate.setText(DateUtils.getDate(date, FORMAT_DATE_ONLY))
+        binding.etDate.setText(DateUtils.getDate(date, FORMAT_DATE_ONLY))
     }
 
     override fun setTimeToUI(time: Long) {
-        container.etTime.setText(DateUtils.getDate(time, FORMAT_TIME_ONLY))
+        binding.etTime.setText(DateUtils.getDate(time, FORMAT_TIME_ONLY))
     }
 
     override fun setEmptyDateToEditText() {
-        container.etDate.setText("")
+        binding.etDate.setText("")
     }
 
     override fun showDatePickerDialog() {
@@ -247,15 +253,15 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
     }
 
     override fun setTimeToEditText(time: String) {
-        container.etTime.setText(time)
+        binding.etTime.setText(time)
     }
 
     override fun setDateToEditText(date: String) {
-        container.etDate.setText(date)
+        binding.etDate.setText(date)
     }
 
     override fun setEmptyTimeToEditText() {
-        container.etTime.setText("")
+        binding.etTime.setText("")
     }
 
     override fun dismissDialog() {
@@ -268,22 +274,22 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
 
     override fun setUIWhenTitleEmpty() {
         positive.isEnabled = false
-        container.dialogTaskTitle.error = resources.getString(R.string.dialog_error_empty_title)
+        binding.dialogTaskTitle.error = resources.getString(R.string.dialog_error_empty_title)
     }
 
     override fun setUIWhenTitleNotEmpty() {
         positive.isEnabled = true
-        container.dialogTaskTitle.isErrorEnabled = false
+        binding.dialogTaskTitle.isErrorEnabled = false
     }
 
     override fun initTitle(title: String) {
-        container.etTitle.setText(title)
-        container.etTitle.setSelection(container.etTitle.length())
+        binding.etTitle.setText(title)
+        binding.etTitle.setSelection(binding.etTitle.length())
     }
 
     override fun setTitleFocus(hasFocus: Boolean) {
         if (hasFocus) {
-            container.etTitle.requestFocus()
+            binding.etTitle.requestFocus()
             dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
             (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).toggleSoftInput(
                 InputMethodManager.SHOW_FORCED,
@@ -293,12 +299,13 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
     }
 
     override fun setPriorityToUI(priority: Int) {
-        container.spinnerPriority.setSelection(priority)
+        binding.spinnerPriority.setSelection(priority)
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
+        super.onDestroyView()
         hideSoftKeyboard()
-        super.onDestroy()
+        _binding = null
     }
 
     override fun closeTimeDialogFragment() {
@@ -314,8 +321,8 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
     }
 
     private fun clearTitleFocus() {
-        if (container.etTitle.hasFocus()) {
-            container.etTitle.clearFocus()
+        if (binding.etTitle.hasFocus()) {
+            binding.etTitle.clearFocus()
             hideSoftKeyboard()
             editTaskDialogPresenter.setTitleHasFocus(false)
         }
@@ -323,7 +330,7 @@ class EditTaskDialogFragment : MvpAppCompatDialogFragment(), EditTaskDialogFragm
 
     private fun hideSoftKeyboard() {
         (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-            container.etTitle.windowToken,
+            binding.etTitle.windowToken,
             0
         )
     }

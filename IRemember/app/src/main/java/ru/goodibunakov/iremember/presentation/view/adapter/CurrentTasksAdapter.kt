@@ -2,9 +2,9 @@ package ru.goodibunakov.iremember.presentation.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import ru.goodibunakov.iremember.R
+import ru.goodibunakov.iremember.databinding.ItemTaskBinding
+import ru.goodibunakov.iremember.databinding.SeparatorBinding
 import ru.goodibunakov.iremember.presentation.OnItemClickListener
 import ru.goodibunakov.iremember.presentation.OnItemLongClickListener
 import ru.goodibunakov.iremember.presentation.OnPriorityClickListener
@@ -21,20 +21,18 @@ class CurrentTasksAdapter(
     private val calendar = Calendar.getInstance()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
         if (viewType == TYPE_TASK) {
-            val layoutInflater = LayoutInflater.from(parent.context)
-            val itemView = layoutInflater.inflate(R.layout.item_task, parent, false)
+            val binding = ItemTaskBinding.inflate(layoutInflater, parent, false)
             return TaskViewHolderCurrent(
-                itemView,
+                binding,
                 onClickListener,
                 onLongClickListener,
                 onPriorityClickListener
             )
         }
-        val separator =
-            LayoutInflater.from(parent.context).inflate(R.layout.separator, parent, false)
-        val type = separator.findViewById<TextView>(R.id.separator)
-        return SeparatorViewHolder(separator, type)
+        val separator = SeparatorBinding.inflate(layoutInflater, parent, false)
+        return SeparatorViewHolder(separator, separator.separator)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

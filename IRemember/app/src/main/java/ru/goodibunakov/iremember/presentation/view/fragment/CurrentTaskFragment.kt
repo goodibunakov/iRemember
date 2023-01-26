@@ -5,16 +5,15 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.fragment_current_task.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
+import ru.goodibunakov.iremember.databinding.FragmentCurrentTaskBinding
 import ru.goodibunakov.iremember.presentation.OnItemClickListener
 import ru.goodibunakov.iremember.presentation.OnItemLongClickListener
 import ru.goodibunakov.iremember.presentation.OnPriorityClickListener
@@ -25,7 +24,9 @@ import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragme
 import ru.goodibunakov.iremember.presentation.view.dialog.EditTaskDialogFragment
 import ru.goodibunakov.iremember.presentation.view.dialog.RemoveTaskDialog
 
-class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClickListener,
+class CurrentTaskFragment : TaskFragment(R.layout.fragment_current_task),
+    CurrentTaskFragmentView,
+    OnItemClickListener,
     OnItemLongClickListener, OnPriorityClickListener {
 
 
@@ -36,6 +37,8 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
     fun providePresenter(): CurrentTaskFragmentPresenter {
         return CurrentTaskFragmentPresenter(RememberApp.getEventBus())
     }
+
+    private val binding by viewBinding(FragmentCurrentTaskBinding::bind)
 
     init {
         adapter = CurrentTasksAdapter(this, this, this)
@@ -62,19 +65,12 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
         dialog.cancel()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_current_task, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initRecyclerView()
 
-        fab.setOnClickListener {
+        binding.fab.setOnClickListener {
             currentTaskFragmentPresenter.showViewToAddTask()
         }
     }
@@ -89,11 +85,11 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
     }
 
     private fun initRecyclerView() {
-        recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = adapter
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > 0 || dy < 0 && fab.isShown) {
+                if (dy > 0 || dy < 0 && binding.fab.isShown) {
                     currentTaskFragmentPresenter.hideFab()
                 }
             }
@@ -109,11 +105,11 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
     }
 
     override fun hideFab() {
-        fab.hide()
+        binding.fab.hide()
     }
 
     override fun showFab() {
-        fab.show()
+        binding.fab.show()
     }
 
     override fun checkAdapter() {
@@ -147,10 +143,10 @@ class CurrentTaskFragment : TaskFragment(), CurrentTaskFragmentView, OnItemClick
     }
 
     override fun showEmptyListText() {
-        emptyListText.visibility = View.VISIBLE
+        binding.emptyListText.visibility = View.VISIBLE
     }
 
     override fun hideEmptyListText() {
-        emptyListText.visibility = View.GONE
+        binding.emptyListText.visibility = View.GONE
     }
 }
