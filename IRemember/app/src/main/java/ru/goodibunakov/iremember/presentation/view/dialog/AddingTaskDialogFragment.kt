@@ -32,7 +32,6 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
     // This property is only valid between onCreateDialog and onDestroyView.
     private val binding get() = _binding!!
 
-//    private lateinit var container: View
     private lateinit var positive: Button
     private lateinit var timePickerDialogFragment: TimePickerDialogFragment
     private lateinit var datePickerDialogFragment: DatePickerDialogFragment
@@ -70,7 +69,6 @@ class AddingTaskDialogFragment : MvpAppCompatDialogFragment(), AddingTaskDialogF
         _binding = DialogTaskBinding.inflate(LayoutInflater.from(context))
         Log.d("debug", "AddingTaskDialogFragment onCreateDialog")
         val builder = AlertDialog.Builder(activity as Context, R.style.AppThemeDialog)
-//        container = View.inflate(context, R.layout.dialog_task, null)
         isCancelable = false
 
         builder.setTitle(R.string.dialog_title)

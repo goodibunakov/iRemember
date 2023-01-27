@@ -6,9 +6,9 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.databinding.DialogDatepickerBinding
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment.Companion.DAY
@@ -20,12 +20,15 @@ import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragme
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment.Companion.YEAR
 import java.util.*
 
-class DatePickerDialogFragment : DialogFragment(R.layout.dialog_datepicker) {
+class DatePickerDialogFragment : DialogFragment() {
 
-    private val binding by viewBinding(DialogDatepickerBinding::bind)
+    private var _binding: DialogDatepickerBinding? = null
+    // This property is only valid between onCreateDialog and onDestroyView.
+    private val binding get() = _binding!!
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        _binding = DialogDatepickerBinding.inflate(LayoutInflater.from(context))
         val intent = Intent()
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -51,5 +54,10 @@ class DatePickerDialogFragment : DialogFragment(R.layout.dialog_datepicker) {
         }
         isCancelable = false
         return builder.create()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

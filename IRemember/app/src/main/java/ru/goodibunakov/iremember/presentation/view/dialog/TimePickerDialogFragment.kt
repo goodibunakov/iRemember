@@ -9,29 +9,32 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TimePicker
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.databinding.DialogTimepickerBinding
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment.Companion.HOUR
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment.Companion.KEY_NEGATIVE
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment.Companion.KEY_POSITIVE
-import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment.Companion.TYPE
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment.Companion.MINUTE
 import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment.Companion.REQUEST_CODE_TIME
+import ru.goodibunakov.iremember.presentation.view.dialog.AddingTaskDialogFragment.Companion.TYPE
 import java.util.*
 
 @Suppress("DEPRECATION")
-class TimePickerDialogFragment : DialogFragment(R.layout.dialog_timepicker) {
+class TimePickerDialogFragment : DialogFragment() {
 
-    private val binding by viewBinding(DialogTimepickerBinding::bind)
+    private var _binding: DialogTimepickerBinding? = null
+    // This property is only valid between onCreateDialog and onDestroyView.
+    private val binding get() = _binding!!
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        _binding = DialogTimepickerBinding.inflate(LayoutInflater.from(context))
         Log.d("debug", "timePickerDialogFragment onCreateDialog")
 
         val calendar = Calendar.getInstance()
@@ -93,5 +96,10 @@ class TimePickerDialogFragment : DialogFragment(R.layout.dialog_timepicker) {
                 ex.printStackTrace()
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
