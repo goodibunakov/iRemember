@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "ru.goodibunakov.iremember"
         namespace 'ru.goodibunakov.iremember'
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 33
         versionCode 24
         versionName "1.4.11"
