@@ -11,11 +11,10 @@ android {
         namespace 'ru.goodibunakov.iremember'
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 23
-        versionName "1.4.10"
+        versionCode 24
+        versionName "1.4.11"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-        multiDexEnabled true
         archivesBaseName = "iremember-$versionName($versionCode)"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -51,11 +50,10 @@ android {
 dependencies {
 
     // AndroidX
-    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
 
     // Kotlin
     implementation 'androidx.core:core-ktx:1.9.0'

@@ -1,7 +1,7 @@
 package ru.goodibunakov.iremember
 
+import android.app.Application
 import android.content.Context
-import androidx.multidex.MultiDexApplication
 import com.facebook.stetho.Stetho
 import ru.goodibunakov.iremember.data.DatabaseRepositoryImpl
 import ru.goodibunakov.iremember.data.SharedPreferencesRepositoryImpl
@@ -11,7 +11,7 @@ import ru.goodibunakov.iremember.domain.SharedPreferencesRepository
 import ru.goodibunakov.iremember.presentation.bus.EventRxBus
 import ru.goodibunakov.iremember.presentation.alarm.AlarmHelper
 
-class RememberApp : MultiDexApplication() {
+class RememberApp : Application() {
 
     companion object {
 
