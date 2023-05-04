@@ -11,8 +11,8 @@ android {
         namespace 'ru.goodibunakov.iremember'
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 25
-        versionName "1.4.12"
+        versionCode 26
+        versionName "1.4.13"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         archivesBaseName = "iremember-$versionName($versionCode)"
@@ -84,7 +84,7 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 
     // Firebase
-    implementation platform('com.google.firebase:firebase-bom:31.3.0')
+    implementation platform('com.google.firebase:firebase-bom:32.0.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-perf-ktx'
