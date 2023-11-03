@@ -7,12 +7,10 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
 import moxy.MvpAppCompatActivity
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.databinding.ActivityMainBinding
@@ -25,16 +23,25 @@ import ru.goodibunakov.iremember.presentation.view.fragment.SplashFragment
 
 class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityView {
 
-    private var fragmentManager: FragmentManager? = null
     private lateinit var onPageChangeCallback: ViewPager2.OnPageChangeCallback
     private val binding by viewBinding(ActivityMainBinding::bind)
 
-    @InjectPresenter
-    lateinit var mainActivityPresenter: MainActivityPresenter
+//    @InjectPresenter
+//    lateinit var mainActivityPresenter: MainActivityPresenter
+//
+//    @ProvidePresenter
+//    fun providePresenter(): MainActivityPresenter = MainActivityPresenter(
+//        RememberApp.sharedPreferencesRepository,
+//        RememberApp.getEventBus(),
+//        RememberApp.databaseRepository
+//    )
 
-    @ProvidePresenter
-    fun providePresenter(): MainActivityPresenter {
-        return MainActivityPresenter(
+//    @Inject
+//    lateinit var presenterProvider: Provider<MainActivityPresenter>
+//    private val mainActivityPresenter by moxyPresenter { presenterProvider.get() }
+
+    private val mainActivityPresenter by moxyPresenter {
+        MainActivityPresenter(
             RememberApp.sharedPreferencesRepository,
             RememberApp.getEventBus(),
             RememberApp.databaseRepository
@@ -48,7 +55,6 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("debug", "MainActivity onCreate")
-        fragmentManager = supportFragmentManager
     }
 
     override fun onResume() {
@@ -62,11 +68,10 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     }
 
     override fun runSplash() {
-        val splashFragment = SplashFragment()
-        fragmentManager?.beginTransaction()
-            ?.replace(R.id.content_frame, splashFragment)
-            ?.addToBackStack(null)
-            ?.commit()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.content_frame, SplashFragment())
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -75,6 +80,7 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
                 mainActivityPresenter.itemSelected(id)
                 return true
             }
+
             R.id.action_trash -> {
                 mainActivityPresenter.itemSelected(id)
                 return true
@@ -90,6 +96,7 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
                 splashItem.isChecked = !splashItem.isChecked
                 mainActivityPresenter.saveBoolean(splashItem.isChecked)
             }
+
             R.id.action_trash -> {
                 mainActivityPresenter.showDeleteDoneTasksDialog()
             }

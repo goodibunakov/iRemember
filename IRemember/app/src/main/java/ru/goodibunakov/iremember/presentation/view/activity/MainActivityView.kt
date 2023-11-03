@@ -1,26 +1,28 @@
 package ru.goodibunakov.iremember.presentation.view.activity
 
 import moxy.MvpView
-import moxy.viewstate.strategy.*
+import moxy.viewstate.strategy.alias.AddToEnd
+import moxy.viewstate.strategy.alias.OneExecution
+import moxy.viewstate.strategy.alias.Skip
 
-@StateStrategyType(value = AddToEndStrategy::class)
+@AddToEnd
 interface MainActivityView : MvpView {
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun onDestroyView()
 
-    @StateStrategyType(OneExecutionStateStrategy::class)
+    @OneExecution
     fun runSplash()
 
     fun setUI()
 
-    @StateStrategyType(OneExecutionStateStrategy::class)
+    @OneExecution
     fun itemSelected(id: Int)
 
     fun setSplashItemState(id: Int, isChecked: Boolean)
 
-    @StateStrategyType(OneExecutionStateStrategy::class)
+    @OneExecution
     fun showDeleteDoneTasksDialog()
 
-    @StateStrategyType(OneExecutionStateStrategy::class)
+    @OneExecution
     fun showDeleteAllTasksIcon(visible: Boolean)
 }

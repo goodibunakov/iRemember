@@ -1,6 +1,5 @@
 package ru.goodibunakov.iremember.presentation.presenter
 
-import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.goodibunakov.iremember.RememberApp
 import ru.goodibunakov.iremember.domain.DatabaseRepository
@@ -9,9 +8,8 @@ import ru.goodibunakov.iremember.presentation.utils.DateUtils
 import ru.goodibunakov.iremember.presentation.utils.DateUtils.FORMAT_DATE_ONLY
 import ru.goodibunakov.iremember.presentation.utils.DateUtils.FORMAT_TIME_ONLY
 import ru.goodibunakov.iremember.presentation.view.dialog.EditTaskDialogFragmentView
-import java.util.*
+import java.util.Calendar
 
-@InjectViewState
 class EditTaskDialogPresenter(
     private val repository: DatabaseRepository
 ) : MvpPresenter<EditTaskDialogFragmentView>() {

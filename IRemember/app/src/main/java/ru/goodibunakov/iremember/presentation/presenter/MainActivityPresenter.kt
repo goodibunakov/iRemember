@@ -1,7 +1,6 @@
 package ru.goodibunakov.iremember.presentation.presenter
 
 import io.reactivex.disposables.Disposable
-import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.goodibunakov.iremember.data.SharedPreferencesRepositoryImpl
 import ru.goodibunakov.iremember.domain.DatabaseRepository
@@ -10,7 +9,6 @@ import ru.goodibunakov.iremember.presentation.bus.Event
 import ru.goodibunakov.iremember.presentation.bus.EventRxBus
 import ru.goodibunakov.iremember.presentation.view.activity.MainActivityView
 
-@InjectViewState
 class MainActivityPresenter(
     private val sharedPreferencesRepository: SharedPreferencesRepository,
     private val bus: EventRxBus,

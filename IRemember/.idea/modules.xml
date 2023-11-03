@@ -3,6 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/IRemember.iml" filepath="$PROJECT_DIR$/IRemember.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/animatedbottombar/IRemember.animatedbottombar.iml" filepath="$PROJECT_DIR$/.idea/modules/animatedbottombar/IRemember.animatedbottombar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/animatedbottombar/IRemember.animatedbottombar.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/animatedbottombar/IRemember.animatedbottombar.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/animatedbottombar/IRemember.animatedbottombar.main.iml" filepath="$PROJECT_DIR$/.idea/modules/animatedbottombar/IRemember.animatedbottombar.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/animatedbottombar/IRemember.animatedbottombar.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/animatedbottombar/IRemember.animatedbottombar.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/IRemember.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/IRemember.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/IRemember.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/IRemember.app.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/IRemember.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/IRemember.app.main.iml" />

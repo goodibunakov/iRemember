@@ -5,17 +5,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import moxy.InjectViewState
-import ru.goodibunakov.iremember.presentation.bus.QueryEvent
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.RememberApp.Companion.databaseRepository
 import ru.goodibunakov.iremember.presentation.bus.DeleteAllDoneTasksEvent
-import ru.goodibunakov.iremember.presentation.bus.UpdateEvent
 import ru.goodibunakov.iremember.presentation.bus.EventRxBus
+import ru.goodibunakov.iremember.presentation.bus.QueryEvent
+import ru.goodibunakov.iremember.presentation.bus.UpdateEvent
 import ru.goodibunakov.iremember.presentation.model.ModelTask
 import ru.goodibunakov.iremember.presentation.view.fragment.DoneTaskFragmentView
 
-@InjectViewState
 class DoneTaskFragmentPresenter(
     private val bus: EventRxBus
 ) : TaskFragmentPresenter<DoneTaskFragmentView>() {

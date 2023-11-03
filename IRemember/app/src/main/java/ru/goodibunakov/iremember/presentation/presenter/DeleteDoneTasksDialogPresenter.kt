@@ -3,7 +3,6 @@ package ru.goodibunakov.iremember.presentation.presenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.goodibunakov.iremember.R
 import ru.goodibunakov.iremember.domain.DatabaseRepository
@@ -11,7 +10,6 @@ import ru.goodibunakov.iremember.presentation.bus.DeleteAllDoneTasksEvent
 import ru.goodibunakov.iremember.presentation.bus.EventRxBus
 import ru.goodibunakov.iremember.presentation.view.dialog.DeleteDoneTasksDialogView
 
-@InjectViewState
 class DeleteDoneTasksDialogPresenter(
     private val repository: DatabaseRepository,
     private val bus: EventRxBus
