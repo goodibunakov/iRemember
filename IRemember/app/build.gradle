@@ -11,8 +11,8 @@ android {
         namespace 'ru.goodibunakov.iremember'
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 28
-        versionName "1.4.15"
+        versionCode 29
+        versionName "1.4.16"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         archivesBaseName = "iremember-$versionName($versionCode)"
         javaCompileOptions {
@@ -51,9 +51,9 @@ dependencies {
 
     // AndroidX
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0"
 
     // Kotlin
     implementation 'androidx.core:core-ktx:1.12.0'
@@ -81,7 +81,7 @@ dependencies {
 //    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
     // LeakCanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.13'
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:32.6.0')
