@@ -1,3 +1,3 @@
 # iRemember
 
-Kotlin, MVP (Moxy), Rx, Room
+Kotlin, MVP, RxJava, Room
