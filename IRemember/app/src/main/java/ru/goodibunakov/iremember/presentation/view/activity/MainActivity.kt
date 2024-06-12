@@ -26,20 +26,6 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     private lateinit var onPageChangeCallback: ViewPager2.OnPageChangeCallback
     private val binding by viewBinding(ActivityMainBinding::bind)
 
-//    @InjectPresenter
-//    lateinit var mainActivityPresenter: MainActivityPresenter
-//
-//    @ProvidePresenter
-//    fun providePresenter(): MainActivityPresenter = MainActivityPresenter(
-//        RememberApp.sharedPreferencesRepository,
-//        RememberApp.getEventBus(),
-//        RememberApp.databaseRepository
-//    )
-
-//    @Inject
-//    lateinit var presenterProvider: Provider<MainActivityPresenter>
-//    private val mainActivityPresenter by moxyPresenter { presenterProvider.get() }
-
     private val mainActivityPresenter by moxyPresenter {
         MainActivityPresenter(
             RememberApp.sharedPreferencesRepository,
