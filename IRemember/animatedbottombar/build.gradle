@@ -2,12 +2,12 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         namespace 'nl.joery.animatedbottombar'
         minSdkVersion 21
-        targetSdkVersion 34
+        targetSdkVersion 35
         consumerProguardFiles 'consumer-rules.pro'
     }
 
@@ -40,7 +40,7 @@ dependencies {
     api 'com.google.android.flexbox:flexbox:3.0.0'
     api 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    api 'androidx.navigation:navigation-ui-ktx:2.7.7'
+    api 'androidx.navigation:navigation-ui-ktx:2.8.3'
 
     implementation 'com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.9'
 }
