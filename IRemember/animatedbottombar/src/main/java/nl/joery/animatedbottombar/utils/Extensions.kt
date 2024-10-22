@@ -41,7 +41,6 @@ internal fun ValueAnimator.fixDurationScale() {
             Float::class.javaPrimitiveType
         ).invoke(this, 1f)
     } catch (t: Throwable) {
-
     }
 }
 
