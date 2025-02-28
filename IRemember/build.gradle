@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '2.0.21'
+    ext.kotlin_version = '2.1.10'
     ext.moxy_version = '2.2.2'
     ext.dagger_version = '2.44'
     ext.room_version = '2.6.1'
@@ -9,16 +9,16 @@ buildscript {
         gradlePluginPortal()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.7.2'
+        classpath 'com.android.tools.build:gradle:8.8.2'
         classpath 'com.google.gms:google-services:4.4.2'
         classpath 'com.google.firebase:perf-plugin:1.4.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.3'
     }
 }
 
 plugins {
-    id 'com.google.devtools.ksp' version '2.0.21-1.0.25' apply false
+    id 'com.google.devtools.ksp' version '2.1.10-1.0.29' apply false
 }
 
 allprojects {
@@ -36,5 +36,5 @@ allprojects {
 }
 
 tasks.register('clean', Delete) {
-    delete rootProject.buildDir
+    delete rootProject.layout.buildDirectory
 }

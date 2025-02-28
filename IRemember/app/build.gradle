@@ -11,8 +11,8 @@ android {
         namespace 'ru.goodibunakov.iremember'
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode 34
-        versionName "1.4.21"
+        versionCode 35
+        versionName "1.4.22"
         archivesBaseName = "iremember-$versionName($versionCode)"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -34,11 +34,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = JavaVersion.VERSION_21.toString()
     }
     buildFeatures {
         viewBinding true
@@ -84,7 +84,7 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
 
     // Firebase
-    implementation platform('com.google.firebase:firebase-bom:33.5.1')
+    implementation platform('com.google.firebase:firebase-bom:33.10.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-perf-ktx'
