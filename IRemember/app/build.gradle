@@ -11,8 +11,8 @@ android {
         namespace 'ru.goodibunakov.iremember'
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode 35
-        versionName "1.4.22"
+        versionCode 36
+        versionName "1.4.23"
         archivesBaseName = "iremember-$versionName($versionCode)"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -55,7 +55,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
 
     // Kotlin
-    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.core:core-ktx:1.16.0'
 
     // RxJava
     implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
@@ -84,7 +84,7 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
 
     // Firebase
-    implementation platform('com.google.firebase:firebase-bom:33.10.0')
+    implementation platform('com.google.firebase:firebase-bom:33.13.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-perf-ktx'
