@@ -5,14 +5,14 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
-    compileSdk 35
+    compileSdk 36
     defaultConfig {
         applicationId "ru.goodibunakov.iremember"
         namespace 'ru.goodibunakov.iremember'
         minSdkVersion 21
-        targetSdkVersion 35
-        versionCode 36
-        versionName "1.4.23"
+        targetSdkVersion 36
+        versionCode 37
+        versionName "1.4.24"
         archivesBaseName = "iremember-$versionName($versionCode)"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -49,10 +49,10 @@ dependencies {
     implementation project(":animatedbottombar")
 
     // AndroidX
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.viewpager2:viewpager2:1.1.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.1'
 
     // Kotlin
     implementation 'androidx.core:core-ktx:1.16.0'
@@ -84,7 +84,7 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
 
     // Firebase
-    implementation platform('com.google.firebase:firebase-bom:33.13.0')
+    implementation platform('com.google.firebase:firebase-bom:33.15.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-perf-ktx'
